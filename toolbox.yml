@@ -1,0 +1,60 @@
+- name: Fedora toolbox
+  hosts: localhost
+  become: true
+  vars:
+    favcolor: blue
+  vars_files:
+    - common.yml
+  tasks:
+    - name: setup GH cli repo
+      shell: dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+      args:
+        creates: /etc/yum.repos.d/gh-cli.repo
+
+    - name: setup terraform
+      shell: dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+      args:
+        creates: /etc/yum.repos.d/terraform.repo
+
+    - name: setup vscode
+      shell: |
+        rpm --import https://packages.microsoft.com/keys/microsoft.asc
+        sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+      args:
+        creates: /etc/yum.repos.d/vscode.repo
+
+    - name: copr
+      community.general.copr:
+        name: "{{ item }}"
+      loop: "{{ copr }}"
+
+    - name: Package Install - common
+      package:
+        state: installed
+        name: "{{ package }}"
+
+    - name: Package Install - pip
+      pip:
+        name: "{{ pip }}"
+
+    - name: Package Install - npm
+      community.general.npm:
+        name: "{{ item }}"
+        global: yes
+        path: "~/.npm-global"
+      loop: "{{ npm }}"
+
+    - name: Package Install - brew
+      become: no
+      community.general.homebrew:
+        path: /home/linuxbrew/.linuxbrew/bin
+        name: "{{ brew }}"
+
+    - name: Install nvm
+      shell: curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+
+    - name: Set fish as default shell for {{ user }}
+      become: true
+      user:
+        name: "ofrades"
+        shell: /usr/bin/fish

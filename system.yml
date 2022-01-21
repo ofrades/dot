@@ -1,0 +1,90 @@
+- name: Fedora system
+  hosts: localhost
+  become: true
+  vars:
+    favcolor: green
+  vars_files:
+    - common.yml
+  tasks:
+    - name: get jetbrains toolbox
+      get_url: 
+        url: https://raw.githubusercontent.com/nagygergo/jetbrains-toolbox-install/master/jetbrains-toolbox.sh
+        dest: /etc/jetbrains-toolbox.sh
+
+    - name: install jetbrains toolbox
+      shell: /etc/jetbrains-toolbox.sh | bash
+
+    - name: get Noto
+      get_url:
+        url: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Noto.zip
+        dest: /etc/Noto.zip
+
+    - name: Installing Noto
+      unarchive:
+        src: /etc/Noto.zip
+        dest: /home/ofrades/.fonts/
+
+    - name: Flatpak - Flathub repository
+      flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+        method: user
+
+    - name: Flatpak - Fedora repository
+      flatpak_remote:
+        name: fedora
+        state: present
+        flatpakrepo_url: oci+https://registry.fedoraproject.org
+        method: user
+
+    - name: Flatpak - Packages install
+      flatpak:
+        name: "{{ item }}"
+        state: present
+        remote: flathub
+        method: user
+      loop: "{{ flatpak }}"
+
+    - name: Ensure folders exist
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - ~/.config/nvim
+        - ~/.config/fish
+        - ~/.config/lazygit
+        - ~/.aws
+        - ~/.ssh
+
+    - name: Ensure ~/.gnupg exists
+      file:
+        path: ~/.gnupg
+        state: directory
+        mode: 0700
+
+    - name: Create symlinks
+      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig
+
+    - name: Set ssh permissions
+      file:
+        path: ~/.ssh
+        state: directory
+        mode: 0700
+
+    - name: Set ssh permissions
+      file:
+        path: ~/.ssh
+        state: directory
+        mode: 0700
+
+
+    - name: Set ssh pub permissions
+      file:
+        path: /home/ofrades/.ssh/id_ed25519.pub
+        mode: 0644
+
+    - name: Set ssh private permissions
+      file:
+        path: /home/ofrades/.ssh/id_ed25519
+        mode: 0600

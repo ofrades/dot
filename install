@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -e
+
+function have {
+  command -v "$1" &> /dev/null
+}
+
+# install fish
+have fish || rpm-ostree install fish
+
+# install chrome
+have google-chrome || rpm-ostree install google-chrome-stable
+
+# install vim
+have vim || rpm-ostree install vim
+
+# install ansible
+have ansible || rpm-ostree install ansible
+
+# install ansible community plugins
+[ -d ~/.ansible/collections/ansible_collections/community ] || \
+  ansible-galaxy collection install community.general
+
+
+# Install LinuxBrew
+if ! have "brew"; then
+  sudo dnf group install -y 'Development Tools'
+  sudo dnf install -y procps-ng curl file git libxcrypt-compat
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# install stow
+have stow || rpm-ostree install stow
+
+# Run Ansible
+ansible-playbook system.yml --ask-become-pass
+
+# echo 'setup dconf'
+dconf load / < ~/dot/gnome.dconf
+

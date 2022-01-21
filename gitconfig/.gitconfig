@@ -1,0 +1,59 @@
+[pull]
+  rebase = true
+
+[diff]
+  tool = vimdiff
+  colorMoved = default
+
+[merge]
+  tool = vimdiff
+  conflictstyle = diff3
+
+[mergetool "vimdiff"]
+  cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+
+[mergetool]
+  path = nvim
+  prompt = false
+  keepBackup = false
+  trustexitcode = true
+
+[user]
+  email = mig.silva@gmail.com
+	name = Miguel Bastos
+
+[push]
+  default = current
+
+[color]
+  ui = true
+
+[core]
+  pager = delta
+	editor = nvim
+
+[interactive]
+  diffFilter = delta --color-only --features=interactive
+
+[delta]
+  features = decorations
+  side-by-side = true
+  line-numbers = true
+  ; if diff colorMoved causes problems disable this0 
+  ; inspect-raw-lines = false
+  theme = gruvbox-dark
+
+[delta "interactive"]
+    keep-plus-minus-markers = false
+
+[delta "decorations"]
+    commit-decoration-style = blue ol
+    commit-style = raw
+    file-style = omit
+    hunk-header-decoration-style = blue box
+    hunk-header-file-style = red
+    hunk-header-line-number-style = "#067a00"
+    hunk-header-style = file line-number syntax
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential

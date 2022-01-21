@@ -1,0 +1,36 @@
+
+# 👆-add-message--------------------------------------------
+# Header - type(scope): Brief description
+# ----------------------------------------------------------
+# empty line
+# ----------------------------------------------------------
+# Body - More description, if necessary
+# ----------------------------------------------------------
+#    * Motivation behind changes, more detail into how
+#      functionality might be affected, etc.
+# ----------------------------------------------------------
+# empty line
+# ----------------------------------------------------------
+# Footer - Associated issues, PRs, etc.
+# ----------------------------------------------------------
+#    * Ex: Resolves Issue #207, see PR #15, etc.
+# ----------------------------------------------------------
+# Conventional Commits
+# ----------------------------------------------------------
+#   ✨ * feat             A new feature
+#   🐛 * fix              A bug fix
+#   📚 * docs             Change to documentation only
+#   🎨 * style            Change to style: whitespace, formatting...
+#   ♻️  * refactor         Change not related to a bug or feat
+#   ⚡ * perf             Change that affects performance
+#   🚨 * test             Change that adds/modifies tests
+#   🔧 * chore            General tooling/config/min refactor
+#   📦 * build            Change to build system
+#   👷 * ci               Change to CI pipeline/workflow
+#   🚀 * release          Code deployment or publishing
+#   🔒 * security         Fixing security issues
+#   🌐 * i18n             Internationalization and localization
+#   💥 * breaking         Introducing breaking changes
+#   ⚙️  * config           Changing configuration files
+#   ➕ * add              Add something
+#   ➖ * remove           Remove something

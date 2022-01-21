@@ -1,0 +1,98 @@
+---
+user:
+  - ofrades
+package:
+  - "@Development Tools"
+  - fish
+  - fzf
+  - stow
+  - git
+  - gh
+  - bat
+  - curl
+  - wget
+  - unzip
+  - procps-ng
+  - libxcrypt-compat
+  - zlib-devel
+  - bzip2
+  - bzip2-devel
+  - readline-devel
+  - sqlite
+  - sqlite-devel
+  - openssl-devel
+  - xz
+  - xz-devel
+  - libffi-devel
+  - findutils
+  - gcc
+  - gcc-c++
+  - libstdc++-static
+  - git-delta
+  - exa
+  - awscli
+  - fd-find
+  - ripgrep
+  - zoxide
+  - git-crypt
+  - nodejs
+  - neovim
+  - terraform
+  - jq
+  - pipenv
+  - pyenv
+  - rust
+  - cargo
+  - lazygit
+  - starship
+  - code
+  - deno
+  - "https://download.pop.com/desktop-app/linux/8.0.8/pop-8.0.8-1.x86_64.rpm"
+
+pip:
+  - pyright
+  - awsume
+  - pynvim
+  - ansible-lint
+
+npm:
+  - yarn
+  - typescript
+  - typescript-language-server
+  - eslint_d
+  - stylint
+  - prettier
+  - vscode-langservers-extracted
+  - serverless
+  - fixjson
+  - jsonlint
+  - markdownlint-cli
+
+brew:
+  - circleci
+  - broot
+  - aws-vault
+
+copr:
+  - agriffis/neovim-nightly
+  - atim/lazygit
+  - decathorpe/deno
+  - atim/starship
+  - nili/pyenv
+  - keefle/glow
+
+flatpak:
+  - org.gnome.Extensions
+  - org.gnome.Evolution
+  - com.slack.Slack
+  - com.github.hluk.copyq
+  - com.github.wwmm.easyeffects
+  - com.github.xournalpp.xournalpp
+  - com.dropbox.Client
+  - com.calibre_ebook.calibre
+  - org.flameshot.Flameshot
+  - com.uploadedlobster.peek
+  - org.qbittorrent.qBittorrent
+  - com.microsoft.Teams
+  - org.chromium.Chromium
+  - org.kde.krita

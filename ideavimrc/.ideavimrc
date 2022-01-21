@@ -1,0 +1,158 @@
+" plugins
+set NERDTree
+set surround
+set commentary
+set highlightedyank
+
+" settings
+set ideajoin
+set ideamarks
+set ideawrite=all
+set ideastatusicon=gray
+set idearefactormode=keep
+set showmode
+set scrolloff=5
+set clipboard+=unnamed
+set clipboard+=ideaput
+
+" mappings
+" set leader to space bar
+let mapleader=" "
+
+" search
+map <C-p> :action GotoFile<CR>
+map <C-f> :action Find<CR>
+map <C-r> :action Replace<CR>
+map <C-s-f> :action FindInPath<CR>
+map <C-s-r> :action ReplaceInPath<CR>
+nnoremap <leader>o :action RecentFiles<CR>
+
+" jetbrains specific
+nnoremap <leader><leader> :action SearchEverywhere<CR>
+nnoremap <leader>m :action ToggleFullScreen<CR>
+nnoremap <leader>jm :action EditorPopupMenu<CR>
+nnoremap <leader>jr :action Refactorings.QuickListPopupAction<CR>
+nnoremap <leader>ji :action QuickImplementations<CR>
+nnoremap <leader>jl :action RecentLocations<CR>
+nnoremap <leader>jh :action LocalHistory.ShowHistory<CR>
+nnoremap <leader>jt :action RerunFailedTests<CR>
+nnoremap <leader>je :action ShowErrorDescription<CR>
+nnoremap <leader>jr :action IdeaVim.ReloadVimRc.reload<CR>
+nnoremap <leader>j. :e ~/.ideavimrc<CR>
+nnoremap <C-Right> :action EditorSelectWord<CR>
+vnoremap <C-Right> :action EditorSelectWord<CR>
+
+" code navigation
+nnoremap gd :action GotoDeclaration<CR>
+nnoremap gh K
+nnoremap gi :action GotoImplementation<CR>
+nnoremap gr :action FindUsages<CR>
+nnoremap ga :action GotoAction<CR>
+nnoremap gt :action GotoTypeDeclaration<CR>
+nnoremap <leader>r :action RenameElement<CR>
+nnoremap <leader>R :action RenameFile<CR>
+nnoremap gf :action ReformatCode<CR>
+nnoremap gI :action OptimizeImports<CR>
+nnoremap g] :action GotoNextError<CR>
+nnoremap g[ :action GotoPreviousError<CR>
+nnoremap <C-i> :action Forward<CR>
+nnoremap <C-o> :action Back<CR>
+inoremap <C-Space> <ESC>:action CodeCompletion<CR>
+
+" code manipulation
+nnoremap <C-n> :action SelectNextOccurrence<CR>
+xnoremap <C-n> :action SelectNextOccurrence<CR>
+nnoremap <A-j> :action MoveLineDown<CR>
+inoremap <A-j> :action MoveLineDown<CR>
+vnoremap <A-j> :action MoveLineDown<CR>
+nnoremap <A-k> :action MoveLineUp<CR>
+inoremap <A-k> :action MoveLineUp<CR>
+vnoremap <A-k> :action MoveLineUp<CR>
+
+" git
+nnoremap <leader>c :action CheckinProject<CR>
+nnoremap <leader>b :action Git.Branches<CR>
+nnoremap <leader>d :action Vcs.Show.Local.Changes<CR>
+nnoremap <leader>l :action Vcs.Show.Log<CR>
+nnoremap <leader>u :action Vcs.UpdateProject<CR>
+nnoremap <leader>p :action Vcs.Push<CR>
+nnoremap <leader>o :action Github.Open.In.Browser<CR>
+nnoremap <leader>gm :action Git.Menu<CR>
+nnoremap <leader>gf :action Git.FileActions<CR>
+nnoremap <leader>gr :action Git.ResolveConflicts<CR>
+nnoremap <leader>gh :action Vcs.ShowTabbedFileHistory<CR>
+
+" nice defaults to have
+nnoremap Y y$
+nnoremap D d$
+nnoremap C c$
+nnoremap H ^
+nnoremap L $
+vnoremap < <gv
+vnoremap > >gv
+nnoremap <C-l> <C-w>l
+nnoremap <C-j> <C-w>j
+nnoremap <C-h> <C-w>h
+nnoremap <C-k> <C-w>k
+nnoremap <C-a> ggVG<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>w :w<CR>
+nnoremap <leader>n :sp ~/notes/note.md<CR>
+
+" font size manipulation
+nnoremap <C-=> :action EditorIncreaseFontSize<CR>
+nnoremap <C--> :action EditorDecreaseFontSize<CR>
+
+" Tab navigation
+nnoremap <TAB> :action NextTab<CR>
+nnoremap <s-TAB> :action PreviousTab<CR>
+nnoremap <leader>1 :action GoToTab1<CR>
+nnoremap <leader>2 :action GoToTab2<CR>
+nnoremap <leader>3 :action GoToTab3<CR>
+nnoremap <leader>4 :action GoToTab4<CR>
+nnoremap <leader>5 :action GoToTab6<CR>
+nnoremap <leader>6 :action GoToTab6<CR>
+nnoremap <leader>7 :action GoToTab7<CR>
+nnoremap <leader>8 :action GoToTab8<CR>
+nnoremap <leader>9 :action GoToTab9<CR>
+
+" jetbrains regular keymaps in insert mode
+sethandler <C-2> n-v:vim i:ide
+sethandler <C-s-2> n-v:vim i:ide
+sethandler <C-s-6> n-v:vim i:ide
+sethandler <C-a> n-v:vim i:ide
+sethandler <C-b> n-v:vim i:ide
+sethandler <C-c> a:ide
+sethandler <C-d> n-v:vim i:ide
+sethandler <C-e> n-v:vim i:ide
+sethandler <C-f> n-v:vim i:ide
+sethandler <C-s-f> n-v:vim i:ide
+sethandler <C-g> n-v:vim i:ide
+sethandler <C-h> n-v:vim i:ide
+sethandler <C-i> n-v:vim i:ide
+sethandler <C-j> n-v:vim i:ide
+sethandler <A-J> n-v:vim i:ide
+sethandler <C-k> n-v:vim i:ide
+sethandler <C-l> n-v:vim i:ide
+sethandler <C-m> n-v:vim i:ide
+sethandler <C-n> n-v:vim i:ide
+sethandler <C-o> n-v:vim i:ide
+sethandler <C-r> n-v:vim i:ide
+sethandler <C-s-r> n-v:vim i:ide
+sethandler <C-s> n-v:vim i:ide
+sethandler <C-p> n-v:vim i:ide
+sethandler <C-q> n-v:vim i:ide
+sethandler <C-v> n-v:vim i:ide
+sethandler <C-t> n-v:vim i:ide
+sethandler <C-u> n-v:vim i:ide
+sethandler <C-w> n-v:vim i:ide
+sethandler <C-y> n-v:vim i:ide
+sethandler <C-x> n-v:vim i:ide
+sethandler <C-z> n-v:vim i:ide
+sethandler <C-/> n-v:vim i:ide
+sethandler <C-]> n-v:vim i:ide
+sethandler <C-[> n-v:vim i:ide
+sethandler <s-tab> n-v:vim i:ide
+sethandler <C-\> a:ide
+sethandler <C-s-\> a:ide
+

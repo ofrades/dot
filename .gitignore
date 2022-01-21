@@ -1,0 +1,6 @@
+fish_variables
+config/fish/fish_history
+ssh/.ssh/known_hosts
+
+lazygit/.config/lazygit/state.yml
+nvim/.config/nvim/plugin
