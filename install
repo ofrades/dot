@@ -9,21 +9,31 @@ function have {
 # install fish
 have fish || rpm-ostree install fish
 
+# install stow
+have stow || rpm-ostree install stow
+
 # install chrome
 have google-chrome || rpm-ostree install google-chrome-stable
 
 # install ansible
 have ansible || rpm-ostree install ansible
 
+# need to reboot to have ansible available
+systemctl reboot
+
 # install ansible community plugins
 [ -d ~/.ansible/collections/ansible_collections/community ] || \
   ansible-galaxy collection install community.general
 
-# install stow
-have stow || rpm-ostree install stow
+# decrypt secrets
+ansible-vault decrypt --vault-password-file ~/Dropbox/warden aws/.aws/config aws/.aws/credentials ssh/.ssh/id_ed25519 ssh/.ssh/id_ed25519.pub npmrc/.npmrc
+
+# flathub
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub com.dropbox.Client
 
 # Run Ansible
-ansible-playbook system.yml --ask-become-pass --ask-vault-pass
+ansible-playbook system.yml --ask-become-pass
 
 # echo 'setup dconf'
 dconf load / < ~/dot/gnome.dconf

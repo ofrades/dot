@@ -98,6 +98,8 @@ set -ga fish_user_paths ~/.cargo/bin
 set -Ux EDITOR nvim
 set -gx AWS_PROFILE default
 set -gx AWS_SDK_LOAD_CONFIG 1
+set -gx ANSIBLE_VAULT_PASSWORD_FILE ~/Dropbox/warden
+
 
 set -ga PATH ~/.npm-global/bin:$PATH
 

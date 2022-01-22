@@ -4,3 +4,4 @@ ssh/.ssh/known_hosts
 
 lazygit/.config/lazygit/state.yml
 nvim/.config/nvim/plugin
+ssh/.ssh/known_hosts.old
