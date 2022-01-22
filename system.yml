@@ -6,8 +6,13 @@
   vars_files:
     - common.yml
   tasks:
+    - name: 1password
+      community.general.rpm_ostree_pkg:
+        name: https://downloads.1password.com/linux/rpm/stable/x86_64/1password-latest.rpm
+        state: present
+
     - name: get jetbrains toolbox
-      get_url: 
+      get_url:
         url: https://raw.githubusercontent.com/nagygergo/jetbrains-toolbox-install/master/jetbrains-toolbox.sh
         dest: /etc/jetbrains-toolbox.sh
 
@@ -19,10 +24,15 @@
         url: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Noto.zip
         dest: /etc/Noto.zip
 
+    - name: create fonts folder
+      file:
+        path: "/home/{{ user }}/.fonts/"
+        state: directory
+
     - name: Installing Noto
       unarchive:
         src: /etc/Noto.zip
-        dest: /home/ofrades/.fonts/
+        dest: "/home/{{ user }}/.fonts/"
 
     - name: Flatpak - Flathub repository
       flatpak_remote:
@@ -57,12 +67,6 @@
         - ~/.aws
         - ~/.ssh
 
-    - name: Ensure ~/.gnupg exists
-      file:
-        path: ~/.gnupg
-        state: directory
-        mode: 0700
-
     - name: Create symlinks
       shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig
 
@@ -78,13 +82,12 @@
         state: directory
         mode: 0700
 
-
     - name: Set ssh pub permissions
       file:
-        path: /home/ofrades/.ssh/id_ed25519.pub
+        path: "/home/{{ user }}/.ssh/id_ed25519.pub"
         mode: 0644
 
     - name: Set ssh private permissions
       file:
-        path: /home/ofrades/.ssh/id_ed25519
+        path: "/home/{{ user }}/.ssh/id_ed25519"
         mode: 0600

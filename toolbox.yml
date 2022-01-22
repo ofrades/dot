@@ -56,5 +56,5 @@
     - name: Set fish as default shell for {{ user }}
       become: true
       user:
-        name: "ofrades"
+        name: "{{ user }}"
         shell: /usr/bin/fish

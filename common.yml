@@ -1,6 +1,5 @@
 ---
-user:
-  - ofrades
+user: ofrades
 package:
   - "@Development Tools"
   - fish
@@ -34,7 +33,6 @@ package:
   - fd-find
   - ripgrep
   - zoxide
-  - git-crypt
   - nodejs
   - neovim
   - terraform
@@ -47,7 +45,6 @@ package:
   - starship
   - code
   - deno
-  - "https://download.pop.com/desktop-app/linux/8.0.8/pop-8.0.8-1.x86_64.rpm"
 
 pip:
   - pyright
@@ -96,3 +93,4 @@ flatpak:
   - com.microsoft.Teams
   - org.chromium.Chromium
   - org.kde.krita
+  - com.bitwarden.desktop
