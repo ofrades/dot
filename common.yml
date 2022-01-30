@@ -4,7 +4,6 @@ package:
   - "@Development Tools"
   - fish
   - fzf
-  - stow
   - git
   - gh
   - bat
@@ -76,7 +75,6 @@ copr:
   - decathorpe/deno
   - atim/starship
   - nili/pyenv
-  - keefle/glow
 
 flatpak:
   - org.gnome.Extensions

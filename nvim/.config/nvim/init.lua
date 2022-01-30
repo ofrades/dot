@@ -151,7 +151,9 @@ require("packer").startup(function(use)
 		config = function()
 			local tree_cb = require("nvim-tree.config").nvim_tree_callback
 			require("nvim-tree").setup({
-				open_on_setup = false,
+				disable_netrw = true,
+				hijack_netrw = true,
+				open_on_setup = true,
 				ignore_ft_on_setup = {},
 				auto_close = false,
 				open_on_tab = true,
@@ -305,7 +307,7 @@ require("packer").startup(function(use)
 
 			local config = {
 				options = {
-					theme = "tokyonight",
+					theme = "auto",
 					section_separators = { left = " ", right = " " },
 					component_separators = { left = " ", right = " " },
 					icons_enabled = true,
@@ -572,8 +574,6 @@ require("packer").startup(function(use)
 				[[autocmd ColorScheme * lua package.loaded['colorizer'] = nil; require('colorizer').setup(); require('colorizer').attach_to_buffer(0)]]
 			)
 
-			vim.o.background = "dark"
-
 			vim.g.tokyonight_dev = true
 			vim.g.tokyonight_style = "storm"
 			vim.g.tokyonight_sidebars = {
@@ -598,6 +598,9 @@ require("packer").startup(function(use)
 			vim.g.tokyonight_colors = {}
 
 			require("tokyonight").colorscheme()
+			-- require("github-theme").setup({
+			-- 	theme_style = "light",
+			-- })
 		end,
 	})
 
