@@ -12,6 +12,11 @@ package:
   - unzip
   - procps-ng
   - libxcrypt-compat
+  - libdrm
+  - libX11-xcb
+  - libxshmfence
+  - mesa-libgbm
+  - which
   - zlib-devel
   - bzip2
   - bzip2-devel

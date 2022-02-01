@@ -79,7 +79,6 @@ map("x", "L", "$", { noremap = true })
 map("n", "<leader>-", ":set background=light<cr>", { noremap = true })
 map("n", "<leader>=", ":set background=dark<cr>", { noremap = true })
 
-map("n", "f", ":HopWord<cr>", { noremap = true })
 map("n", ";", ":", { noremap = true })
 
 -- Nice defaults

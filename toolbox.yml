@@ -16,12 +16,14 @@
       args:
         creates: /etc/yum.repos.d/terraform.repo
 
-    - name: setup vscode
-      shell: |
-        rpm --import https://packages.microsoft.com/keys/microsoft.asc
-        sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
-      args:
-        creates: /etc/yum.repos.d/vscode.repo
+    - name: Add Visual Studio Code repo
+      yum_repository:
+        name: code
+        description: Visual Studio Code
+        file: vscode
+        baseurl: https://packages.microsoft.com/yumrepos/vscode
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+        gpgcheck: yes
 
     - name: copr
       community.general.copr:

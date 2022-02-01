@@ -15,11 +15,12 @@ have stow || rpm-ostree install stow
 # install chrome
 have google-chrome || rpm-ostree install google-chrome-stable
 
+# install kitty
+have kitty || rpm-ostree install kitty
+
 # install ansible
 have ansible || rpm-ostree install ansible
-
-# need to reboot to have ansible available
-systemctl reboot
+have ansible || systemctl reboot
 
 # install ansible community plugins
 [ -d ~/.ansible/collections/ansible_collections/community ] || \

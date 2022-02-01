@@ -18,7 +18,6 @@ end
 
 local function on_attach(client)
 	local opts = { noremap = true, silent = true }
-	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 	if client.resolved_capabilities.document_formatting then
 		vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
 	end
@@ -68,9 +67,9 @@ local function on_attach(client)
 
 		-- no default maps, so you may want to define some here
 
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "gts", ":TSLspOrganize<CR>", opts)
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "gtr", ":TSLspRenameFile<CR>", opts)
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "gti", ":TSLspImportAll<CR>", opts)
+		vim.api.nvim_set_keymap("n", "gts", ":TSLspOrganize<CR>", opts)
+		vim.api.nvim_set_keymap("n", "gtr", ":TSLspRenameFile<CR>", opts)
+		vim.api.nvim_set_keymap("n", "gti", ":TSLspImportAll<CR>", opts)
 	end
 
 	-- See `:help vim.lsp.*` for documentation on any of the below functions

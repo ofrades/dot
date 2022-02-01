@@ -604,12 +604,14 @@ require("packer").startup(function(use)
 		end,
 	})
 
-	use({
-		"phaazon/hop.nvim",
-		config = function()
-			require("hop").setup({ keys = "etovxqpdygfblzhckisuran", jump_on_sole_occurence = true })
-		end,
-	})
+	-- use({
+	-- 	"phaazon/hop.nvim",
+	-- 	config = function()
+	-- 		require("hop").setup({ keys = "etovxqpdygfblzhckisuran", jump_on_sole_occurence = true })
+	-- 	end,
+	-- })
+
+	use({ "ggandor/lightspeed.nvim" })
 
 	use({
 		"folke/todo-comments.nvim",
