@@ -94,12 +94,9 @@ require("packer").startup(function(use)
 
 	use({ "tpope/vim-fugitive" })
 
-	use({
-		"tpope/vim-surround",
-	})
-	use({
-		"tpope/vim-repeat",
-	})
+	use({ "tpope/vim-surround" })
+
+	use({ "tpope/vim-repeat" })
 
 	use({
 		"hrsh7th/nvim-cmp",
@@ -107,14 +104,14 @@ require("packer").startup(function(use)
 			require("config.cmp")
 		end,
 		requires = {
-			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-cmdline",
-			"f3fora/cmp-spell",
+			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-nvim-lsp-signature-help",
-			"lukas-reineke/cmp-rg",
+			"f3fora/cmp-spell",
 			"petertriho/cmp-git",
+			"lukas-reineke/cmp-rg",
 			"saadparwaiz1/cmp_luasnip",
 			"onsails/lspkind-nvim",
 			{ "tzachar/cmp-tabnine", run = "./install.sh" },
@@ -135,15 +132,6 @@ require("packer").startup(function(use)
 	})
 
 	use({ "kevinhwang91/nvim-bqf", ft = "qf" })
-
-	use({
-		"elihunter173/dirbuf.nvim",
-		config = function()
-			require("dirbuf").setup({
-				show_hidden = true,
-			})
-		end,
-	})
 
 	use({
 		"kyazdani42/nvim-tree.lua",
@@ -221,62 +209,9 @@ require("packer").startup(function(use)
 	use({ "JoosepAlviste/nvim-ts-context-commentstring" })
 
 	use({
-		"akinsho/nvim-bufferline.lua",
-		event = "BufReadPre",
-		wants = "nvim-web-devicons",
-		config = function()
-			local signs = require("config.lsp").signs
-
-			signs = {
-				error = signs.Error,
-				warning = signs.Warn,
-				info = signs.Info,
-				hint = signs.Hint,
-			}
-
-			local severities = {
-				"error",
-				"warning",
-				-- "info",
-				-- "hint",
-			}
-
-			require("bufferline").setup({
-				options = {
-					show_close_icon = true,
-					diagnostics = "nvim_lsp",
-					always_show_bufferline = false,
-					separator_style = "thick",
-					diagnostics_indicator = function(_, _, diag)
-						local s = {}
-						for _, severity in ipairs(severities) do
-							if diag[severity] then
-								table.insert(s, signs[severity] .. diag[severity])
-							end
-						end
-						return table.concat(s, " ")
-					end,
-					offsets = {
-						{
-							filetype = "NvimTree",
-							text = "NvimTree",
-							highlight = "Directory",
-							text_align = "left",
-						},
-					},
-				},
-			})
-		end,
-	})
-
-	use({
 		"nvim-lualine/lualine.nvim",
 		requires = { "rlch/github-notifications.nvim" },
 		config = function()
-			local function holidays()
-				return "🎅🎄🌟🎁👑"
-			end
-
 			local function lsp_progress(_, is_active)
 				if not is_active then
 					return
@@ -306,13 +241,6 @@ require("packer").startup(function(use)
 			vim.cmd("au User LspProgressUpdate let &ro = &ro")
 
 			local config = {
-				options = {
-					theme = "auto",
-					section_separators = { left = " ", right = " " },
-					component_separators = { left = " ", right = " " },
-					icons_enabled = true,
-					mappings = true,
-				},
 				sections = {
 					lualine_a = { "mode" },
 					lualine_b = { "branch" },
@@ -320,53 +248,27 @@ require("packer").startup(function(use)
 						{ "diagnostics", sources = { "nvim_diagnostic" } },
 						{ "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
 						{ "filename", path = 1, symbols = { modified = "  ", readonly = "" } },
-						{
-							function()
-								local gps = require("nvim-gps")
-								return gps.get_location()
-							end,
-							cond = function()
-								local gps = require("nvim-gps")
-								return pcall(require, "nvim-treesitter.parsers") and gps.is_available()
-							end,
-							color = { fg = "#ff9e64" },
-						},
 					},
-					lualine_x = { holidays },
+					lualine_x = {},
 					lualine_y = { lsp_progress },
 					lualine_z = { "os.date('%a %H:%M')" },
 				},
 				inactive_sections = {
-					lualine_a = {},
+					lualine_a = { "filename" },
 					lualine_b = {},
-					lualine_c = { "filename" },
+					lualine_c = {},
 					lualine_x = {},
 					lualine_y = {},
 					lualine_z = {},
 				},
 				extensions = { "nvim-tree" },
 			}
-
 			require("lualine").setup(config)
-		end,
-	})
-	use({
-		"SmiteshP/nvim-gps",
-		requires = "nvim-treesitter/nvim-treesitter",
-		wants = "nvim-treesitter",
-		module = "nvim-gps",
-		config = function()
-			require("nvim-gps").setup({ separator = " " })
 		end,
 	})
 
 	use({
 		"RRethy/vim-illuminate",
-		event = "CursorHold",
-		module = "illuminate",
-		config = function()
-			vim.g.Illuminate_delay = 1000
-		end,
 	})
 
 	use({
@@ -459,36 +361,14 @@ require("packer").startup(function(use)
 		end,
 	})
 
-	use({
-		"pwntester/octo.nvim",
-		config = function()
-			require("octo").setup()
-		end,
-	})
-
 	use({ "lukas-reineke/indent-blankline.nvim" })
 
 	use({ "sindrets/diffview.nvim" })
 
 	use({
 		"karb94/neoscroll.nvim",
-		keys = { "<C-u>", "<C-d>", "<C-e>", "<C-y>", "gg", "G" },
 		config = function()
-			require("neoscroll").setup({
-				hide_cursor = false,
-				easing_function = "nil",
-			})
-			require("neoscroll.config").set_mappings({
-				["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "200" } },
-				["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "200" } },
-				["<C-b>"] = { "scroll", { "-vim.api.nvim_win_get_height(0)", "true", "300" } },
-				["<C-f>"] = { "scroll", { "vim.api.nvim_win_get_height(0)", "true", "300" } },
-				["<C-y>"] = { "scroll", { "-0.10", "false", "50" } },
-				["<C-e>"] = { "scroll", { "0.10", "false", "50" } },
-				["zt"] = { "zt", { "300" } },
-				["zz"] = { "zz", { "300" } },
-				["zb"] = { "zb", { "300" } },
-			})
+			require("neoscroll").setup()
 		end,
 	})
 
@@ -574,8 +454,8 @@ require("packer").startup(function(use)
 				[[autocmd ColorScheme * lua package.loaded['colorizer'] = nil; require('colorizer').setup(); require('colorizer').attach_to_buffer(0)]]
 			)
 
-			vim.g.tokyonight_dev = true
 			vim.g.tokyonight_style = "storm"
+
 			vim.g.tokyonight_sidebars = {
 				"qf",
 				"vista_kind",
@@ -585,17 +465,13 @@ require("packer").startup(function(use)
 				"NeogitStatus",
 				"help",
 			}
-			vim.g.tokyonight_cterm_colors = false
-			vim.g.tokyonight_terminal_colors = true
 			vim.g.tokyonight_italic_comments = true
 			vim.g.tokyonight_italic_keywords = true
 			vim.g.tokyonight_italic_functions = false
 			vim.g.tokyonight_italic_variables = false
 			vim.g.tokyonight_transparent = false
-			vim.g.tokyonight_hide_inactive_statusline = true
 			vim.g.tokyonight_dark_sidebar = true
 			vim.g.tokyonight_dark_float = true
-			vim.g.tokyonight_colors = {}
 
 			require("tokyonight").colorscheme()
 			-- require("github-theme").setup({
@@ -603,13 +479,6 @@ require("packer").startup(function(use)
 			-- })
 		end,
 	})
-
-	-- use({
-	-- 	"phaazon/hop.nvim",
-	-- 	config = function()
-	-- 		require("hop").setup({ keys = "etovxqpdygfblzhckisuran", jump_on_sole_occurence = true })
-	-- 	end,
-	-- })
 
 	use({ "ggandor/lightspeed.nvim" })
 
@@ -643,6 +512,7 @@ require("packer").startup(function(use)
 			require("config.keys")
 		end,
 	})
+
 	if packer_bootstrap then
 		require("packer").sync()
 	end
@@ -680,8 +550,8 @@ vim.opt.inccommand = "split" -- preview incremental substitute
 vim.opt.joinspaces = false -- No double spaces with join after a dot
 vim.opt.list = true -- Show some invisible characters (tabs...
 vim.opt.number = true -- Print line number
-vim.opt.relativenumber = true -- Relative line numbers
-vim.opt.scrolloff = 4 -- Lines of context
+vim.opt.relativenumber = false -- Relative line numbers
+-- vim.opt.scrolloff = 4 -- Lines of context
 vim.opt.shiftround = true -- Round indent
 vim.opt.shiftwidth = indent -- Size of an indent
 vim.opt.sidescrolloff = 8 -- Columns of context

@@ -3,17 +3,17 @@ set -Ux fish_user_paths
 
 set -U fish_emoji_width 2
 
-# Color Palette
-set -l foreground 00BDB4
-set -l selection 33467C
+# TokyoNight Color Palette
+set -l foreground c0caf5
+set -l selection 364A82
 set -l comment 565f89
-set -l red FF605C
-set -l orange FF9F0A
-set -l yellow FFCC00
-set -l green 34C759
-set -l purple AF52DE
-set -l cyan 5CC1EA
-set -l pink E73256
+set -l red f7768e
+set -l orange ff9e64
+set -l yellow e0af68
+set -l green 9ece6a
+set -l purple 9d7cd8
+set -l cyan 7dcfff
+set -l pink bb9af7
 
 # Syntax Highlighting Colors
 set -g fish_color_normal $foreground
@@ -23,6 +23,7 @@ set -g fish_color_quote $yellow
 set -g fish_color_redirection $foreground
 set -g fish_color_end $orange
 set -g fish_color_error $red
+set -g fish_color_param $purple
 set -g fish_color_comment $comment
 set -g fish_color_selection --background=$selection
 set -g fish_color_search_match --background=$selection

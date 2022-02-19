@@ -18,6 +18,9 @@ have google-chrome || rpm-ostree install google-chrome-stable
 # install kitty
 have kitty || rpm-ostree install kitty
 
+# install ulauncher
+have ulauncher-toggle || rpm-ostree install ulauncher
+
 # install ansible
 have ansible || rpm-ostree install ansible
 have ansible || systemctl reboot

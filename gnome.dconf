@@ -101,7 +101,7 @@ night-light-enabled=true
 night-light-last-coordinates=(40.529898560115186, -8.0828000000000007)
 
 [org/gnome/settings-daemon/plugins/media-keys]
-custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/']
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/']
 home=['<Super>f']
 mic-mute=['<Super>BackSpace']
 terminal=['<Super>t']
@@ -121,6 +121,11 @@ name='terminal'
 binding='<Super>c'
 command='flatpak run com.github.hluk.copyq toggle'
 name='clipboard'
+
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3]
+binding='<Super>u'
+command='ulauncher-toggle'
+name='ulauncher'
 
 [org/gnome/shell/keybindings]
 focus-active-notification=['<Alt>n']

@@ -52,8 +52,8 @@ package:
 
 pip:
   - pyright
-  - awsume
   - pynvim
+  - awsume
   - ansible-lint
 
 npm:
