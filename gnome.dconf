@@ -1,55 +1,9 @@
-[org.gnome.Terminal.Legacy.Profile]
-audible-bell=true
-background-color='#373737'
-background-transparency-percent=50
-backspace-binding='ascii-delete'
-bold-color='#000000'
-bold-color-same-as-fg=true
-bold-is-bright=false
-cell-height-scale=1.0
-cell-width-scale=1.0
-cjk-utf8-ambiguous-width='narrow'
-cursor-background-color='#000000'
-cursor-blink-mode='system'
-cursor-colors-set=false
-cursor-foreground-color='#ffffff'
-cursor-shape='block'
-default-size-columns=265
-default-size-rows=60
-delete-binding='delete-sequence'
-enable-bidi=true
-enable-shaping=true
-encoding='UTF-8'
-exit-action='close'
-font='NotoMono Nerd Font'
-foreground-color='#D3D7CF'
-headerbar=false
-highlight-background-color='#000000'
-highlight-colors-set=false
-highlight-foreground-color='#ffffff'
-login-shell=false
-palette=['#3B4252', '#FF605C', '#34C759', '#FFCC00', '#007AFF', '#AF52DE', '#00C7BE', '#F2F2F7', '#4C566A', '#FF453A', '#30D158', '#FFD60A', '#0A84FF', '#BF5AF2', '#66D4CF', '#E5E5EA']
-preserve-working-directory='safe'
-rewrap-on-resize=true
-scroll-on-keystroke=true
-scroll-on-output=false
-scrollback-lines=10000
-scrollback-unlimited=false
-scrollbar-policy='always'
-text-blink-mode='always'
-use-system-font=true
-use-theme-colors=true
-use-theme-transparency=true
-use-transparent-background=true
-visible-name='Unnamed'
-
 [org/gnome/Weather]
 locations=[<(uint32 2, <('Oliveira de Frades, Souto de Lafões e Sejães', '', false, [(0.71083677883639917, -0.14268335343483907)], [(0.71325789346611357, -0.15068008627107962)])>)>]
 
-[org/gnome/desktop/background]
-color-shading-type='solid'
-picture-options='zoom'
-picture-uri='file:///home/ofrades/Pictures/bright-rain.png'
+[org/gnome/shell/weather]
+automatic-location=true
+locations=[<(uint32 2, <('Oliveira de Frades, Souto de Lafões e Sejães', '', false, [(0.71083677883639917, -0.14268335343483907)], [(0.71325789346611357, -0.15068008627107962)])>)>]
 
 [org/gnome/desktop/input-sources]
 current='uint32 0'
@@ -58,50 +12,17 @@ per-window=false
 sources=[('xkb', 'us'), ('xkb', 'pt')]
 xkb-options=['caps:escape']
 
-[org/gnome/desktop/interface]
-clock-format='12h'
-cursor-theme='Adwaita'
-enable-animations=true
-enable-hot-corners=true
-font-name='NotoMono Nerd Font 12'
-gtk-im-module='gtk-im-context-simple'
-gtk-theme='Adwaita-dark'
-icon-theme='Adwaita'
-monospace-font-name='NotoMono Nerd Font 12'
-
-[org/gnome/desktop/screensaver]
-color-shading-type='solid'
-picture-options='zoom'
-picture-uri='file:///home/ofrades/Pictures/bright-rain.png'
-primary-color='#000000000000'
-secondary-color='#000000000000'
-
 [org/gnome/desktop/wm/keybindings]
 close=['<Super>q']
 toggle-fullscreen=['<Super>Return']
 toggle-maximized=['<Super>m']
 
-[org/gnome/gedit/preferences/editor]
-background-pattern='grid'
-display-line-numbers=true
-display-overview-map=true
-display-right-margin=false
-editor-font='NotoMono Italic Nerd Font 15'
-scheme='solarized-dark'
-tabs-size=uint32 2
-use-default-font=true
-wrap-last-split-mode='word'
-
 [org/gnome/mutter]
 center-new-windows=true
 workspaces-only-on-primary=false
 
-[org/gnome/settings-daemon/plugins/color]
-night-light-enabled=true
-night-light-last-coordinates=(40.529898560115186, -8.0828000000000007)
-
 [org/gnome/settings-daemon/plugins/media-keys]
-custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/']
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/']
 home=['<Super>f']
 mic-mute=['<Super>BackSpace']
 terminal=['<Super>t']
@@ -114,68 +35,11 @@ name='flameshot'
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Super>t'
-command='gnome-terminal'
+command='kitty'
 name='terminal'
-
-[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2]
-binding='<Super>c'
-command='flatpak run com.github.hluk.copyq toggle'
-name='clipboard'
-
-[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3]
-binding='<Super>u'
-command='ulauncher-toggle'
-name='ulauncher'
 
 [org/gnome/shell/keybindings]
 focus-active-notification=['<Alt>n']
 toggle-message-tray=['<Super>n']
 toggle-overview=['<Alt>s']
 
-[org/gnome/shell/weather]
-automatic-location=true
-locations=[<(uint32 2, <('Oliveira de Frades, Souto de Lafões e Sejães', '', false, [(0.71083677883639917, -0.14268335343483907)], [(0.71325789346611357, -0.15068008627107962)])>)>]
-
-[org/gnome/terminal/legacy/profiles:]
-default='5a870196-8a1d-40b6-9ccd-5b11a44067a9'
-list=['5a870196-8a1d-40b6-9ccd-5b11a44067a9']
-
-[org/gnome/terminal/legacy/profiles:/:5a870196-8a1d-40b6-9ccd-5b11a44067a9]
-background-color='#2E3440'
-bold-color='#D8DEE9'
-bold-color-same-as-fg=true
-cursor-background-color='rgb(216,222,233)'
-cursor-colors-set=true
-cursor-foreground-color='rgb(59,66,82)'
-font='NotoMono Nerd Font Mono 12'
-foreground-color='#D8DEE9'
-highlight-background-color='rgb(136,192,208)'
-highlight-colors-set=true
-highlight-foreground-color='rgb(46,52,64)'
-palette=['#3B4252', '#FF605C', '#34C759', '#FFCC00', '#007AFF', '#AF52DE', '#00C7BE', '#F2F2F7', '#4C566A', '#FF453A', '#30D158', '#FFD60A', '#0A84FF', '#BF5AF2', '#66D4CF', '#E5E5EA']
-use-system-font=false
-use-theme-background=false
-use-theme-colors=true
-use-theme-transparency=false
-use-transparent-background=false
-visible-name='Term'
-
-[org/gnome/terminal/legacy/profiles:/:7c905903-dd7e-4645-9c4a-6be8f8c1c043]
-background-color='#282c34'
-bold-color='#ABB2BF'
-bold-color-same-as-fg=true
-cursor-background-color='rgb(216,222,233)'
-cursor-colors-set=true
-cursor-foreground-color='rgb(59,66,82)'
-font='NotoMono Nerd Font 12'
-foreground-color='#abb2bf'
-highlight-background-color='rgb(136,192,208)'
-highlight-colors-set=true
-highlight-foreground-color='rgb(46,52,64)'
-palette=['#000000', '#e06c75', '#98c379', '#d19a66', '#61afef', '#c678dd', '#56b6c2', '#abb2bf', '#5c6370', '#e06c75', '#98c379', '#d19a66', '#61afef', '#c678dd', '#56b6c2', '#ffffff']
-use-system-font=false
-use-theme-background=false
-use-theme-colors=false
-use-theme-transparency=false
-use-transparent-background=false
-visible-name='One Dark'

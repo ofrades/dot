@@ -2,9 +2,6 @@
 user: ofrades
 package:
   - "@Development Tools"
-  - fish
-  - fzf
-  - git
   - gh
   - bat
   - curl
@@ -59,10 +56,10 @@ pip:
 npm:
   - yarn
   - typescript
-  - typescript-language-server
   - eslint_d
   - stylint
   - prettier
+  - typescript-language-server
   - vscode-langservers-extracted
   - serverless
   - fixjson
@@ -82,18 +79,9 @@ copr:
   - nili/pyenv
 
 flatpak:
-  - org.gnome.Extensions
-  - org.gnome.Evolution
   - com.slack.Slack
-  - com.github.hluk.copyq
-  - com.github.wwmm.easyeffects
-  - com.github.xournalpp.xournalpp
   - com.dropbox.Client
-  - com.calibre_ebook.calibre
-  - org.flameshot.Flameshot
-  - com.uploadedlobster.peek
-  - org.qbittorrent.qBittorrent
   - com.microsoft.Teams
-  - org.chromium.Chromium
-  - org.kde.krita
-  - com.bitwarden.desktop
+  - org.flameshot.Flameshot
+  - com.calibre_ebook.calibre
+  - com.github.wwmm.easyeffects

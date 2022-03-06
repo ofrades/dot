@@ -69,9 +69,9 @@ abbr files 'nvim (fzf --preview "cat {}")'
 abbr checkout 'git branch -a | grep -v HEAD |  sed "s/remotes\/origin\///" |string trim | fzf | read -l result; and git checkout "$result"'
 abbr gedit 'flatpak run org.gnome.gedit'
 
-alias -s ls 'exa --color=always --icons --group-directories-first'
-alias -s la 'exa --color=always --icons --group-directories-first --all'
-alias -s ll 'exa --color=always --icons --group-directories-first --all --long'
+abbr -s ls 'exa --color=always --icons --group-directories-first'
+abbr -s la 'exa --color=always --icons --group-directories-first --all'
+abbr -s ll 'exa --color=always --icons --group-directories-first --all --long'
 
 abbr weather "curl -s wttr.in/Oliveira+de+Frades | grep -v Follow"
 
