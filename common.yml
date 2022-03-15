@@ -2,6 +2,9 @@
 user: ofrades
 package:
   - "@Development Tools"
+  - fish
+  - fzf
+  - git
   - gh
   - bat
   - curl
@@ -36,7 +39,7 @@ package:
   - zoxide
   - nodejs
   - neovim
-  - terraform
+#  - terraform
   - jq
   - pipenv
   - pyenv
@@ -80,7 +83,6 @@ copr:
 
 flatpak:
   - com.slack.Slack
-  - com.dropbox.Client
   - com.microsoft.Teams
   - org.flameshot.Flameshot
   - com.calibre_ebook.calibre

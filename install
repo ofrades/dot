@@ -18,8 +18,14 @@ have google-chrome || rpm-ostree install google-chrome-stable
 # install kitty
 have kitty || rpm-ostree install kitty
 
-# install ulauncher
-have ulauncher-toggle || rpm-ostree install ulauncher
+# install fzf
+have fzf || rpm-ostree install fzf
+
+# install exa
+have exa || rpm-ostree install exa
+
+# install tweaks
+have gnome-tweaks || rpm-ostree install gnome-tweaks
 
 # install ansible
 have ansible || rpm-ostree install ansible
