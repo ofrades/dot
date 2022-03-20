@@ -6,25 +6,6 @@
   vars_files:
     - common.yml
   tasks:
-    - name: setup GH cli repo
-      shell: dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-      args:
-        creates: /etc/yum.repos.d/gh-cli.repo
-
-    - name: setup terraform
-      shell: dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
-      args:
-        creates: /etc/yum.repos.d/terraform.repo
-
-    - name: Add Visual Studio Code repo
-      yum_repository:
-        name: code
-        description: Visual Studio Code
-        file: vscode
-        baseurl: https://packages.microsoft.com/yumrepos/vscode
-        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
-        gpgcheck: yes
-
     - name: copr
       community.general.copr:
         name: "{{ item }}"

@@ -5,7 +5,6 @@ package:
   - fish
   - fzf
   - git
-  - gh
   - bat
   - curl
   - wget
@@ -39,7 +38,6 @@ package:
   - zoxide
   - nodejs
   - neovim
-#  - terraform
   - jq
   - pipenv
   - pyenv
@@ -47,8 +45,8 @@ package:
   - cargo
   - lazygit
   - starship
-  - code
   - deno
+  - golang
 
 pip:
   - pyright
@@ -68,6 +66,8 @@ npm:
   - fixjson
   - jsonlint
   - markdownlint-cli
+  - cspell
+  - write-good
 
 brew:
   - circleci

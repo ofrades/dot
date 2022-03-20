@@ -68,7 +68,7 @@
         - ~/.ssh
 
     - name: Create symlinks
-      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig kitty nvmrc
+      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig kitty nvmrc gitignoreglobal
 
     - name: Set ssh permissions
       file:
