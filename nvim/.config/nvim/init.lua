@@ -57,11 +57,17 @@ require("packer").startup(function(use)
 		},
 		run = ":UpdateRemotePlugins",
 		config = function()
-			vim.g["test#strategy"] = "neovim"
-			vim.g["test#neovim#term_position"] = "vert"
+			vim.g["test#strategy"] = {
+				nearest = "neovim",
+				file = "neovim",
+				suite = "neovim",
+			}
+			-- vim.g["test#neovim#term_position"] = "vert"
 			vim.g["test#preserve_screen"] = 1
+			vim.g["test#neovim#start_normal"] = 1
 			vim.g.neoterm_shell = "fish"
-			vim.g.neoterm_default_mod = "vertical"
+			vim.g["ultest_use_pty"] = 1
+			-- vim.g.neoterm_default_mod = "vertical"
 		end,
 	})
 
@@ -92,11 +98,84 @@ require("packer").startup(function(use)
 		end,
 	})
 
-	use({ "tpope/vim-fugitive" })
+	use({
+		"nvim-neorg/neorg",
+		config = function()
+			require("neorg").setup({
+				load = {
+					["core.defaults"] = {},
+					["core.norg.dirman"] = {
+						config = {
+							workspaces = {
+								notes = "~/notes",
+							},
+						},
+					},
+				},
+			})
+		end,
+		requires = "nvim-lua/plenary.nvim",
+	})
 
+	use({
+		"tpope/vim-fugitive",
+		requires = { "tpope/vim-rhubarb", "junegunn/gv.vim" },
+	})
 	use({ "tpope/vim-surround" })
-
 	use({ "tpope/vim-repeat" })
+	use({
+		"tpope/vim-projectionist",
+		config = function()
+			vim.g.projectionist_heuristics = {
+				["package.json"] = {
+					["*.ts"] = {
+						["alternate"] = "{}.spec.ts",
+						["alternate"] = "{}.test.ts",
+					},
+					["*.test.ts"] = {
+						["alternate"] = "{}.ts",
+					},
+					["*.spec.ts"] = {
+						["alternate"] = "{}.ts",
+					},
+					["*.js"] = {
+						["alternate"] = "{}.spec.js",
+						["alternate"] = "{}.test.js",
+					},
+					["*.test.js"] = {
+						["alternate"] = "{}.js",
+					},
+					["*.spec.js"] = {
+						["alternate"] = "{}.js",
+					},
+					["*.tsx"] = {
+						["alternate"] = "{}.spec.tsx",
+						["alternate"] = "{}.test.tsx",
+					},
+					["*.test.tsx"] = {
+						["alternate"] = "{}.tsx",
+					},
+					["*.spec.tsx"] = {
+						["alternate"] = "{}.tsx",
+					},
+					["*.jsx"] = {
+						["alternate"] = "{}.spec.jsx",
+						["alternate"] = "{}.test.jsx",
+					},
+					["*.test.jsx"] = {
+						["alternate"] = "{}.jsx",
+					},
+					["*.spec.jsx"] = {
+						["alternate"] = "{}.jsx",
+					},
+				},
+			}
+		end,
+	})
+	use({ "tpope/vim-dispatch" })
+	use({ "tpope/vim-commentary" })
+
+	use({ "JoosepAlviste/nvim-ts-context-commentstring" })
 
 	use({
 		"hrsh7th/nvim-cmp",
@@ -204,10 +283,6 @@ require("packer").startup(function(use)
 		end,
 	})
 
-	use({ "tpope/vim-commentary" })
-
-	use({ "JoosepAlviste/nvim-ts-context-commentstring" })
-
 	use({
 		"nvim-lualine/lualine.nvim",
 		requires = { "rlch/github-notifications.nvim" },
@@ -241,6 +316,10 @@ require("packer").startup(function(use)
 			vim.cmd("au User LspProgressUpdate let &ro = &ro")
 
 			local config = {
+
+				options = {
+					theme = "github_dimmed",
+				},
 				sections = {
 					lualine_a = { "mode" },
 					lualine_b = { "branch" },
@@ -473,10 +552,10 @@ require("packer").startup(function(use)
 			vim.g.tokyonight_dark_sidebar = true
 			vim.g.tokyonight_dark_float = true
 
-			require("tokyonight").colorscheme()
-			-- require("github-theme").setup({
-			-- 	theme_style = "light",
-			-- })
+			-- require("tokyonight").colorscheme()
+			require("github-theme").setup({
+				theme_style = "dimmed",
+			})
 		end,
 	})
 

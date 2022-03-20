@@ -98,6 +98,8 @@ map("v", "<", "<gv", { noremap = true })
 map("v", ">", ">gv", { noremap = true })
 
 local leader = {
+	a = { "<cmd>:A<cr>", "Projectionist" },
+	A = { "<cmd>:AV<cr>", "Projectionist split" },
 	b = { "<cmd>:Telescope buffers<cr>", "Buffers" },
 	c = { "<cmd>Telescope commands<cr>", "Commands" },
 	d = { "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({ path = '~/dev/' })<CR>", "Dev" },
@@ -108,7 +110,7 @@ local leader = {
 	o = { "<cmd>Telescope oldfiles<cr>", "Recent Files" },
 	p = { "<cmd>Telescope find_files<cr>", "Find Files" },
 	q = { "<cmd>:q<cr>", "Quit" },
-	r = { "<cmd>Telescope repo list<cr>", "Repos" },
+	r = { "<cmd>lua require'telescope'.extensions.repo.list{search_dirs = {'~/dev'}}<cr>", "Repos" },
 	s = {
 		name = "+search",
 		c = { "<cmd>viw:lua require('spectre').open_file_search()<CR>", "Search selected" },
@@ -121,11 +123,14 @@ local leader = {
 	t = {
 		name = "+term/test",
 		b = { "<cmd>:split | term<cr>", "Bottom terminal" },
-		c = { ":vsplit | term code . %<CR>:q<CR>:echo '-> VSCODE'<CR>", "Open in vscode" },
+		v = { "<cmd>:vsplit | term<cr>", "Side terminal" },
 		f = { "<cmd>:TestFile<cr>", "Test File" },
 		n = { "<cmd>:TestNearest<cr>", "Test Nearest" },
+		l = { "<cmd>:TestLast<cr>", "Test Last" },
 		t = { "<cmd>:term<cr>", "Terminal" },
-		v = { "<cmd>:vsplit | term<cr>", "Side terminal" },
+		u = { "<cmd>:Ultest<cr>", "Ultest" },
+		s = { "<cmd>:UltestSummary<cr>", "Ultest Summary" },
+		c = { ":vsplit | term code . %<CR>:q<CR>:echo '-> VSCODE'<CR>", "Open in vscode" },
 	},
 	x = { "<cmd>TroubleToggle<cr>", "Trouble" },
 	w = { "<cmd>:w<cr>", "Save" },

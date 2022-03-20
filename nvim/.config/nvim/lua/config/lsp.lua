@@ -4,7 +4,7 @@ local nvim_lsp = require("lspconfig")
 vim.diagnostic.config({
 	underline = true,
 	update_in_insert = false,
-	virtual_text = true,
+	virtual_text = false,
 	severity_sort = true,
 	float = { border = "single", focusable = false, scope = "line" },
 })
@@ -92,8 +92,8 @@ local function on_attach(client)
 	vim.api.nvim_set_keymap("n", "gR", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
 	vim.api.nvim_set_keymap("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
 	vim.api.nvim_set_keymap("n", "gx", "<cmd>Trouble document_diagnostics<CR>", opts)
-	vim.api.nvim_set_keymap("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
-	vim.api.nvim_set_keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
+	vim.api.nvim_set_keymap("n", "g[", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
+	vim.api.nvim_set_keymap("n", "g]", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
 	vim.api.nvim_set_keymap("n", "<space>lq", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
 	vim.api.nvim_set_keymap("n", "<space>lf", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 end
@@ -157,6 +157,7 @@ require("null-ls").setup({
 		require("null-ls").builtins.diagnostics.markdownlint,
 		require("null-ls").builtins.diagnostics.ansiblelint,
 		require("null-ls").builtins.diagnostics.jsonlint,
+		require("null-ls").builtins.diagnostics.cspell,
 
 		require("null-ls").builtins.code_actions.gitsigns,
 		require("null-ls").builtins.code_actions.eslint_d,
