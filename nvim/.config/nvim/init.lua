@@ -220,7 +220,7 @@ require("packer").startup(function(use)
 			require("nvim-tree").setup({
 				disable_netrw = true,
 				hijack_netrw = true,
-				open_on_setup = true,
+				open_on_setup = false,
 				ignore_ft_on_setup = {},
 				auto_close = false,
 				open_on_tab = true,
@@ -322,15 +322,15 @@ require("packer").startup(function(use)
 				},
 				sections = {
 					lualine_a = { "mode" },
-					lualine_b = { "branch" },
-					lualine_c = {
+					lualine_b = {
 						{ "diagnostics", sources = { "nvim_diagnostic" } },
 						{ "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
 						{ "filename", path = 1, symbols = { modified = "  ", readonly = "" } },
 					},
+					lualine_c = {},
 					lualine_x = {},
 					lualine_y = { lsp_progress },
-					lualine_z = { "os.date('%a %H:%M')" },
+					lualine_z = { "branch" },
 				},
 				inactive_sections = {
 					lualine_a = { "filename" },
