@@ -22,6 +22,7 @@ local map = function(mode, key, cmd, opts, defaults)
 end
 
 presets.objects["a("] = nil
+
 wk.setup({
 	show_help = false,
 	triggers = "auto",
@@ -29,7 +30,6 @@ wk.setup({
 	key_labels = { ["<leader>"] = "SPC" },
 })
 
--- util.nnoremap("zz", ":Z ")
 -- Move to window using the <ctrl> movement keys
 map("n", "<C-h>", "<C-w>h")
 map("n", "<C-j>", "<C-w>j")
@@ -65,8 +65,6 @@ map("n", "]p", ":pu<cr>")
 
 -- Clear search with <esc>
 map("", "<esc>", ":noh<cr>")
-map("n", "gw", "*N")
-map("x", "gw", "*N")
 
 -- Easy start and end of line
 map("n", "H", "^", { noremap = true })
@@ -76,48 +74,37 @@ map("n", "L", "$", { noremap = true })
 map("o", "L", "$", { noremap = true })
 map("x", "L", "$", { noremap = true })
 
-map("n", "<leader>-", ":set background=light<cr>", { noremap = true })
-map("n", "<leader>=", ":set background=dark<cr>", { noremap = true })
-
-map("n", ";", ":", { noremap = true })
-
 -- Nice defaults
 map("n", "Y", "y$", { noremap = true })
 map("n", "D", "d$", { noremap = true })
 map("n", "C", "c$", { noremap = true })
 map("n", "<C-a>", "ggVG", { noremap = true })
+map("n", ";", ":", { noremap = true })
 
 -- file tree
 map("n", "<space><space>", "<cmd>:NvimTreeToggle<cr>", { noremap = true })
-
--- jest nearest
-map("n", "<C-t>", "<cmd>:lua require'config.jest'.run()<cr>", { noremap = true })
 
 -- better indenting
 map("v", "<", "<gv", { noremap = true })
 map("v", ">", ">gv", { noremap = true })
 
 local leader = {
-	b = { "<cmd>:Telescope buffers<cr>", "Buffers" },
+	b = { "<cmd>:Telescope git_bcommits<cr>", "File commits" },
 	c = { "<cmd>Telescope commands<cr>", "Commands" },
 	d = { "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({ path = '~/dev/' })<CR>", "Dev" },
-	e = { "<cmd>lua require 'telescope'.extensions.file_browser.file_browser()<CR>", "File Browser" },
 	f = { "<cmd>Telescope live_grep<cr>", "Find Text" },
 	g = { "<cmd>:LazyGit<cr>", "Lazygit" },
 	n = { "<cmd>enew<cr>", "New File" },
 	o = { "<cmd>Telescope oldfiles<cr>", "Recent Files" },
 	p = { "<cmd>Telescope find_files<cr>", "Find Files" },
 	q = { "<cmd>:q<cr>", "Quit" },
-	r = { "<cmd>lua require'telescope'.extensions.repo.list{search_dirs = {'~/dev'}}<cr>", "Repos" },
 	s = {
 		name = "+search",
-		c = { "<cmd>viw:lua require('spectre').open_file_search()<CR>", "Search selected" },
 		f = { "<cmd>Telescope grep_string<cr>", "Find string under cursor" },
 		s = { "<cmd>:lua require('spectre').open()<CR>", "Search" },
 		v = { "<cmd>:lua require('spectre').open_visual()<CR>", "Search selected" },
 		w = { "<cmd>:lua require('spectre').open_visual({select_word=true})<CR>", "Search word under cursor" },
 	},
-	S = { "<cmd>:PackerSync<cr>", "Packer Sync" },
 	t = {
 		name = "+term/test",
 		a = { "<cmd>:A<cr>", "Projectionist" },
@@ -133,7 +120,6 @@ local leader = {
 	},
 	x = { "<cmd>TroubleToggle<cr>", "Trouble" },
 	w = { "<cmd>:w<cr>", "Save" },
-	z = { "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({ path = '~/notes' })<CR>", "Notes" },
 }
 
 for i = 0, 10 do

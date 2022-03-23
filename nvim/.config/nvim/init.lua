@@ -57,6 +57,7 @@ require("packer").startup(function(use)
 		},
 		run = ":UpdateRemotePlugins",
 		config = function()
+			vim.g["test#neovim#start_normal"] = 1
 			vim.g["test#strategy"] = {
 				nearest = "neovim",
 				file = "neovim",
@@ -68,9 +69,6 @@ require("packer").startup(function(use)
 				suite = "--bail",
 			}
 			-- vim.g["test#neovim#term_position"] = "vert"
-			vim.g["test#preserve_screen"] = 1
-			vim.g["test#neovim#start_normal"] = 1
-			vim.g.neoterm_shell = "fish"
 			-- vim.g.neoterm_default_mod = "vertical"
 		end,
 	})
@@ -100,25 +98,6 @@ require("packer").startup(function(use)
 				},
 			})
 		end,
-	})
-
-	use({
-		"nvim-neorg/neorg",
-		config = function()
-			require("neorg").setup({
-				load = {
-					["core.defaults"] = {},
-					["core.norg.dirman"] = {
-						config = {
-							workspaces = {
-								notes = "~/notes",
-							},
-						},
-					},
-				},
-			})
-		end,
-		requires = "nvim-lua/plenary.nvim",
 	})
 
 	use({
@@ -192,10 +171,10 @@ require("packer").startup(function(use)
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-nvim-lsp-signature-help",
+			"saadparwaiz1/cmp_luasnip",
 			"f3fora/cmp-spell",
 			"petertriho/cmp-git",
 			"lukas-reineke/cmp-rg",
-			"onsails/lspkind-nvim",
 			{ "tzachar/cmp-tabnine", run = "./install.sh" },
 			{
 				"L3MON4D3/LuaSnip",
@@ -204,7 +183,6 @@ require("packer").startup(function(use)
 					require("config.snippets")
 				end,
 			},
-			"saadparwaiz1/cmp_luasnip",
 			"rafamadriz/friendly-snippets",
 			{
 				"windwp/nvim-autopairs",
@@ -214,8 +192,6 @@ require("packer").startup(function(use)
 			},
 		},
 	})
-
-	use({ "kevinhwang91/nvim-bqf", ft = "qf" })
 
 	use({
 		"kyazdani42/nvim-tree.lua",
@@ -259,27 +235,19 @@ require("packer").startup(function(use)
 						custom_only = false,
 						list = {
 							{ key = { "<CR>", "o", "l" }, cb = tree_cb("edit") },
-							{ key = "<C-]>", cb = tree_cb("cd") },
-							{ key = "<C-[>", cb = tree_cb("dir_up") },
 							{ key = "<C-v>", cb = tree_cb("vsplit") },
-							{ key = "<C-x>", cb = tree_cb("split") },
+							{ key = "<C-s>", cb = tree_cb("split") },
 							{ key = "<C-t>", cb = tree_cb("tabnew") },
 							{ key = "<BS>", cb = tree_cb("close_node") },
 							{ key = "<S-CR>", cb = tree_cb("close_node") },
 							{ key = "h", cb = tree_cb("close_node") },
-							{ key = "<Tab>", cb = tree_cb("preview") },
-							{ key = "I", cb = tree_cb("toggle_ignored") },
-							{ key = "H", cb = tree_cb("toggle_dotfiles") },
 							{ key = "R", cb = tree_cb("refresh") },
 							{ key = "a", cb = tree_cb("create") },
 							{ key = "d", cb = tree_cb("remove") },
 							{ key = "r", cb = tree_cb("rename") },
-							{ key = "<C-r>", cb = tree_cb("full_rename") },
 							{ key = "x", cb = tree_cb("cut") },
 							{ key = "c", cb = tree_cb("copy") },
 							{ key = "p", cb = tree_cb("paste") },
-							{ key = "[c", cb = tree_cb("prev_git_item") },
-							{ key = "]c", cb = tree_cb("next_git_item") },
 							{ key = "q", cb = tree_cb("close") },
 						},
 					},
@@ -290,7 +258,6 @@ require("packer").startup(function(use)
 
 	use({
 		"nvim-lualine/lualine.nvim",
-		requires = { "rlch/github-notifications.nvim" },
 		config = function()
 			local function lsp_progress(_, is_active)
 				if not is_active then
@@ -324,6 +291,8 @@ require("packer").startup(function(use)
 
 				options = {
 					theme = "github_dimmed",
+					section_separators = { left = "", right = "" },
+					component_separators = { left = "", right = "" },
 				},
 				sections = {
 					lualine_a = { "mode" },
@@ -426,13 +395,9 @@ require("packer").startup(function(use)
 		"nvim-telescope/telescope.nvim",
 		requires = {
 			"nvim-lua/plenary.nvim",
-			"nvim-telescope/telescope-file-browser.nvim",
-			"cljoly/telescope-repo.nvim",
 		},
 		config = function()
 			local actions = require("telescope.actions")
-			require("telescope").load_extension("repo")
-			require("telescope").load_extension("file_browser")
 			require("telescope").setup({
 				defaults = {
 					mappings = {
@@ -445,7 +410,7 @@ require("packer").startup(function(use)
 		end,
 	})
 
-	use({ "lukas-reineke/indent-blankline.nvim" })
+	-- use({ "lukas-reineke/indent-blankline.nvim" })
 
 	use({ "sindrets/diffview.nvim" })
 
@@ -467,44 +432,32 @@ require("packer").startup(function(use)
 		"lewis6991/gitsigns.nvim",
 		config = function()
 			require("gitsigns").setup({
-				signs = {
-					add = {
-						hl = "GitSignsAdd",
-						text = "▍",
-					},
-					change = {
-						hl = "GitSignsChange",
-						text = "▍",
-					},
-					delete = {
-						hl = "GitSignsDelete",
-						text = "▸",
-					},
-					topdelete = {
-						hl = "GitSignsDelete",
-						text = "▾",
-					},
-					changedelete = {
-						hl = "GitSignsChange",
-						text = "▍",
-					},
-				},
+				-- signs = {
+				-- 	add = {
+				-- 		hl = "GitSignsAdd",
+				-- 		text = "▍",
+				-- 	},
+				-- 	change = {
+				-- 		hl = "GitSignsChange",
+				-- 		text = "▍",
+				-- 	},
+				-- 	delete = {
+				-- 		hl = "GitSignsDelete",
+				-- 		text = "▸",
+				-- 	},
+				-- 	topdelete = {
+				-- 		hl = "GitSignsDelete",
+				-- 		text = "▾",
+				-- 	},
+				-- 	changedelete = {
+				-- 		hl = "GitSignsChange",
+				-- 		text = "▍",
+				-- 	},
+				-- },
 				keymaps = {
 					noremap = true,
-					["n ]c"] = { expr = true, "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'" },
-					["n [c"] = { expr = true, "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'" },
-					["n <leader>hs"] = "<cmd>Gitsigns stage_hunk<CR>",
-					["v <leader>hs"] = ":Gitsigns stage_hunk<CR>",
-					["n <leader>hu"] = "<cmd>Gitsigns undo_stage_hunk<CR>",
-					["n <leader>hr"] = "<cmd>Gitsigns reset_hunk<CR>",
-					["v <leader>hr"] = ":Gitsigns reset_hunk<CR>",
-					["n <leader>hR"] = "<cmd>Gitsigns reset_buffer<CR>",
 					["n <leader>hp"] = "<cmd>Gitsigns preview_hunk<CR>",
 					["n <leader>hb"] = '<cmd>lua require"gitsigns".blame_line{full=true}<CR>',
-					["n <leader>hS"] = "<cmd>Gitsigns stage_buffer<CR>",
-					["n <leader>hU"] = "<cmd>Gitsigns reset_buffer_index<CR>",
-					["o ih"] = ":<C-U>Gitsigns select_hunk<CR>",
-					["x ih"] = ":<C-U>Gitsigns select_hunk<CR>",
 				},
 			})
 		end,
@@ -517,7 +470,6 @@ require("packer").startup(function(use)
 	use({
 		"norcalli/nvim-colorizer.lua",
 		requires = {
-			"folke/tokyonight.nvim",
 			"projekt0n/github-nvim-theme",
 		},
 		config = function()
@@ -538,33 +490,11 @@ require("packer").startup(function(use)
 				[[autocmd ColorScheme * lua package.loaded['colorizer'] = nil; require('colorizer').setup(); require('colorizer').attach_to_buffer(0)]]
 			)
 
-			vim.g.tokyonight_style = "storm"
-
-			vim.g.tokyonight_sidebars = {
-				"qf",
-				"vista_kind",
-				"terminal",
-				"packer",
-				"spectre_panel",
-				"NeogitStatus",
-				"help",
-			}
-			vim.g.tokyonight_italic_comments = true
-			vim.g.tokyonight_italic_keywords = true
-			vim.g.tokyonight_italic_functions = false
-			vim.g.tokyonight_italic_variables = false
-			vim.g.tokyonight_transparent = false
-			vim.g.tokyonight_dark_sidebar = true
-			vim.g.tokyonight_dark_float = true
-
-			-- require("tokyonight").colorscheme()
 			require("github-theme").setup({
 				theme_style = "dimmed",
 			})
 		end,
 	})
-
-	use({ "ggandor/lightspeed.nvim" })
 
 	use({
 		"folke/todo-comments.nvim",
