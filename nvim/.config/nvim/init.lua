@@ -62,11 +62,15 @@ require("packer").startup(function(use)
 				file = "neovim",
 				suite = "neovim",
 			}
+			vim.g["test#javascript#jest#options"] = {
+				nearest = "--watch",
+				file = "--watch",
+				suite = "--bail",
+			}
 			-- vim.g["test#neovim#term_position"] = "vert"
 			vim.g["test#preserve_screen"] = 1
 			vim.g["test#neovim#start_normal"] = 1
 			vim.g.neoterm_shell = "fish"
-			vim.g["ultest_use_pty"] = 1
 			-- vim.g.neoterm_default_mod = "vertical"
 		end,
 	})
@@ -191,15 +195,16 @@ require("packer").startup(function(use)
 			"f3fora/cmp-spell",
 			"petertriho/cmp-git",
 			"lukas-reineke/cmp-rg",
-			"saadparwaiz1/cmp_luasnip",
 			"onsails/lspkind-nvim",
 			{ "tzachar/cmp-tabnine", run = "./install.sh" },
 			{
 				"L3MON4D3/LuaSnip",
+				wants = "friendly-snippets",
 				config = function()
 					require("config.snippets")
 				end,
 			},
+			"saadparwaiz1/cmp_luasnip",
 			"rafamadriz/friendly-snippets",
 			{
 				"windwp/nvim-autopairs",

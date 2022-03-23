@@ -98,8 +98,6 @@ map("v", "<", "<gv", { noremap = true })
 map("v", ">", ">gv", { noremap = true })
 
 local leader = {
-	a = { "<cmd>:A<cr>", "Projectionist" },
-	A = { "<cmd>:AV<cr>", "Projectionist split" },
 	b = { "<cmd>:Telescope buffers<cr>", "Buffers" },
 	c = { "<cmd>Telescope commands<cr>", "Commands" },
 	d = { "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({ path = '~/dev/' })<CR>", "Dev" },
@@ -122,15 +120,16 @@ local leader = {
 	S = { "<cmd>:PackerSync<cr>", "Packer Sync" },
 	t = {
 		name = "+term/test",
+		a = { "<cmd>:A<cr>", "Projectionist" },
 		b = { "<cmd>:split | term<cr>", "Bottom terminal" },
-		v = { "<cmd>:vsplit | term<cr>", "Side terminal" },
+		c = { ":vsplit | term code . %<CR>:q<CR>:echo '-> VSCODE'<CR>", "Open in vscode" },
 		f = { "<cmd>:TestFile<cr>", "Test File" },
-		n = { "<cmd>:TestNearest<cr>", "Test Nearest" },
 		l = { "<cmd>:TestLast<cr>", "Test Last" },
+		n = { "<cmd>:TestNearest<cr>", "Test Nearest" },
+		s = { "<cmd>:AV<cr>", "Projectionist split" },
+		v = { "<cmd>:vsplit | term<cr>", "Side terminal" },
 		t = { "<cmd>:term<cr>", "Terminal" },
 		u = { "<cmd>:Ultest<cr>", "Ultest" },
-		s = { "<cmd>:UltestSummary<cr>", "Ultest Summary" },
-		c = { ":vsplit | term code . %<CR>:q<CR>:echo '-> VSCODE'<CR>", "Open in vscode" },
 	},
 	x = { "<cmd>TroubleToggle<cr>", "Trouble" },
 	w = { "<cmd>:w<cr>", "Save" },

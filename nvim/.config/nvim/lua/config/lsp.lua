@@ -78,7 +78,7 @@ local function on_attach(client)
 	vim.api.nvim_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
 	vim.api.nvim_set_keymap("n", "gh", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
 	vim.api.nvim_set_keymap("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
-	vim.api.nvim_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+	vim.api.nvim_set_keymap("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 	vim.api.nvim_set_keymap("n", "<space>lwa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
 	vim.api.nvim_set_keymap("n", "<space>lwr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
 	vim.api.nvim_set_keymap(
@@ -157,7 +157,7 @@ require("null-ls").setup({
 		require("null-ls").builtins.diagnostics.markdownlint,
 		require("null-ls").builtins.diagnostics.ansiblelint,
 		require("null-ls").builtins.diagnostics.jsonlint,
-		require("null-ls").builtins.diagnostics.cspell,
+		-- require("null-ls").builtins.diagnostics.cspell,
 
 		require("null-ls").builtins.code_actions.gitsigns,
 		require("null-ls").builtins.code_actions.eslint_d,

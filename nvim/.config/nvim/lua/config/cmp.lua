@@ -1,13 +1,16 @@
 local luasnip = require("luasnip")
-
 local cmp = require("cmp")
-
 local lspkind = require("lspkind")
 
 cmp.setup({
-	formatting = {
-		format = lspkind.cmp_format({ with_text = false, maxwidth = 50 }),
+	completion = {
+		completeopt = "menuone,noinsert",
 	},
+	-- formatting = {
+	-- 	format = require("lspkind").cmp_format({
+	-- 		mode = "symbol",
+	-- 	}),
+	-- },
 	experimental = {
 		native_menu = false,
 		ghost_text = true,
@@ -35,7 +38,7 @@ cmp.setup({
 	},
 	sources = {
 		{ name = "nvim_lsp" },
-		{ name = "luasnip" },
+		{ name = "luasnip", priority = 999 },
 		{ name = "path" },
 		{ name = "buffer" },
 		{ name = "spell" },

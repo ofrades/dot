@@ -1,0 +1,14 @@
+{
+  "name": "snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "javascript",
+          "javascriptreact"
+        ],
+        "path": "javascript.json"
+      }
+    ]
+  }
+}
