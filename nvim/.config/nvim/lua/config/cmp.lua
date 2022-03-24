@@ -1,16 +1,10 @@
 local luasnip = require("luasnip")
 local cmp = require("cmp")
-local lspkind = require("lspkind")
 
 cmp.setup({
 	completion = {
 		completeopt = "menuone,noinsert",
 	},
-	-- formatting = {
-	-- 	format = require("lspkind").cmp_format({
-	-- 		mode = "symbol",
-	-- 	}),
-	-- },
 	experimental = {
 		native_menu = false,
 		ghost_text = true,

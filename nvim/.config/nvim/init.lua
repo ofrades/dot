@@ -395,9 +395,11 @@ require("packer").startup(function(use)
 		"nvim-telescope/telescope.nvim",
 		requires = {
 			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope-file-browser.nvim",
 		},
 		config = function()
 			local actions = require("telescope.actions")
+			require("telescope").load_extension("file_browser")
 			require("telescope").setup({
 				defaults = {
 					mappings = {
@@ -492,6 +494,8 @@ require("packer").startup(function(use)
 
 			require("github-theme").setup({
 				theme_style = "dimmed",
+				function_style = "italic",
+				keyword_style = "italic",
 			})
 		end,
 	})
