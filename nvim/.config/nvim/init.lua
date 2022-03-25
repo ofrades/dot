@@ -25,7 +25,6 @@ require("packer").startup(function(use)
 		"neovim/nvim-lspconfig",
 		requires = {
 			"nvim-lua/plenary.nvim",
-			"jose-elias-alvarez/nvim-lsp-ts-utils",
 			"jose-elias-alvarez/null-ls.nvim",
 			"ray-x/lsp_signature.nvim",
 		},
@@ -35,41 +34,31 @@ require("packer").startup(function(use)
 		end,
 	})
 
+	use({ "kassio/neoterm" })
 	use({
-		"akinsho/nvim-toggleterm.lua",
+		"ggandor/leap.nvim",
 		config = function()
-			require("toggleterm").setup({
-				open_mapping = [[<c-\>]],
-				shading_factor = 0.3,
-				size = vim.o.columns * 0.3,
-				start_in_insert = true,
-				direction = "vertical",
-			})
-
-			vim.cmd([[tnoremap <esc> <C-\><C-N>]])
+			require("leap").set_default_keymaps()
 		end,
 	})
 
 	use({
 		"vim-test/vim-test",
-		requires = {
-			"rcarriga/vim-ultest",
-		},
 		run = ":UpdateRemotePlugins",
 		config = function()
 			vim.g["test#neovim#start_normal"] = 1
+			vim.g["neoterm_autoscroll"] = 1
 			vim.g["test#strategy"] = {
-				nearest = "neovim",
-				file = "neovim",
-				suite = "neovim",
+				nearest = "neoterm",
+				file = "neoterm",
+				suite = "neoterm",
 			}
 			vim.g["test#javascript#jest#options"] = {
 				nearest = "--watch",
 				file = "--watch",
 				suite = "--bail",
 			}
-			-- vim.g["test#neovim#term_position"] = "vert"
-			-- vim.g.neoterm_default_mod = "vertical"
+			vim.g.neoterm_default_mod = "botright"
 		end,
 	})
 
@@ -412,8 +401,6 @@ require("packer").startup(function(use)
 		end,
 	})
 
-	-- use({ "lukas-reineke/indent-blankline.nvim" })
-
 	use({ "sindrets/diffview.nvim" })
 
 	use({
@@ -434,28 +421,6 @@ require("packer").startup(function(use)
 		"lewis6991/gitsigns.nvim",
 		config = function()
 			require("gitsigns").setup({
-				-- signs = {
-				-- 	add = {
-				-- 		hl = "GitSignsAdd",
-				-- 		text = "▍",
-				-- 	},
-				-- 	change = {
-				-- 		hl = "GitSignsChange",
-				-- 		text = "▍",
-				-- 	},
-				-- 	delete = {
-				-- 		hl = "GitSignsDelete",
-				-- 		text = "▸",
-				-- 	},
-				-- 	topdelete = {
-				-- 		hl = "GitSignsDelete",
-				-- 		text = "▾",
-				-- 	},
-				-- 	changedelete = {
-				-- 		hl = "GitSignsChange",
-				-- 		text = "▍",
-				-- 	},
-				-- },
 				keymaps = {
 					noremap = true,
 					["n <leader>hp"] = "<cmd>Gitsigns preview_hunk<CR>",
@@ -539,10 +504,6 @@ end)
 local cmd = vim.cmd
 local indent = 2
 
---[[ vim.bo.expandtab = true -- Use spaces instead of tabs
-vim.bo.shiftwidth = indent -- Size of an indent
-vim.bo.smartindent = true -- Insert indents automatically
-vim.bo.undofile = true ]]
 vim.g.mapleader = " "
 
 vim.opt.backup = false -- creates a backupt file
@@ -569,7 +530,7 @@ vim.opt.joinspaces = false -- No double spaces with join after a dot
 vim.opt.list = true -- Show some invisible characters (tabs...
 vim.opt.number = true -- Print line number
 vim.opt.relativenumber = false -- Relative line numbers
--- vim.opt.scrolloff = 4 -- Lines of context
+vim.opt.scrolloff = 5 -- Lines of context
 vim.opt.shiftround = true -- Round indent
 vim.opt.shiftwidth = indent -- Size of an indent
 vim.opt.sidescrolloff = 8 -- Columns of context

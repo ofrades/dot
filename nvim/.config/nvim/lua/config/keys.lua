@@ -89,15 +89,28 @@ map("v", "<", "<gv", { noremap = true })
 map("v", ">", ">gv", { noremap = true })
 
 local leader = {
-	b = { "<cmd>:Telescope git_bcommits<cr>", "File commits" },
+	v = { "<cmd>:vertical Ttoggle<cr>", "Terminal side" },
+	b = { "<cmd>:botright Ttoggle | resize 40<cr>", "Terminal bottom" },
 	c = { "<cmd>Telescope commands<cr>", "Commands" },
 	d = { "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({ path = '~/dev/' })<CR>", "Dev" },
 	f = { "<cmd>Telescope live_grep<cr>", "Find Text" },
 	g = { "<cmd>:LazyGit<cr>", "Lazygit" },
-	n = { "<cmd>enew<cr>", "New File" },
+	n = { "<cmd>:vsplit | enew<cr>", "New File" },
 	o = { "<cmd>Telescope oldfiles<cr>", "Recent Files" },
 	p = { "<cmd>Telescope find_files<cr>", "Find Files" },
 	q = { "<cmd>:q<cr>", "Quit" },
+	V = { ":vsplit | term code . %<CR>:q<CR>:echo '-> VSCODE'<CR>", "Open in vscode" },
+	x = { "<cmd>TroubleToggle<cr>", "Trouble" },
+	w = { "<cmd>:w<cr>", "Save" },
+	t = {
+		name = "+test",
+		a = { "<cmd>:A<cr>", "Open test/source file" },
+		v = { "<cmd>:AV<cr>", "Open test/source file in vsplit" },
+		f = { "<cmd>:TestFile<cr>", "Test File" },
+		l = { "<cmd>:TestLast<cr>", "Test Last" },
+		n = { "<cmd>:TestNearest<cr>", "Test Nearest" },
+		s = { "<cmd>:TestSuite<cr>", "Test Suite" },
+	},
 	s = {
 		name = "+search",
 		f = { "<cmd>Telescope grep_string<cr>", "Find string under cursor" },
@@ -105,21 +118,6 @@ local leader = {
 		v = { "<cmd>:lua require('spectre').open_visual()<CR>", "Search selected" },
 		w = { "<cmd>:lua require('spectre').open_visual({select_word=true})<CR>", "Search word under cursor" },
 	},
-	t = {
-		name = "+term/test",
-		a = { "<cmd>:A<cr>", "Open test/source file" },
-		A = { "<cmd>:AV<cr>", "Open test/source file in split" },
-		c = { ":vsplit | term code . %<CR>:q<CR>:echo '-> VSCODE'<CR>", "Open in vscode" },
-		f = { "<cmd>:TestFile<cr>", "Test File" },
-		l = { "<cmd>:TestLast<cr>", "Test Last" },
-		n = { "<cmd>:TestNearest<cr>", "Test Nearest" },
-		s = { "<cmd>:TestSuite<cr>", "Test Suite" },
-		b = { "<cmd>:split | term<cr>", "Bottom terminal" },
-		v = { "<cmd>:vsplit | term<cr>", "Side terminal" },
-		t = { "<cmd>:term<cr>", "Terminal" },
-	},
-	x = { "<cmd>TroubleToggle<cr>", "Trouble" },
-	w = { "<cmd>:w<cr>", "Save" },
 }
 
 for i = 0, 10 do

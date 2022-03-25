@@ -25,51 +25,9 @@ local function on_attach(client)
 		client.resolved_capabilities.document_formatting = false
 		client.resolved_capabilities.document_range_formatting = false
 	end
-	if client.name == "typescript" or client.name == "tsserver" then
+	if client.name == "tsserver" then
 		client.resolved_capabilities.document_formatting = false
 		client.resolved_capabilities.document_range_formatting = false
-		local ts_utils = require("nvim-lsp-ts-utils")
-
-		-- defaults
-		ts_utils.setup({
-			debug = false,
-			disable_commands = false,
-			enable_import_on_completion = false,
-
-			-- import all
-			import_all_timeout = 5000, -- ms
-			-- lower numbers = higher priority
-			import_all_priorities = {
-				same_file = 1, -- add to existing import statement
-				local_files = 2, -- git files or files with relative path markers
-				buffer_content = 3, -- loaded buffer content
-				buffers = 4, -- loaded buffer names
-			},
-			import_all_scan_buffers = 100,
-			import_all_select_source = false,
-
-			-- filter diagnostics
-			filter_out_diagnostics_by_severity = {},
-			filter_out_diagnostics_by_code = {},
-
-			-- inlay hints
-			auto_inlay_hints = true,
-			inlay_hints_highlight = "Comment",
-
-			-- update imports on file move
-			update_imports_on_move = true,
-			require_confirmation_on_move = false,
-			watch_dir = nil,
-		})
-
-		-- required to fix code action ranges and filter diagnostics
-		ts_utils.setup_client(client)
-
-		-- no default maps, so you may want to define some here
-
-		vim.api.nvim_set_keymap("n", "gts", ":TSLspOrganize<CR>", opts)
-		vim.api.nvim_set_keymap("n", "gtr", ":TSLspRenameFile<CR>", opts)
-		vim.api.nvim_set_keymap("n", "gti", ":TSLspImportAll<CR>", opts)
 	end
 
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -97,26 +55,6 @@ local function on_attach(client)
 	vim.api.nvim_set_keymap("n", "<space>lq", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
 	vim.api.nvim_set_keymap("n", "<space>lf", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 end
-
--- l = {
--- 	name = "+lsp",
--- 	r = { "<cmd>Telescope lsp_references<cr>", "References" },
--- 	d = { "<cmd>Telescope lsp_definitions<cr>", "Definitions" },
--- 	D = { "<cmd>Telescope lsp_declarations<cr>", "Declarations" },
--- 	t = { "<cmd>Telescope lsp_typedefs<cr>", "Type Definitions" },
--- 	i = { "<cmd>Telescope lsp_implementations<cr>", "Implementations" },
--- 	s = {
--- 		name = "+symbols",
--- 		d = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols" },
--- 		w = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Workspace Symbols" },
--- 	},
--- 	c = { "<cmd>Telescope code_actions<cr>", "Code Actions" },
--- 	x = {
--- 		name = "+diagnostics",
--- 		d = { "<cmd>Telescope lsp_document_diagnostics<cr>", "Document Diagnostics" },
--- 		w = { "<cmd>Telescope lsp_workspace_diagnostics<cr>", "Workspace Diagnostics" },
--- 	},
--- },
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
