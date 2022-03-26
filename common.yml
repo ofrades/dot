@@ -42,6 +42,7 @@ package:
   - pipenv
   - pyenv
   - rust
+  - rustfmt
   - cargo
   - lazygit
   - starship
@@ -62,6 +63,7 @@ npm:
   - prettier
   - typescript-language-server
   - vscode-langservers-extracted
+  - bash-language-server
   - serverless
   - fixjson
   - jsonlint
@@ -71,8 +73,10 @@ npm:
 
 brew:
   - circleci
-  - broot
   - aws-vault
+  - rust-analyzer
+  - gopls
+  - golangci-lint
 
 copr:
   - agriffis/neovim-nightly

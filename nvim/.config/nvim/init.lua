@@ -385,10 +385,12 @@ require("packer").startup(function(use)
 		requires = {
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope-file-browser.nvim",
+			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
 		},
 		config = function()
 			local actions = require("telescope.actions")
 			require("telescope").load_extension("file_browser")
+			require("telescope").load_extension("fzf")
 			require("telescope").setup({
 				defaults = {
 					mappings = {

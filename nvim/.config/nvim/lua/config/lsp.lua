@@ -29,6 +29,10 @@ local function on_attach(client)
 		client.resolved_capabilities.document_formatting = false
 		client.resolved_capabilities.document_range_formatting = false
 	end
+	if client.name == "rust_analyzer" then
+		client.resolved_capabilities.document_formatting = false
+		client.resolved_capabilities.document_range_formatting = false
+	end
 
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
 	vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
@@ -68,11 +72,14 @@ local options = {
 }
 
 local servers = {
+	"bashls",
 	"tsserver",
 	"cssls",
 	"jsonls",
 	"html",
 	"pyright",
+	"gopls",
+	"rust_analyzer",
 }
 for _, lsp in ipairs(servers) do
 	nvim_lsp[lsp].setup(options)
@@ -88,6 +95,7 @@ require("null-ls").setup({
 		require("null-ls").builtins.formatting.terraform_fmt,
 		require("null-ls").builtins.formatting.black,
 		require("null-ls").builtins.formatting.fixjson,
+		require("null-ls").builtins.formatting.rustfmt,
 
 		require("null-ls").builtins.diagnostics.eslint_d,
 		require("null-ls").builtins.diagnostics.flake8,
@@ -95,6 +103,7 @@ require("null-ls").setup({
 		require("null-ls").builtins.diagnostics.markdownlint,
 		require("null-ls").builtins.diagnostics.ansiblelint,
 		require("null-ls").builtins.diagnostics.jsonlint,
+		require("null-ls").builtins.diagnostics.golangci_lint,
 		-- require("null-ls").builtins.diagnostics.cspell,
 
 		require("null-ls").builtins.code_actions.gitsigns,
