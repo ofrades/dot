@@ -19,7 +19,7 @@ toggle-maximized=['<Super>m']
 
 [org/gnome/mutter]
 center-new-windows=true
-workspaces-only-on-primary=false
+workspaces-only-on-primary=true
 
 [org/gnome/settings-daemon/plugins/media-keys]
 custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/']
@@ -28,18 +28,14 @@ mic-mute=['<Super>BackSpace']
 terminal=['<Super>t']
 www=['<Super>b']
 
-[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
-binding='<Super>s'
-command='flatpak run --branch=stable --arch=x86_64 --command=flameshot org.flameshot.Flameshot gui --delay 0'
-name='flameshot'
-
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Super>t'
-command='kitty'
+command='kitty toolbox enter'
 name='terminal'
 
 [org/gnome/shell/keybindings]
 focus-active-notification=['<Alt>n']
+show-screenshot-ui=['<Super>s']
 toggle-message-tray=['<Super>n']
 toggle-overview=['<Alt>s']
 
