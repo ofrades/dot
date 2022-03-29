@@ -3,6 +3,7 @@ user: ofrades
 package:
   - "@Development Tools"
   - fish
+  - tmux
   - fzf
   - git
   - bat

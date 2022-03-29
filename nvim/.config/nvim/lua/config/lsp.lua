@@ -29,6 +29,10 @@ local function on_attach(client)
 		client.resolved_capabilities.document_formatting = false
 		client.resolved_capabilities.document_range_formatting = false
 	end
+	if client.name == "denols" then
+		client.resolved_capabilities.document_formatting = false
+		client.resolved_capabilities.document_range_formatting = false
+	end
 	if client.name == "rust_analyzer" then
 		client.resolved_capabilities.document_formatting = false
 		client.resolved_capabilities.document_range_formatting = false
@@ -73,7 +77,6 @@ local options = {
 
 local servers = {
 	"bashls",
-	"tsserver",
 	"cssls",
 	"jsonls",
 	"html",
@@ -81,9 +84,25 @@ local servers = {
 	"gopls",
 	"rust_analyzer",
 }
+
 for _, lsp in ipairs(servers) do
 	nvim_lsp[lsp].setup(options)
 end
+
+nvim_lsp.denols.setup({
+	on_attach = on_attach,
+	capabilities = capabilities,
+	root_dir = nvim_lsp.util.root_pattern("deno.json"),
+	init_options = {
+		lint = true,
+	},
+})
+
+nvim_lsp.tsserver.setup({
+	on_attach = on_attach,
+	capabilities = capabilities,
+	root_dir = nvim_lsp.util.root_pattern("package.json"),
+})
 
 require("null-ls").setup({
 	sources = {
@@ -96,6 +115,7 @@ require("null-ls").setup({
 		require("null-ls").builtins.formatting.black,
 		require("null-ls").builtins.formatting.fixjson,
 		require("null-ls").builtins.formatting.rustfmt,
+		-- require("null-ls").builtins.formatting.deno_fmt,
 
 		require("null-ls").builtins.diagnostics.eslint_d,
 		require("null-ls").builtins.diagnostics.flake8,

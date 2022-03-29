@@ -30,7 +30,7 @@ www=['<Super>b']
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Super>t'
-command='kitty toolbox enter'
+command='alacritty toolbox enter'
 name='terminal'
 
 [org/gnome/shell/keybindings]

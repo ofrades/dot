@@ -78,11 +78,14 @@ map("x", "L", "$", { noremap = true })
 map("n", "Y", "y$", { noremap = true })
 map("n", "D", "d$", { noremap = true })
 map("n", "C", "c$", { noremap = true })
-map("n", "<C-a>", "ggVG", { noremap = true })
 map("n", ";", ":", { noremap = true })
 
 -- file tree
 map("n", "<space><space>", "<cmd>:NvimTreeToggle<cr>", { noremap = true })
+
+-- harpoon
+map("n", "<leader>ha", "<cmd>:lua require('harpoon.mark').add_file()<cr>", { noremap = true })
+map("n", "<leader>ht", "<cmd>:lua require('harpoon.ui').toggle_quick_menu()<cr>", { noremap = true })
 
 -- better indenting
 map("v", "<", "<gv", { noremap = true })
@@ -90,7 +93,7 @@ map("v", ">", ">gv", { noremap = true })
 
 local leader = {
 	v = { "<cmd>:vertical Ttoggle<cr>", "Terminal side" },
-	b = { "<cmd>:botright Ttoggle | resize 40<cr>", "Terminal bottom" },
+	b = { "<cmd>:botright Ttoggle<cr>", "Terminal bottom" },
 	c = { "<cmd>Telescope commands<cr>", "Commands" },
 	d = { "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({ path = '~/dev/' })<CR>", "Dev" },
 	f = { "<cmd>Telescope live_grep<cr>", "Find Text" },
@@ -99,12 +102,11 @@ local leader = {
 	o = { "<cmd>Telescope oldfiles<cr>", "Recent Files" },
 	p = { "<cmd>Telescope find_files<cr>", "Find Files" },
 	q = { "<cmd>:q<cr>", "Quit" },
-	V = { ":vsplit | term code . %<CR>:q<CR>:echo '-> VSCODE'<CR>", "Open in vscode" },
 	x = { "<cmd>TroubleToggle<cr>", "Trouble" },
 	w = { "<cmd>:w<cr>", "Save" },
 	t = {
 		name = "+test",
-		a = { "<cmd>:A<cr>", "Open test/source file" },
+		a = { "<cmd>:A<cr>", "Toggle test/source file" },
 		v = { "<cmd>:AV<cr>", "Open test/source file in vsplit" },
 		f = { "<cmd>:TestFile<cr>", "Test File" },
 		l = { "<cmd>:TestLast<cr>", "Test Last" },

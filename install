@@ -15,8 +15,8 @@ have stow || rpm-ostree install stow
 # install chrome
 have google-chrome || rpm-ostree install google-chrome-stable
 
-# install kitty
-have kitty || rpm-ostree install kitty
+# install alacritty
+have alacritty || rpm-ostree install alacritty
 
 # install fzf
 have fzf || rpm-ostree install fzf

@@ -22,6 +22,14 @@ require("packer").startup(function(use)
 	use({ "wbthomason/packer.nvim" })
 
 	use({
+		"goolord/alpha-nvim",
+		requires = { "kyazdani42/nvim-web-devicons" },
+		config = function()
+			require("alpha").setup(require("alpha.themes.startify").config)
+		end,
+	})
+
+	use({
 		"neovim/nvim-lspconfig",
 		requires = {
 			"nvim-lua/plenary.nvim",
@@ -46,7 +54,6 @@ require("packer").startup(function(use)
 		"vim-test/vim-test",
 		run = ":UpdateRemotePlugins",
 		config = function()
-			vim.g["test#neovim#start_normal"] = 1
 			vim.g["neoterm_autoscroll"] = 1
 			vim.g["test#strategy"] = {
 				nearest = "neoterm",
@@ -141,6 +148,14 @@ require("packer").startup(function(use)
 						["alternate"] = "{}.jsx",
 					},
 				},
+				["go.mod"] = {
+					["*.go"] = {
+						["alternate"] = "{}_test.go",
+					},
+					["*_test.go"] = {
+						["alternate"] = "{}.go",
+					},
+				},
 			}
 		end,
 	})
@@ -160,6 +175,7 @@ require("packer").startup(function(use)
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-nvim-lsp-signature-help",
+			"andersevenrud/cmp-tmux",
 			"saadparwaiz1/cmp_luasnip",
 			"f3fora/cmp-spell",
 			"petertriho/cmp-git",
@@ -248,40 +264,11 @@ require("packer").startup(function(use)
 	use({
 		"nvim-lualine/lualine.nvim",
 		config = function()
-			local function lsp_progress(_, is_active)
-				if not is_active then
-					return
-				end
-				local messages = vim.lsp.util.get_progress_messages()
-				if #messages == 0 then
-					return ""
-				end
-				-- dump(messages)
-				local status = {}
-				for _, msg in pairs(messages) do
-					local title = ""
-					if msg.title then
-						title = msg.title
-					end
-					-- if msg.message then
-					--   title = title .. " " .. msg.message
-					-- end
-					table.insert(status, (msg.percentage or 0) .. "%% " .. title)
-				end
-				local spinners = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
-				local ms = vim.loop.hrtime() / 1000000
-				local frame = math.floor(ms / 120) % #spinners
-				return table.concat(status, "   ") .. " " .. spinners[frame + 1]
-			end
-
-			vim.cmd("au User LspProgressUpdate let &ro = &ro")
-
 			local config = {
-
 				options = {
 					theme = "github_dimmed",
-					section_separators = { left = "", right = "" },
-					component_separators = { left = "", right = "" },
+					component_separators = "",
+					section_separators = "",
 				},
 				sections = {
 					lualine_a = { "mode" },
@@ -290,14 +277,14 @@ require("packer").startup(function(use)
 						{ "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
 						{ "filename", path = 1, symbols = { modified = "  ", readonly = "" } },
 					},
-					lualine_c = {},
-					lualine_x = {},
-					lualine_y = { lsp_progress },
-					lualine_z = { "branch" },
+					lualine_c = { "diff" },
+					lualine_x = { "branch" },
+					lualine_y = { "progress" },
+					lualine_z = { "location" },
 				},
 				inactive_sections = {
 					lualine_a = { "filename" },
-					lualine_b = {},
+					lualine_b = { "diff" },
 					lualine_c = {},
 					lualine_x = {},
 					lualine_y = {},
@@ -385,12 +372,14 @@ require("packer").startup(function(use)
 		requires = {
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope-file-browser.nvim",
+			"ThePrimeagen/harpoon",
 			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
 		},
 		config = function()
 			local actions = require("telescope.actions")
 			require("telescope").load_extension("file_browser")
 			require("telescope").load_extension("fzf")
+			require("telescope").load_extension("harpoon")
 			require("telescope").setup({
 				defaults = {
 					mappings = {

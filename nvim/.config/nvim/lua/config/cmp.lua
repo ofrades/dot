@@ -39,6 +39,7 @@ cmp.setup({
 		{ name = "nvim_lua" },
 		{ name = "rg" },
 		{ name = "cmp_git" },
+		{ name = "tmux" },
 		{ name = "signature_help" },
 		{ name = "cmp_tabnine" },
 	},
