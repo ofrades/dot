@@ -84,8 +84,10 @@ map("n", ";", ":", { noremap = true })
 map("n", "<space><space>", "<cmd>:NvimTreeToggle<cr>", { noremap = true })
 
 -- harpoon
-map("n", "<leader>ha", "<cmd>:lua require('harpoon.mark').add_file()<cr>", { noremap = true })
+map("n", "<leader>a", "<cmd>:lua require('harpoon.mark').add_file()<cr>", { noremap = true })
 map("n", "<leader>ht", "<cmd>:lua require('harpoon.ui').toggle_quick_menu()<cr>", { noremap = true })
+map("n", "[", "<cmd>:lua require('harpoon.ui').nav_prev()<cr>", { noremap = true })
+map("n", "]", "<cmd>:lua require('harpoon.ui').nav_next()<cr>", { noremap = true })
 
 -- better indenting
 map("v", "<", "<gv", { noremap = true })
