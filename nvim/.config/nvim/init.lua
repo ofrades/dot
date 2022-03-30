@@ -43,6 +43,7 @@ require("packer").startup(function(use)
 	})
 
 	use({ "kassio/neoterm" })
+	use({ "christoomey/vim-tmux-navigator" })
 	use({
 		"ggandor/leap.nvim",
 		config = function()
