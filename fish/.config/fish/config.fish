@@ -47,7 +47,7 @@ abbr remove "toolbox rm"
 abbr list "toolbox list"
 
 # neovim
-abbr v 'nvim'
+abbr v 'vi'
 abbr cat 'bat'
 abbr tree 'broot'
 

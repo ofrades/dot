@@ -22,18 +22,11 @@ require("packer").startup(function(use)
 	use({ "wbthomason/packer.nvim" })
 
 	use({
-		"goolord/alpha-nvim",
-		requires = { "kyazdani42/nvim-web-devicons" },
-		config = function()
-			require("alpha").setup(require("alpha.themes.startify").config)
-		end,
-	})
-
-	use({
 		"neovim/nvim-lspconfig",
 		requires = {
 			"nvim-lua/plenary.nvim",
 			"jose-elias-alvarez/null-ls.nvim",
+			"jose-elias-alvarez/typescript.nvim",
 			"ray-x/lsp_signature.nvim",
 		},
 		config = function()
@@ -93,6 +86,9 @@ require("packer").startup(function(use)
 				indent = {
 					enable = true,
 				},
+				autotag = {
+					enable = true,
+				},
 			})
 		end,
 	})
@@ -103,6 +99,7 @@ require("packer").startup(function(use)
 	})
 	use({ "tpope/vim-surround" })
 	use({ "tpope/vim-repeat" })
+	use({ "tpope/vim-obsession" })
 	use({
 		"tpope/vim-projectionist",
 		config = function()
@@ -181,7 +178,7 @@ require("packer").startup(function(use)
 			"f3fora/cmp-spell",
 			"petertriho/cmp-git",
 			"lukas-reineke/cmp-rg",
-			{ "tzachar/cmp-tabnine", run = "./install.sh" },
+			{ "hrsh7th/cmp-copilot", requires = { "github/copilot.vim" } },
 			{
 				"L3MON4D3/LuaSnip",
 				wants = "friendly-snippets",
@@ -194,6 +191,12 @@ require("packer").startup(function(use)
 				"windwp/nvim-autopairs",
 				config = function()
 					require("nvim-autopairs").setup()
+				end,
+			},
+			{
+				"windwp/nvim-ts-autotag",
+				config = function()
+					require("nvim-ts-autotag").setup()
 				end,
 			},
 		},
@@ -276,9 +279,13 @@ require("packer").startup(function(use)
 					lualine_b = {
 						{ "diagnostics", sources = { "nvim_diagnostic" } },
 						{ "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-						{ "filename", path = 1, symbols = { modified = "  ", readonly = "" } },
+						{
+							"filename",
+							path = 1,
+							symbols = { modified = "  ", readonly = "" },
+						},
 					},
-					lualine_c = { "diff" },
+					lualine_c = { "diff", "ObsessionStatus" },
 					lualine_x = { "branch" },
 					lualine_y = { "progress" },
 					lualine_z = { "location" },
@@ -555,6 +562,7 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.loaded_matchit = 1
 vim.g.loaded_matchparen = 1
+vim.lsp.buf.formatting_sync(nil, 3000)
 
 -- go to last loc when opening a buffer
 cmd([[

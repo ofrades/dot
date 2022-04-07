@@ -71,6 +71,7 @@ npm:
   - markdownlint-cli
   - cspell
   - write-good
+  - emmet-ls
 
 brew:
   - circleci

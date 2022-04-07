@@ -98,6 +98,12 @@ nvim_lsp.denols.setup({
 	},
 })
 
+nvim_lsp.emmet_ls.setup({
+	on_attach = on_attach,
+	capabilities = capabilities,
+	filetypes = { "html", "css", "typescriptreact", "javascriptreact" },
+})
+
 nvim_lsp.tsserver.setup({
 	on_attach = on_attach,
 	capabilities = capabilities,
@@ -112,7 +118,7 @@ require("null-ls").setup({
 		require("null-ls").builtins.formatting.stylua,
 		require("null-ls").builtins.formatting.eslint_d,
 		require("null-ls").builtins.formatting.terraform_fmt,
-		require("null-ls").builtins.formatting.black,
+		require("null-ls").builtins.formatting.black.with({ filetypes = { "python", "jq" } }),
 		require("null-ls").builtins.formatting.fixjson,
 		require("null-ls").builtins.formatting.rustfmt,
 		-- require("null-ls").builtins.formatting.deno_fmt,

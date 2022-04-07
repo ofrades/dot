@@ -5,9 +5,9 @@ function dev
         set searchdir $HOME/dev
     end
 
-    # https://github.com/fish-shell/fish-shell/issues/1362
     set -l tmpfile (mktemp)
-    find $searchdir \( ! -regex '.*/\..*' \) ! -name __pycache__ -type d | fzf > $tmpfile
+    find -L $searchdir -maxdepth 4 -type d \
+    | fzf > $tmpfile
     set -l destdir (cat $tmpfile)
     rm -f $tmpfile
 
@@ -16,4 +16,13 @@ function dev
     end
 
     cd $destdir
+
+    if test -z "Session.vim"
+        vi
+    else if test -z "README.md"
+        vi README.md
+    else
+        vi
+    end
+
 end

@@ -41,7 +41,7 @@ cmp.setup({
 		{ name = "cmp_git" },
 		{ name = "tmux" },
 		{ name = "signature_help" },
-		{ name = "cmp_tabnine" },
+		{ name = "copilot" },
 	},
 })
 
