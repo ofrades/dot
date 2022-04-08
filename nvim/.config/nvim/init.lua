@@ -266,45 +266,6 @@ require("packer").startup(function(use)
 	})
 
 	use({
-		"nvim-lualine/lualine.nvim",
-		config = function()
-			local config = {
-				options = {
-					theme = "github_dimmed",
-					component_separators = "",
-					section_separators = "",
-				},
-				sections = {
-					lualine_a = { "mode" },
-					lualine_b = {
-						{ "diagnostics", sources = { "nvim_diagnostic" } },
-						{ "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-						{
-							"filename",
-							path = 1,
-							symbols = { modified = "  ", readonly = "" },
-						},
-					},
-					lualine_c = { "diff", "ObsessionStatus" },
-					lualine_x = { "branch" },
-					lualine_y = { "progress" },
-					lualine_z = { "location" },
-				},
-				inactive_sections = {
-					lualine_a = { "filename" },
-					lualine_b = { "diff" },
-					lualine_c = {},
-					lualine_x = {},
-					lualine_y = {},
-					lualine_z = {},
-				},
-				extensions = { "nvim-tree" },
-			}
-			require("lualine").setup(config)
-		end,
-	})
-
-	use({
 		"RRethy/vim-illuminate",
 	})
 
@@ -461,6 +422,22 @@ require("packer").startup(function(use)
 				function_style = "italic",
 				keyword_style = "italic",
 			})
+
+			local set_hl = function(group, options)
+				local bg = options.bg == nil and "" or "guibg=" .. options.bg
+				local fg = options.fg == nil and "" or "guifg=" .. options.fg
+				local gui = options.gui == nil and "" or "gui=" .. options.gui
+
+				vim.cmd(string.format("hi %s %s %s %s", group, bg, fg, gui))
+			end
+
+			local highlights = {
+				{ "StatusLine", { fg = "#aaa", bg = "#ccc" } },
+			}
+
+			for _, highlight in ipairs(highlights) do
+				set_hl(highlight[1], highlight[2])
+			end
 		end,
 	})
 
@@ -505,6 +482,20 @@ local indent = 2
 
 vim.g.mapleader = " "
 
+-- statusline
+-- %<                                             trim from here
+-- %{fugitive#head()}                             name of the current branch (needs fugitive.vim)
+-- %f                                             path+filename
+-- %m                                             check modifi{ed,able}
+-- %r                                             check readonly
+-- %w                                             check preview window
+-- %=                                             left/right separator
+-- %l/%L,%c                                       rownumber/total,colnumber
+-- %{&fileencoding?&fileencoding:&encoding}       file encoding
+vim.opt.laststatus = 3
+
+vim.opt.statusline =
+	"  %< %{fugitive#head()}  %f %m %r %w %= Ln %l, Col %c  %{&fileencoding?&fileencoding:&encoding}  "
 vim.opt.backup = false -- creates a backupt file
 vim.opt.clipboard = "unnamedplus" -- sync with system clipboard
 vim.opt.conceallevel = 2 -- Hide * markup for bold and italic
