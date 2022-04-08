@@ -85,7 +85,13 @@ set -gx ANSIBLE_VAULT_PASSWORD_FILE ~/Dropbox/warden
 set -ga PATH ~/.npm-global/bin:$PATH
 
 starship init fish | source
-eval (/var/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+switch (uname)
+    case Linux
+      eval (/var/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+      echo Hi Linux!
+    case Darwin
+      echo Hi Macos!
+end
 
 
 set -gx PYENV_ROOT "$HOME/.pyenv"

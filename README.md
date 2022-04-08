@@ -14,7 +14,10 @@ Basic system setup done by running `sh install`
 
 This will install Dropbox and ansible-vault will need the key to decrypt secrets
 
-`ansible-vault decrypt aws/.aws/config aws/.aws/credentials ssh/.ssh/id_ed25519 ssh/.ssh/id_ed25519.pub npmrc/.npmrc`
+`ansible-vault decrypt --vault-password-file ~/Dropbox/warden aws/.aws/config aws/.aws/credentials ssh/.ssh/id_ed25519 ssh/.ssh/id_ed25519.pub npmrc/.npmrc`
+
+After decrypt forget about secrets changes with:
+`git update-index --skip-worktree aws/.aws/config aws/.aws/credentials ssh/.ssh/id_ed25519 ssh/.ssh/id_ed25519.pub npmrc/.npmrc`
 
 Create a container `toolbox create [name]`
 

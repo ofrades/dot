@@ -1,0 +1,126 @@
+---
+- hosts: localhost
+  vars:
+    user: ofrades
+  tasks:
+    - name: Make sure homebrew bin is in path
+      ansible.builtin.lineinfile:
+        path: /etc/paths
+        state: present
+        line: '/opt/homebrew/bin'
+      become: true
+      become_user: root
+
+    - name: Install core packages via brew casks
+      community.general.homebrew_cask:
+        name: "{{ item }}"
+        state: present
+      ignore_errors: yes
+      with_items:
+        - raycast
+        - 1password
+        - dropbox
+        - google-chrome
+        - alacritty
+        - slack
+        - visual-studio-code
+
+    - name: "Install homebrew packages"
+      community.general.homebrew:
+        name: "{{ item }}"
+        state: present
+        update_homebrew: yes
+      with_items:
+        - fish
+        - tmux
+        - fzf
+        - git
+        - bat
+        - curl
+        - wget
+        - unzip
+        - stow
+        - exa
+        - fd
+        - ripgrep
+        - zoxide
+        - node
+        - jq
+        - pipenv
+        - pyenv
+        - lazygit
+        - starship
+        - deno
+        - awscli
+        - aws-vault
+        - awsume
+        - pyright
+        - vim
+        - nvim
+        - yarn
+
+    - name: Install nvm
+      shell: curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+
+    - name: Set fish as the default shell
+      shell: chsh -s $(which fish) {{ lookup('env', 'USER') }}
+      become: true
+
+    - name: Install yarn packages
+      shell: yarn global add {{ item }}
+      with_items:
+        - typescript
+        - eslint_d
+        - stylint
+        - typescript-language-server
+        - vscode-langservers-extracted
+        - bash-language-server
+        - serverless
+        - fixjson
+        - jsonlint
+        - markdownlint-cli
+        - cspell
+        - write-good
+        
+    - name: Install pip packages
+      shell: python3 -m pip install {{ item }}
+      with_items:
+        - pyright
+        - pynvim
+        - ansible-lint
+
+    - name: Create symlinks
+      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig alacritty nvmrc gitignoreglobal tmux
+
+    - name: Ensure folders exist
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - ~/.config/nvim
+        - ~/.config/fish
+        - ~/.config/lazygit
+        - ~/.aws
+        - ~/.ssh
+
+    - name: Set ssh permissions
+      file:
+        path: ~/.ssh
+        state: directory
+        mode: 0700
+
+    - name: Set ssh permissions
+      file:
+        path: ~/.ssh
+        state: directory
+        mode: 0700
+
+    - name: Set ssh pub permissions
+      file:
+        path: ~/.ssh/id_ed25519.pub
+        mode: 0644
+
+    - name: Set ssh private permissions
+      file:
+        path: ~/.ssh/id_ed25519
+        mode: 0600
