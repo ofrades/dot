@@ -31,4 +31,4 @@ if ! have "gh"; then
   sudo dnf install gh
 fi
 
-ansible-playbook toolbox.yml --ask-become-pass
+ansible-playbook toolbox-common.yml --ask-become-pass

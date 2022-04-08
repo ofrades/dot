@@ -23,4 +23,4 @@ Create a container `toolbox create [name]`
 
 Enter the container by running `toolbox enter [name]`
 
-Install dev tools by running `sh toolbox`.
+Install dev tools by running `sh toolbox-common` and language specific with `ansible-playbook toolbox-[some-language].yml --ask-become-pass`.

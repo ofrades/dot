@@ -24,6 +24,9 @@ have fzf || rpm-ostree install fzf
 # install exa
 have exa || rpm-ostree install exa
 
+# install rnnoise
+have exa || rpm-ostree install rnnoise
+
 # install tweaks
 have gnome-tweaks || rpm-ostree install gnome-tweaks
 

@@ -3,8 +3,7 @@
   become: true
   vars:
     favcolor: green
-  vars_files:
-    - common.yml
+    user: ofrades
   tasks:
     - name: 1password
       community.general.rpm_ostree_pkg:
@@ -54,7 +53,12 @@
         state: present
         remote: flathub
         method: user
-      loop: "{{ flatpak }}"
+      with_items:
+        - com.slack.Slack
+        - com.microsoft.Teams
+        - org.flameshot.Flameshot
+        - com.calibre_ebook.calibre
+        - com.github.wwmm.easyeffects
 
     - name: Ensure folders exist
       file:

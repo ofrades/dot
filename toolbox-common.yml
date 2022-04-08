@@ -1,0 +1,66 @@
+- name: Main toolbox
+  hosts: localhost
+  become: true
+  vars:
+    favcolor: blue
+    user: ofrades
+  vars_files:
+    - common.yml
+  tasks:
+    - name: Copr packages
+      community.general.copr:
+        name: "{{ item }}"
+      with_items:
+        - agriffis/neovim-nightly
+        - atim/lazygit
+        - atim/starship
+
+    - name: Sytem packages
+      package:
+        state: installed
+        name: "{{ item }}"
+      with_items:
+        - "@Development Tools"
+        - fish
+        - tmux
+        - fzf
+        - git
+        - bat
+        - git-delta
+        - exa
+        - fd-find
+        - ripgrep
+        - zoxide
+        - neovim
+        - lazygit
+        - starship
+
+    - name: Npm packages
+      community.general.npm:
+        name: "{{ item }}"
+        global: yes
+        path: "~/.npm-global"
+      with_items:
+        - bash-language-server
+        - fixjson
+        - jsonlint
+        - markdownlint-cli
+        - cspell
+        - write-good
+
+    - name: Brew packages
+      become: no
+      community.general.homebrew:
+        path: /home/linuxbrew/.linuxbrew/bin
+        name: "{{ item }}"
+      with_items:
+        - git-absorb
+
+    - name: Install nvm
+      shell: curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+
+    - name: Set fish as default shell for {{ user }}
+      become: true
+      user:
+        name: "{{ user }}"
+        shell: /usr/bin/fish
