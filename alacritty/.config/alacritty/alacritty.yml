@@ -1,19 +1,19 @@
 window:
   decorations: "None"
   padding:
-    x: 0
-    y: 0
-  dynamic_padding: true
-  startup_mode: Fullscreen
+    x: 5
+    y: 5
+  # startup_mode: Fullscreen
 
 shell:
   program: /bin/bash
   args:
     - -l
     - -c
-    - toolbox enter && fish && tmux new-session -s main
+    - toolbox enter && fish
 font:
   use_thin_strokes: true
+  size: 9
   normal:
     family: monospace
     style: Medium
@@ -30,7 +30,6 @@ font:
     family: monospace
     style: Bold Italic
 
-  size: 10
 colors:
   primary:
     background: "0x22272e"

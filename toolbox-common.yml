@@ -4,8 +4,6 @@
   vars:
     favcolor: blue
     user: ofrades
-  vars_files:
-    - common.yml
   tasks:
     - name: Copr packages
       community.general.copr:

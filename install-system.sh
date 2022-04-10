@@ -46,7 +46,7 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 flatpak install flathub com.dropbox.Client
 
 # Run Ansible
-ansible-playbook system.yml --ask-become-pass
+ansible-playbook install-system.yml --ask-become-pass
 
 # echo 'setup dconf'
 dconf load / < ~/dot/gnome.dconf

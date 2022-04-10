@@ -47,6 +47,8 @@ local function on_attach(client)
 	vim.api.nvim_set_keymap("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 	vim.api.nvim_set_keymap("n", "<space>lwa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
 	vim.api.nvim_set_keymap("n", "<space>lwr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
+	vim.api.nvim_set_keymap("n", "X", "<cmd>lua vim.diagnostic.open_float(nil, {focus=false})<CR>", opts)
+
 	vim.api.nvim_set_keymap(
 		"n",
 		"<space>lwl",

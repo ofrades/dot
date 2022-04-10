@@ -98,6 +98,10 @@ local leader = {
 	b = { "<cmd>:botright Ttoggle<cr>", "Terminal bottom" },
 	c = { "<cmd>Telescope commands<cr>", "Commands" },
 	d = { "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({ path = '~/dev/' })<CR>", "Dev" },
+	N = {
+		"<cmd>lua require 'telescope'.extensions.file_browser.file_browser({ path = '~/Dropbox/notes/' })<CR>",
+		"Notes",
+	},
 	f = { "<cmd>Telescope live_grep<cr>", "Find Text" },
 	g = { "<cmd>:LazyGit<cr>", "Lazygit" },
 	n = { "<cmd>:vsplit | enew<cr>", "New File" },

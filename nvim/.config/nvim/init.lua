@@ -67,7 +67,7 @@ require("packer").startup(function(use)
 		"nvim-treesitter/nvim-treesitter",
 		config = function()
 			require("nvim-treesitter.configs").setup({
-				ensure_installed = "maintained",
+				ensure_installed = "all",
 				highlight = {
 					enable = true,
 				},
@@ -392,6 +392,13 @@ require("packer").startup(function(use)
 
 	use({ "kdheepak/lazygit.nvim" })
 
+	use({
+		"ruifm/gitlinker.nvim",
+		config = function()
+			require("gitlinker").setup()
+		end,
+	})
+
 	use({ "mg979/vim-visual-multi" })
 
 	use({
@@ -496,6 +503,10 @@ vim.opt.laststatus = 3
 
 vim.opt.statusline =
 	"  %< %{fugitive#head()}  %f %m %r %w %= Ln %l, Col %c  %{&fileencoding?&fileencoding:&encoding}  "
+
+vim.o.updatetime = 250
+vim.cmd([[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
+
 vim.opt.backup = false -- creates a backupt file
 vim.opt.clipboard = "unnamedplus" -- sync with system clipboard
 vim.opt.conceallevel = 2 -- Hide * markup for bold and italic
@@ -512,7 +523,6 @@ vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()" -- TreeSitter folding
 vim.opt.foldlevel = 10
 vim.opt.foldmethod = "expr" -- TreeSitter folding
-vim.opt.guifont = "FiraCode Nerd Font:h12"
 vim.opt.grepprg = "rg --vimgrep"
 vim.opt.grepformat = "%f:%l:%c:%m"
 vim.opt.inccommand = "split" -- preview incremental substitute
@@ -533,12 +543,9 @@ vim.opt.tabstop = indent -- Number of spaces tabs count for
 vim.opt.termguicolors = true -- True color support
 vim.opt.undofile = true
 vim.opt.undolevels = 10000
-vim.opt.updatetime = 200 -- save swap file and trigger CursorHold
 vim.opt.swapfile = false
 vim.opt.wildmode = "longest:full,full" -- Command-line completion mode
 vim.opt.wrap = false -- Disable line wrap
-vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize" }
-vim.o.shortmess = "IToOlxfitn"
 vim.g.python_host_prog = "/usr/bin/python"
 vim.g.python3_host_prog = "/usr/bin/python3"
 vim.opt.shell = "fish"

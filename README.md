@@ -10,7 +10,7 @@ Clone this repo and chdir `git clone git@github.com:ofrades/dot.git && cd dot`
 
 File `common.yml` contains all the packages and vars e.g: user/home
 
-Basic system setup done by running `sh install`
+Basic system setup done by running `sh install-system.sh`
 
 This will install Dropbox and ansible-vault will need the key to decrypt secrets
 
@@ -23,4 +23,4 @@ Create a container `toolbox create [name]`
 
 Enter the container by running `toolbox enter [name]`
 
-Install dev tools by running `sh toolbox-common` and language specific with `ansible-playbook toolbox-[some-language].yml --ask-become-pass`.
+Install dev tools by running `sh toolbox-common.sh` and language specific with `ansible-playbook toolbox-[some-language].yml --ask-become-pass`.
