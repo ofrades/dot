@@ -11,12 +11,11 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
 	})
 end
 
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost init.lua source <afile> | PackerCompile
-  augroup end
-]])
+local packer_group = vim.api.nvim_create_augroup("Packer", { clear = true })
+vim.api.nvim_create_autocmd(
+	"BufWritePost",
+	{ command = "source <afile> | PackerCompile", group = packer_group, pattern = "init.lua" }
+)
 
 require("packer").startup(function(use)
 	use({ "wbthomason/packer.nvim" })
@@ -277,66 +276,6 @@ require("packer").startup(function(use)
 	})
 
 	use({
-		"windwp/nvim-spectre",
-		require("spectre").setup({
-			is_insert_mode = true,
-			live_update = true,
-			mapping = {
-				["toggle_line"] = {
-					map = "dd",
-					cmd = "<cmd>lua require('spectre').toggle_line()<CR>",
-					desc = "toggle current item",
-				},
-				["enter_file"] = {
-					map = "<cr>",
-					cmd = "<cmd>lua require('spectre.actions').select_entry()<CR>",
-					desc = "goto current file",
-				},
-				["send_to_qf"] = {
-					map = "qq",
-					cmd = "<cmd>lua require('spectre.actions').send_to_qf()<CR>",
-					desc = "send all item to quickfix",
-				},
-				["replace_cmd"] = {
-					map = "<leader>c",
-					cmd = "<cmd>lua require('spectre.actions').replace_cmd()<CR>",
-					desc = "input replace vim command",
-				},
-				["show_option_menu"] = {
-					map = "<leader>o",
-					cmd = "<cmd>lua require('spectre').show_options()<CR>",
-					desc = "show option",
-				},
-				["run_replace"] = {
-					map = "<leader>r",
-					cmd = "<cmd>lua require('spectre.actions').run_replace()<CR>",
-					desc = "replace all",
-				},
-				["change_view_mode"] = {
-					map = "<leader>v",
-					cmd = "<cmd>lua require('spectre').change_view()<CR>",
-					desc = "change result view mode",
-				},
-				["toggle_live_update"] = {
-					map = "<leader>u",
-					cmd = "<cmd>lua require('spectre').toggle_live_update()<CR>",
-					desc = "update change when vim write file.",
-				},
-				["toggle_ignore_case"] = {
-					map = "<leader>i",
-					cmd = "<cmd>lua require('spectre').change_options('ignore-case')<CR>",
-					desc = "toggle ignore case",
-				},
-				["toggle_ignore_hidden"] = {
-					map = "<leader>h",
-					cmd = "<cmd>lua require('spectre').change_options('hidden')<CR>",
-					desc = "toggle search hidden",
-				},
-			},
-		}),
-	})
-
-	use({
 		"nvim-telescope/telescope.nvim",
 		requires = {
 			"nvim-lua/plenary.nvim",
@@ -462,6 +401,13 @@ require("packer").startup(function(use)
 		end,
 	})
 
+	-- use({
+	-- 	"akinsho/git-conflict.nvim",
+	-- 	config = function()
+	-- 		require("git-conflict").setup()
+	-- 	end,
+	-- })
+
 	use({
 		"petertriho/nvim-scrollbar",
 		requires = {
@@ -475,7 +421,69 @@ require("packer").startup(function(use)
 	use({
 		"folke/which-key.nvim",
 		config = function()
-			require("config.keys")
+			require("config.which")
+		end,
+	})
+
+	use({
+		"windwp/nvim-spectre",
+		config = function()
+			require("spectre").setup({
+				is_insert_mode = true,
+				live_update = true,
+				mapping = {
+					["toggle_line"] = {
+						map = "dd",
+						cmd = "<cmd>lua require('spectre').toggle_line()<CR>",
+						desc = "toggle current item",
+					},
+					["enter_file"] = {
+						map = "<cr>",
+						cmd = "<cmd>lua require('spectre.actions').select_entry()<CR>",
+						desc = "goto current file",
+					},
+					["send_to_qf"] = {
+						map = "qq",
+						cmd = "<cmd>lua require('spectre.actions').send_to_qf()<CR>",
+						desc = "send all item to quickfix",
+					},
+					["replace_cmd"] = {
+						map = "<leader>c",
+						cmd = "<cmd>lua require('spectre.actions').replace_cmd()<CR>",
+						desc = "input replace vim command",
+					},
+					["show_option_menu"] = {
+						map = "<leader>o",
+						cmd = "<cmd>lua require('spectre').show_options()<CR>",
+						desc = "show option",
+					},
+					["run_replace"] = {
+						map = "<leader>r",
+						cmd = "<cmd>lua require('spectre.actions').run_replace()<CR>",
+						desc = "replace all",
+					},
+					["change_view_mode"] = {
+						map = "<leader>v",
+						cmd = "<cmd>lua require('spectre').change_view()<CR>",
+						desc = "change result view mode",
+					},
+					["toggle_live_update"] = {
+						map = "<leader>u",
+						cmd = "<cmd>lua require('spectre').toggle_live_update()<CR>",
+						desc = "update change when vim write file.",
+					},
+					["toggle_ignore_case"] = {
+						map = "<leader>i",
+						cmd = "<cmd>lua require('spectre').change_options('ignore-case')<CR>",
+						desc = "toggle ignore case",
+					},
+					["toggle_ignore_hidden"] = {
+						map = "<leader>h",
+						cmd = "<cmd>lua require('spectre').change_options('hidden')<CR>",
+						desc = "toggle search hidden",
+					},
+				},
+			})
 		end,
 	})
 
@@ -484,23 +492,8 @@ require("packer").startup(function(use)
 	end
 end)
 
-local cmd = vim.cmd
-local indent = 2
-
-vim.g.mapleader = " "
-
--- statusline
--- %<                                             trim from here
--- %{fugitive#head()}                             name of the current branch (needs fugitive.vim)
--- %f                                             path+filename
--- %m                                             check modifi{ed,able}
--- %r                                             check readonly
--- %w                                             check preview window
--- %=                                             left/right separator
--- %l/%L,%c                                       rownumber/total,colnumber
--- %{&fileencoding?&fileencoding:&encoding}       file encoding
+-- one statusline to rule them all
 vim.opt.laststatus = 3
-
 vim.opt.statusline =
 	"  %< %{fugitive#head()}  %f %m %r %w %= Ln %l, Col %c  %{&fileencoding?&fileencoding:&encoding}  "
 
@@ -532,14 +525,14 @@ vim.opt.number = true -- Print line number
 vim.opt.relativenumber = false -- Relative line numbers
 vim.opt.scrolloff = 5 -- Lines of context
 vim.opt.shiftround = true -- Round indent
-vim.opt.shiftwidth = indent -- Size of an indent
+vim.opt.shiftwidth = 2 -- Size of an indent
 vim.opt.sidescrolloff = 8 -- Columns of context
 vim.opt.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shift the text each time
 vim.opt.smartcase = true -- Don't ignore case with capitals
 vim.opt.smartindent = true -- Insert indents automatically
 vim.opt.splitbelow = true -- Put new windows below current
 vim.opt.splitright = true -- Put new windows right of current
-vim.opt.tabstop = indent -- Number of spaces tabs count for
+vim.opt.tabstop = 2 -- Number of spaces tabs count for
 vim.opt.termguicolors = true -- True color support
 vim.opt.undofile = true
 vim.opt.undolevels = 10000
@@ -563,9 +556,72 @@ vim.g.loaded_matchparen = 1
 vim.lsp.buf.formatting_sync(nil, 3000)
 
 -- go to last loc when opening a buffer
-cmd([[
+vim.cmd([[
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif
 ]])
 
 -- Highlight on yank
-cmd("au TextYankPost * lua vim.highlight.on_yank {}")
+local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
+vim.api.nvim_create_autocmd("TextYankPost", {
+	callback = function()
+		vim.highlight.on_yank()
+	end,
+	group = highlight_group,
+	pattern = "*",
+})
+
+--Remap space as leader key
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+--Remap for dealing with word wrap
+vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Move to window using the <ctrl> movement keys
+vim.keymap.set("n", "<C-h>", "<C-w>h")
+vim.keymap.set("n", "<C-j>", "<C-w>j")
+vim.keymap.set("n", "<C-k>", "<C-w>k")
+vim.keymap.set("n", "<C-l>", "<C-w>l")
+
+-- Out
+vim.keymap.set("n", "<ESC><ESC>", ":q!<cr>")
+
+-- Resize window using <ctrl> arrow keys
+vim.keymap.set("n", "<Up>", ":resize +2<CR>")
+vim.keymap.set("n", "<Down>", ":resize -2<CR>")
+vim.keymap.set("n", "<Left>", ":vertical resize +2<CR>")
+vim.keymap.set("n", "<Right>", ":vertical resize -2<CR>")
+
+-- Move Lines up and down
+vim.keymap.set("n", "<A-j>", ":m .+1<CR>==")
+vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv")
+vim.keymap.set("i", "<A-j>", "<Esc>:m .+1<CR>==gi")
+vim.keymap.set("n", "<A-k>", ":m .-2<CR>==")
+vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv")
+vim.keymap.set("i", "<A-k>", "<Esc>:m .-2<CR>==gi")
+
+-- Clear search with <esc>
+vim.keymap.set("", "<esc>", ":noh<cr>")
+
+-- Easy go to start and end of line
+vim.keymap.set("n", "H", "^")
+vim.keymap.set("o", "H", "^")
+vim.keymap.set("x", "H", "^")
+vim.keymap.set("n", "L", "$")
+vim.keymap.set("o", "L", "$")
+vim.keymap.set("x", "L", "$")
+
+-- Nice defaults
+vim.keymap.set("n", "Y", "y$")
+vim.keymap.set("n", "D", "d$")
+vim.keymap.set("n", "C", "c$")
+vim.keymap.set("n", ";", ":")
+
+-- File tree
+vim.keymap.set("n", "<space><space>", "<cmd>:NvimTreeToggle<cr>")
+
+-- Better indenting
+vim.keymap.set("v", "<", "<gv")
+vim.keymap.set("v", ">", ">gv")

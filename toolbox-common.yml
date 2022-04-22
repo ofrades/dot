@@ -30,6 +30,7 @@
         - ripgrep
         - zoxide
         - neovim
+        - python3-neovim
         - lazygit
         - starship
 
