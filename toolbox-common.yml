@@ -37,6 +37,7 @@
     - name: Npm packages
       community.general.npm:
         name: "{{ item }}"
+        state: present
         global: yes
         path: "~/.npm-global"
       with_items:
@@ -46,17 +47,6 @@
         - markdownlint-cli
         - cspell
         - write-good
-
-    - name: Brew packages
-      become: no
-      community.general.homebrew:
-        path: /home/linuxbrew/.linuxbrew/bin
-        name: "{{ item }}"
-      with_items:
-        - git-absorb
-
-    - name: Install nvm
-      shell: curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 
     - name: Set fish as default shell for {{ user }}
       become: true

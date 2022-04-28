@@ -587,6 +587,7 @@ vim.keymap.set("n", "<C-l>", "<C-w>l")
 
 -- Out
 vim.keymap.set("n", "<ESC><ESC>", ":q!<cr>")
+vim.keymap.set("t", "<ESC>", "<C-\\><C-n>")
 
 -- Resize window using <ctrl> arrow keys
 vim.keymap.set("n", "<Up>", ":resize +2<CR>")

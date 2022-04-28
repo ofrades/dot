@@ -1,0 +1,102 @@
+- name: Cazoo toolbox
+  hosts: localhost
+  become: true
+  vars:
+    favcolor: blue
+    user: ofrades
+  tasks:
+    - name: copr
+      community.general.copr:
+        name: "{{ item }}"
+      with_items:
+        - nili/pyenv
+
+    - name: Package Install - common
+      package:
+        state: installed
+        name: "{{ item }}"
+      with_items:
+        - nodejs
+        - deno
+        - pipenv
+        - pyenv
+        - jq
+        - awscli
+
+    - name: Package Install - npm
+      community.general.npm:
+        name: "{{ item }}"
+        global: yes
+        path: "~/.npm-global"
+      with_items:
+        - yarn
+        - typescript
+        - eslint_d
+        - stylint
+        - prettier
+        - typescript-language-server
+        - vscode-langservers-extracted
+        - emmet-ls
+        - serverless
+
+    - name: Brew packages
+      become: no
+      community.general.homebrew:
+        path: /home/linuxbrew/.linuxbrew/bin
+        name: "{{ item }}"
+      with_items:
+        - aws-vault
+
+    - name: Install nvm
+      shell: curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+
+    - name: Package Install - pip
+      pip:
+        name: "{{ item }}"
+      with_items:
+        - pyright
+        - pynvim
+        - flake8
+        - black
+        - awsume
+
+    - name: Ensure folders exist
+      file:
+        path: "/home/{{ user }}/dev/cazoo"
+        state: directory
+
+    - name: Clone repository into all folders
+      git:
+        repo: "git@github.com:Cazoo-uk/{{ item }}"
+        dest: "/home/{{ user }}/dev/cazoo/{{ item }}"
+        accept_hostkey: yes
+        clone: yes
+        key_file: "/home/{{ user }}/.ssh/id_ed25519"
+      with_items:
+        - 300-points-inspection-pdf-service
+        - active-customer-vehicle-service
+        - cazoo-auth
+        - cazoo-auth-ui
+        - cazoo-cover-micro-frontend
+        - cazoo-customer-auth
+        - cazoo-react-string-interpolate
+        - crm-escalation-service
+        - customer-force
+        - cx-api-end-to-end
+        - cx-api-python
+        - fulfilment-dispatch-escalation-service
+        - logistics-scheduling
+        - my-account
+        - order-management-cx-on-call
+        - order-management-system
+        - order-management-wizard
+        - order-service
+        - order-updates-tool
+        - payment-mfe
+        - rescheduling-facade
+        - salesforce-mfe-host
+        - salesforce-writer
+        - shared-libraries
+        - shared-libraries-api
+        - transactional-email-service
+        - checkout
