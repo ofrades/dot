@@ -15,14 +15,19 @@ function dev
         return 1
     end
 
-    cd $destdir
-
-    if test -z "Session.vim"
-        vi
-    else if test -z "README.md"
-        vi README.md
+    if not set -q TMUX
+      tmux new -A -s "$destdir" -c "$destdir"
     else
-        vi
+      TMUX= tmux new -d -s "$destdir" -c "$destdir"
+      tmux switch-client -t "$destdir"
     end
+
+#    if test -z "Session.vim"
+#        vi
+#    else if test -z "README.md"
+#        vi README.md
+#    else
+#        vi
+#    end
 
 end

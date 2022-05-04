@@ -211,7 +211,6 @@ require("packer").startup(function(use)
 				hijack_netrw = true,
 				open_on_setup = false,
 				ignore_ft_on_setup = {},
-				auto_close = false,
 				open_on_tab = true,
 				hijack_cursor = false,
 				update_cwd = true,
@@ -219,10 +218,6 @@ require("packer").startup(function(use)
 					enable = true,
 					update_cwd = true,
 					ignore_list = {},
-				},
-				update_to_buf_dir = {
-					enable = true,
-					auto_open = true,
 				},
 				system_open = {
 					cmd = nil,
@@ -236,7 +231,6 @@ require("packer").startup(function(use)
 				view = {
 					width = 40,
 					side = "left",
-					auto_resize = true,
 					signcolumn = "yes",
 					number = true,
 					mappings = {
@@ -344,6 +338,7 @@ require("packer").startup(function(use)
 		"norcalli/nvim-colorizer.lua",
 		requires = {
 			"projekt0n/github-nvim-theme",
+			"dracula/vim",
 		},
 		config = function()
 			require("colorizer").setup(nil, {
@@ -363,11 +358,12 @@ require("packer").startup(function(use)
 				[[autocmd ColorScheme * lua package.loaded['colorizer'] = nil; require('colorizer').setup(); require('colorizer').attach_to_buffer(0)]]
 			)
 
-			require("github-theme").setup({
-				theme_style = "dimmed",
-				function_style = "italic",
-				keyword_style = "italic",
-			})
+			vim.cmd([[colorscheme dracula]])
+			-- require("github-theme").setup({
+			-- 	theme_style = "dimmed",
+			-- 	function_style = "italic",
+			-- 	keyword_style = "italic",
+			-- })
 
 			local set_hl = function(group, options)
 				local bg = options.bg == nil and "" or "guibg=" .. options.bg
@@ -401,13 +397,6 @@ require("packer").startup(function(use)
 		end,
 	})
 
-	-- use({
-	-- 	"akinsho/git-conflict.nvim",
-	-- 	config = function()
-	-- 		require("git-conflict").setup()
-	-- 	end,
-	-- })
-
 	use({
 		"petertriho/nvim-scrollbar",
 		requires = {
@@ -422,6 +411,19 @@ require("packer").startup(function(use)
 		"folke/which-key.nvim",
 		config = function()
 			require("config.which")
+		end,
+	})
+
+	use({
+		"nvim-lualine/lualine.nvim",
+		config = function()
+			require("lualine").setup({
+				options = {
+					theme = "dracula",
+					component_separators = { left = "", right = "" },
+					section_separators = { left = "", right = "" },
+				},
+			})
 		end,
 	})
 
@@ -553,7 +555,6 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.loaded_matchit = 1
 vim.g.loaded_matchparen = 1
-vim.lsp.buf.formatting_sync(nil, 3000)
 
 -- go to last loc when opening a buffer
 vim.cmd([[
@@ -588,6 +589,7 @@ vim.keymap.set("n", "<C-l>", "<C-w>l")
 -- Out
 vim.keymap.set("n", "<ESC><ESC>", ":q!<cr>")
 vim.keymap.set("t", "<ESC>", "<C-\\><C-n>")
+vim.keymap.set("", "<ESC>", ":noh<cr>")
 
 -- Resize window using <ctrl> arrow keys
 vim.keymap.set("n", "<Up>", ":resize +2<CR>")
@@ -602,9 +604,6 @@ vim.keymap.set("i", "<A-j>", "<Esc>:m .+1<CR>==gi")
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==")
 vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("i", "<A-k>", "<Esc>:m .-2<CR>==gi")
-
--- Clear search with <esc>
-vim.keymap.set("", "<esc>", ":noh<cr>")
 
 -- Easy go to start and end of line
 vim.keymap.set("n", "H", "^")

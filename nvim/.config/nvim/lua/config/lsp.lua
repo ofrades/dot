@@ -18,24 +18,28 @@ end
 
 local function on_attach(client, bufnr)
 	local opts = { buffer = bufnr }
-	if client.resolved_capabilities.document_formatting then
-		vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
+	if client.server_capabilities.documentFormattingProvider then
+		vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format{async = true}")
 	end
 	if client.name == "jsonls" then
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
+		client.server_capabilities.documentFormattingProvider = false
+		client.server_capabilities.documentRangeFormattingProvider = false
 	end
 	if client.name == "tsserver" then
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
+		client.server_capabilities.documentFormattingProvider = false
+		client.server_capabilities.documentRangeFormattingProvider = false
+	end
+	if client.name == "eslint" then
+		client.server_capabilities.documentFormattingProvider = false
+		client.server_capabilities.documentRangeFormattingProvider = false
 	end
 	if client.name == "denols" then
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
+		client.server_capabilities.documentFormattingProvider = false
+		client.server_capabilities.documentRangeFormattingProvider = false
 	end
 	if client.name == "rust_analyzer" then
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
+		client.server_capabilities.documentFormattingProvider = false
+		client.server_capabilities.documentRangeFormattingProvider = false
 	end
 
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -71,6 +75,7 @@ local options = {
 
 local servers = {
 	"bashls",
+	"eslint",
 	"cssls",
 	"jsonls",
 	"html",
@@ -117,7 +122,7 @@ require("null-ls").setup({
 		require("null-ls").builtins.formatting.rustfmt,
 		-- require("null-ls").builtins.formatting.deno_fmt,
 
-		require("null-ls").builtins.diagnostics.eslint_d,
+		-- require("null-ls").builtins.diagnostics.eslint_d,
 		require("null-ls").builtins.diagnostics.flake8,
 		require("null-ls").builtins.diagnostics.write_good,
 		require("null-ls").builtins.diagnostics.markdownlint,
@@ -127,7 +132,7 @@ require("null-ls").setup({
 		-- require("null-ls").builtins.diagnostics.cspell,
 
 		require("null-ls").builtins.code_actions.gitsigns,
-		require("null-ls").builtins.code_actions.eslint_d,
+		-- require("null-ls").builtins.code_actions.eslint_d,
 		require("null-ls").builtins.code_actions.refactoring,
 
 		require("null-ls").builtins.hover.dictionary,
