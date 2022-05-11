@@ -30,6 +30,9 @@ have exa || rpm-ostree install rnnoise
 # install tweaks
 have gnome-tweaks || rpm-ostree install gnome-tweaks
 
+# install pop-shell
+have gnome-tweaks || rpm-ostree install gnome-shell-extension-pop-shell
+
 # install ansible
 have ansible || rpm-ostree install ansible
 have ansible || systemctl reboot

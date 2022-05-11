@@ -26,11 +26,10 @@ require("packer").startup(function(use)
 			"nvim-lua/plenary.nvim",
 			"jose-elias-alvarez/null-ls.nvim",
 			"jose-elias-alvarez/typescript.nvim",
-			"ray-x/lsp_signature.nvim",
 		},
 		config = function()
 			require("config.lsp")
-			require("lsp_signature").setup()
+      require("typescript").setup{}
 		end,
 	})
 
@@ -73,8 +72,8 @@ require("packer").startup(function(use)
 				incremental_selection = {
 					enable = true,
 					keymaps = {
-						init_selection = "<CR>",
-						scope_incremental = "<CR>",
+						init_selection = "<cr>",
+						scope_incremental = "<cr>",
 						node_incremental = "<TAB>",
 						node_decremental = "<S-TAB>",
 					},
@@ -94,11 +93,20 @@ require("packer").startup(function(use)
 
 	use({
 		"tpope/vim-fugitive",
-		requires = { "tpope/vim-rhubarb", "junegunn/gv.vim" },
+		requires = { "tpope/vim-rhubarb", "junegunn/gv.vim", "rhysd/git-messenger.vim" },
 	})
 	use({ "tpope/vim-surround" })
 	use({ "tpope/vim-repeat" })
-	use({ "tpope/vim-obsession" })
+
+  use {
+    'rmagatti/auto-session',
+    config = function()
+      require('auto-session').setup {
+        log_level = 'info',
+      }
+    end
+  }
+
 	use({
 		"tpope/vim-projectionist",
 		config = function()
@@ -171,12 +179,7 @@ require("packer").startup(function(use)
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-nvim-lsp-signature-help",
-			"andersevenrud/cmp-tmux",
 			"saadparwaiz1/cmp_luasnip",
-			"f3fora/cmp-spell",
-			"petertriho/cmp-git",
-			"lukas-reineke/cmp-rg",
 			{ "hrsh7th/cmp-copilot", requires = { "github/copilot.vim" } },
 			{
 				"L3MON4D3/LuaSnip",
@@ -236,12 +239,12 @@ require("packer").startup(function(use)
 					mappings = {
 						custom_only = false,
 						list = {
-							{ key = { "<CR>", "o", "l" }, cb = tree_cb("edit") },
+							{ key = { "<cr>", "o", "l" }, cb = tree_cb("edit") },
 							{ key = "<C-v>", cb = tree_cb("vsplit") },
 							{ key = "<C-s>", cb = tree_cb("split") },
 							{ key = "<C-t>", cb = tree_cb("tabnew") },
 							{ key = "<BS>", cb = tree_cb("close_node") },
-							{ key = "<S-CR>", cb = tree_cb("close_node") },
+							{ key = "<S-cr>", cb = tree_cb("close_node") },
 							{ key = "h", cb = tree_cb("close_node") },
 							{ key = "R", cb = tree_cb("refresh") },
 							{ key = "a", cb = tree_cb("create") },
@@ -268,6 +271,8 @@ require("packer").startup(function(use)
 			require("nvim-web-devicons").setup()
 		end,
 	})
+
+	use({ "stevearc/dressing.nvim" })
 
 	use({
 		"nvim-telescope/telescope.nvim",
@@ -316,8 +321,8 @@ require("packer").startup(function(use)
 			require("gitsigns").setup({
 				keymaps = {
 					noremap = true,
-					["n <leader>hp"] = "<cmd>Gitsigns preview_hunk<CR>",
-					["n <leader>hb"] = '<cmd>lua require"gitsigns".blame_line{full=true}<CR>',
+					["n <leader>hp"] = "<cmd>Gitsigns preview_hunk<cr>",
+					["n <leader>hb"] = '<cmd>lua require"gitsigns".blame_line{full=true}<cr>',
 				},
 			})
 		end,
@@ -337,8 +342,8 @@ require("packer").startup(function(use)
 	use({
 		"norcalli/nvim-colorizer.lua",
 		requires = {
-			"projekt0n/github-nvim-theme",
-			"dracula/vim",
+			"Mofiqul/dracula.nvim",
+      "projekt0n/github-nvim-theme"
 		},
 		config = function()
 			require("colorizer").setup(nil, {
@@ -358,12 +363,7 @@ require("packer").startup(function(use)
 				[[autocmd ColorScheme * lua package.loaded['colorizer'] = nil; require('colorizer').setup(); require('colorizer').attach_to_buffer(0)]]
 			)
 
-			vim.cmd([[colorscheme dracula]])
-			-- require("github-theme").setup({
-			-- 	theme_style = "dimmed",
-			-- 	function_style = "italic",
-			-- 	keyword_style = "italic",
-			-- })
+			vim.cmd([[colorscheme github_dimmed]])
 
 			local set_hl = function(group, options)
 				local bg = options.bg == nil and "" or "guibg=" .. options.bg
@@ -382,6 +382,14 @@ require("packer").startup(function(use)
 			end
 		end,
 	})
+
+  use {
+    "projekt0n/circles.nvim",
+    requires = {{"kyazdani42/nvim-web-devicons"}, {"kyazdani42/nvim-tree.lua", opt = true}},
+    config = function()
+      require("circles").setup()
+    end
+  }
 
 	use({
 		"folke/todo-comments.nvim",
@@ -415,17 +423,50 @@ require("packer").startup(function(use)
 	})
 
 	use({
-		"nvim-lualine/lualine.nvim",
+		"j-hui/fidget.nvim",
 		config = function()
-			require("lualine").setup({
-				options = {
-					theme = "dracula",
-					component_separators = { left = "", right = "" },
-					section_separators = { left = "", right = "" },
-				},
-			})
+			require("fidget").setup()
 		end,
 	})
+
+  use({
+    "Pocco81/dap-buddy.nvim",
+    branch = "dev",
+    requires = {
+      "mfussenegger/nvim-dap",
+      "theHamsta/nvim-dap-virtual-text",
+      "David-Kunz/jester"
+    },
+    config = function()
+      local dap = require("dap")
+      local dap_install = require("dap-install")
+
+      dap_install.setup({
+        installation_path = os.getenv('HOME') .. "/.local/share/nvim/dapinstall/",
+      })
+
+      dap_install.config('jsnode', {})
+
+      require('nvim-dap-virtual-text').setup()
+
+      vim.g.dap_virtual_text = true
+
+      vim.fn.sign_define('DapBreakpoint', {text='🟥', texthl='', linehl='', numhl=''})
+      vim.fn.sign_define('DapBreakpointRejected', {text='🟦', texthl='', linehl='', numhl=''})
+      vim.fn.sign_define('DapStopped', {text='⭐️', texthl='', linehl='', numhl=''})
+
+      vim.keymap.set('n', '<leader>dd', function() require"jester".debug() end)
+      vim.keymap.set('n', '<leader>df', function() require"jester".debug_file() end)
+      vim.keymap.set('n', '<leader>dl', function() require"jester".debug_last() end)
+      vim.keymap.set('n', '<leader>dq', function() require"jester".terminate() end)
+
+      vim.keymap.set("n", "<F1>", [[:lua require('dap').toggle_breakpoint()<cr>]])
+      vim.keymap.set("n", "<F5>", [[:lua require('dap').continue()<cr>]])
+      vim.keymap.set("n", "<F6>", [[:lua require('dap').step_over()<cr>]])
+      vim.keymap.set("n", "<F7>", [[:lua require('dap').step_into()<cr>]])
+      vim.keymap.set("n", "<F8>", [[:lua require('dap').step_out()<cr>]])
+    end,
+  })
 
 	use({
 		"windwp/nvim-spectre",
@@ -436,52 +477,52 @@ require("packer").startup(function(use)
 				mapping = {
 					["toggle_line"] = {
 						map = "dd",
-						cmd = "<cmd>lua require('spectre').toggle_line()<CR>",
+						cmd = "<cmd>lua require('spectre').toggle_line()<cr>",
 						desc = "toggle current item",
 					},
 					["enter_file"] = {
 						map = "<cr>",
-						cmd = "<cmd>lua require('spectre.actions').select_entry()<CR>",
+						cmd = "<cmd>lua require('spectre.actions').select_entry()<cr>",
 						desc = "goto current file",
 					},
 					["send_to_qf"] = {
 						map = "qq",
-						cmd = "<cmd>lua require('spectre.actions').send_to_qf()<CR>",
+						cmd = "<cmd>lua require('spectre.actions').send_to_qf()<cr>",
 						desc = "send all item to quickfix",
 					},
 					["replace_cmd"] = {
 						map = "<leader>c",
-						cmd = "<cmd>lua require('spectre.actions').replace_cmd()<CR>",
+						cmd = "<cmd>lua require('spectre.actions').replace_cmd()<cr>",
 						desc = "input replace vim command",
 					},
 					["show_option_menu"] = {
 						map = "<leader>o",
-						cmd = "<cmd>lua require('spectre').show_options()<CR>",
+						cmd = "<cmd>lua require('spectre').show_options()<cr>",
 						desc = "show option",
 					},
 					["run_replace"] = {
 						map = "<leader>r",
-						cmd = "<cmd>lua require('spectre.actions').run_replace()<CR>",
+						cmd = "<cmd>lua require('spectre.actions').run_replace()<cr>",
 						desc = "replace all",
 					},
 					["change_view_mode"] = {
 						map = "<leader>v",
-						cmd = "<cmd>lua require('spectre').change_view()<CR>",
+						cmd = "<cmd>lua require('spectre').change_view()<cr>",
 						desc = "change result view mode",
 					},
 					["toggle_live_update"] = {
 						map = "<leader>u",
-						cmd = "<cmd>lua require('spectre').toggle_live_update()<CR>",
+						cmd = "<cmd>lua require('spectre').toggle_live_update()<cr>",
 						desc = "update change when vim write file.",
 					},
 					["toggle_ignore_case"] = {
 						map = "<leader>i",
-						cmd = "<cmd>lua require('spectre').change_options('ignore-case')<CR>",
+						cmd = "<cmd>lua require('spectre').change_options('ignore-case')<cr>",
 						desc = "toggle ignore case",
 					},
 					["toggle_ignore_hidden"] = {
 						map = "<leader>h",
-						cmd = "<cmd>lua require('spectre').change_options('hidden')<CR>",
+						cmd = "<cmd>lua require('spectre').change_options('hidden')<cr>",
 						desc = "toggle search hidden",
 					},
 				},
@@ -497,10 +538,11 @@ end)
 -- one statusline to rule them all
 vim.opt.laststatus = 3
 vim.opt.statusline =
-	"  %< %{fugitive#head()}  %f %m %r %w %= Ln %l, Col %c  %{&fileencoding?&fileencoding:&encoding}  "
+	"  %< %{FugitiveHead()}  %f %m %r %w %= Ln %l, Col %c  %{&fileencoding?&fileencoding:&encoding}  "
 
 vim.o.updatetime = 250
-vim.cmd([[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
+-- show diagnostics on hover
+-- vim.cmd([[autocmd! CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]])
 
 vim.opt.backup = false -- creates a backupt file
 vim.opt.clipboard = "unnamedplus" -- sync with system clipboard
@@ -592,18 +634,18 @@ vim.keymap.set("t", "<ESC>", "<C-\\><C-n>")
 vim.keymap.set("", "<ESC>", ":noh<cr>")
 
 -- Resize window using <ctrl> arrow keys
-vim.keymap.set("n", "<Up>", ":resize +2<CR>")
-vim.keymap.set("n", "<Down>", ":resize -2<CR>")
-vim.keymap.set("n", "<Left>", ":vertical resize +2<CR>")
-vim.keymap.set("n", "<Right>", ":vertical resize -2<CR>")
+vim.keymap.set("n", "<Up>", ":resize +2<cr>")
+vim.keymap.set("n", "<Down>", ":resize -2<cr>")
+vim.keymap.set("n", "<Left>", ":vertical resize +2<cr>")
+vim.keymap.set("n", "<Right>", ":vertical resize -2<cr>")
 
 -- Move Lines up and down
-vim.keymap.set("n", "<A-j>", ":m .+1<CR>==")
-vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv")
-vim.keymap.set("i", "<A-j>", "<Esc>:m .+1<CR>==gi")
-vim.keymap.set("n", "<A-k>", ":m .-2<CR>==")
-vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv")
-vim.keymap.set("i", "<A-k>", "<Esc>:m .-2<CR>==gi")
+vim.keymap.set("n", "<A-j>", ":m .+1<cr>==")
+vim.keymap.set("v", "<A-j>", ":m '>+1<cr>gv=gv")
+vim.keymap.set("i", "<A-j>", "<Esc>:m .+1<cr>==gi")
+vim.keymap.set("n", "<A-k>", ":m .-2<cr>==")
+vim.keymap.set("v", "<A-k>", ":m '<-2<cr>gv=gv")
+vim.keymap.set("i", "<A-k>", "<Esc>:m .-2<cr>==gi")
 
 -- Easy go to start and end of line
 vim.keymap.set("n", "H", "^")
@@ -619,9 +661,25 @@ vim.keymap.set("n", "D", "d$")
 vim.keymap.set("n", "C", "c$")
 vim.keymap.set("n", ";", ":")
 
+-- Copy file path
+vim.keymap.set("n", "<leader>y", ":let @+=expand('%:p')<cr>")
+
 -- File tree
 vim.keymap.set("n", "<space><space>", "<cmd>:NvimTreeToggle<cr>")
 
 -- Better indenting
 vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
+
+-- statusline
+--
+-- %<                                             trim from here
+-- %{fugitive#head()}                             name of the current branch (needs fugitive.vim)
+-- %f                                             path+filename
+-- %m                                             check modifi{ed,able}
+-- %r                                             check readonly
+-- %w                                             check preview window
+-- %=                                             left/right separator
+-- %l/%L,%c                                       rownumber/total,colnumber
+-- %{&fileencoding?&fileencoding:&encoding}       file encoding
+vim.opt.statusline = '%#Pmenu#   %f %m %r %w %= %< %{FugitiveHead()} |  Ln %l, Col %c  %{&fileencoding?&fileencoding:&encoding}  '

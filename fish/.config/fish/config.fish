@@ -98,13 +98,14 @@ abbr remove "toolbox rm"
 abbr list "toolbox list"
 
 # neovim
-abbr v 'vi'
+abbr v 'nvim'
 abbr cat 'bat'
 abbr tree 'broot'
 
 abbr mv 'mv -iv'
 abbr cp 'cp -riv'
 abbr mkdir 'mkdir -vp'
+
 
 # tmux
 abbr -a -g tls 'tmux list-sessions'

@@ -43,17 +43,11 @@ cmp.setup({
 		end, { "i", "s" }),
 	}),
 	sources = {
-		{ name = "nvim_lsp", priority = 0 },
-		{ name = "luasnip", priority = 1 },
-		{ name = "path", priority = 2 },
-		{ name = "buffer", priority = 2 },
-		{ name = "spell", priority = 3 },
-		{ name = "nvim_lua" },
-		{ name = "rg" },
-		{ name = "cmp_git" },
-		{ name = "tmux" },
-		{ name = "signature_help" },
-		{ name = "copilot", priority = 5 },
+		{ name = "nvim_lsp" },
+    { name = "luasnip" },
+		{ name = "path" },
+		{ name = "buffer", keyword_length = 5 },
+		{ name = "copilot", keyword_length = 5 },
 	},
 })
 

@@ -12,9 +12,10 @@ wk.setup({
 
 local leader = {
 	v = { "<cmd>:vertical Ttoggle<cr>", "Terminal side" },
+	B = { "<cmd>:GitMessenger<cr>", "Show git commit" },
 	b = { "<cmd>:botright Ttoggle<cr>", "Terminal bottom" },
 	c = { "<cmd>Telescope commands<cr>", "Commands" },
-	d = { "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({ path = '~/dev/' })<CR>", "Dev" },
+	-- d = { "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({ path = '~/dev/' })<CR>", "Dev" },
 	N = {
 		"<cmd>lua require 'telescope'.extensions.file_browser.file_browser({ path = '~/Dropbox/notes/' })<CR>",
 		"Notes",

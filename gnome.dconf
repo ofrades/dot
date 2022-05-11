@@ -28,6 +28,11 @@ mic-mute=['<Super>BackSpace']
 terminal=['<Super>t']
 www=['<Super>b']
 
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
+binding='<Super>s'
+command='flatpak run org.flameshot.Flameshot gui'
+name='flameshot'
+
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Super>t'
 command='alacritty toolbox enter'
