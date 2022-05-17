@@ -136,7 +136,6 @@ require("null-ls").setup({
 		require("null-ls").builtins.diagnostics.golangci_lint,
 		-- require("null-ls").builtins.diagnostics.cspell,
 
-		require("null-ls").builtins.code_actions.gitsigns,
 		-- require("null-ls").builtins.code_actions.eslint_d,
 		require("null-ls").builtins.code_actions.refactoring,
 

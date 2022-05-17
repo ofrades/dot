@@ -1,8 +1,8 @@
 window:
   decorations: "None"
   padding:
-    x: 5
-    y: 5
+    x: 10
+    y: 10
   # startup_mode: Fullscreen
 
 # shell:
@@ -15,24 +15,24 @@ font:
   use_thin_strokes: true
   size: 9
   normal:
-    family: monospace
+    family: JetBrainsMono Nerd Font
     style: Medium
 
   bold:
-    family: monospace
+    family: JetBrainsMono Nerd Font
     style: Bold
 
   italic:
-    family: monospace
+    family: JetBrainsMono Nerd Font
     style: Italic
 
   bold_italic:
-    family: monospace
+    family: JetBrainsMono Nerd Font
     style: Bold Italic
 
 colors:
   primary:
-    background: "#282a36"
+    background: '0x22272e'
     foreground: "#f8f8f2"
     bright_foreground: "#ffffff"
   cursor:

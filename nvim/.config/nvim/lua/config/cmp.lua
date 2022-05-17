@@ -44,6 +44,7 @@ cmp.setup({
 	}),
 	sources = {
 		{ name = "nvim_lsp" },
+    { name = "emoji" },
     { name = "luasnip" },
 		{ name = "path" },
 		{ name = "buffer", keyword_length = 5 },

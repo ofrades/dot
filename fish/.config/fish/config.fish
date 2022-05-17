@@ -133,6 +133,7 @@ set -gx AWS_PROFILE default
 set -gx AWS_SDK_LOAD_CONFIG 1
 set -gx ANSIBLE_VAULT_PASSWORD_FILE ~/Dropbox/warden
 
+set -gx FZF_DEFAULT_OPTS '--height 50% --layout=reverse'
 
 set -ga PATH ~/.npm-global/bin:$PATH
 

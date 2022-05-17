@@ -4,19 +4,12 @@
   vars:
     favcolor: blue
   tasks:
-    - name: copr
-      community.general.copr:
-        name: "{{ item }}"
-      with_items:
-        - decathorpe/deno
-
     - name: Package Install - common
       package:
         state: installed
         name: "{{ item }}"
       with_items:
       - nodejs
-      - deno
 
     - name: Package Install - npm
       community.general.npm:
@@ -26,9 +19,6 @@
       with_items:
       - yarn
       - typescript
-      - eslint_d
-      - stylint
-      - prettier
       - typescript-language-server
       - vscode-langservers-extracted
       - emmet-ls

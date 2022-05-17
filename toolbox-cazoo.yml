@@ -16,8 +16,6 @@
         state: installed
         name: "{{ item }}"
       with_items:
-        - nodejs
-        - deno
         - pipenv
         - pyenv
         - jq
@@ -29,14 +27,6 @@
         global: yes
         path: "~/.npm-global"
       with_items:
-        - yarn
-        - typescript
-        - eslint_d
-        - stylint
-        - prettier
-        - typescript-language-server
-        - vscode-langservers-extracted
-        - emmet-ls
         - serverless
 
     - name: Brew packages
@@ -46,9 +36,6 @@
         name: "{{ item }}"
       with_items:
         - aws-vault
-
-    - name: Install nvm
-      shell: curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 
     - name: Package Install - pip
       pip:

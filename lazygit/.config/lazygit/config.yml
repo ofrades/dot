@@ -4,8 +4,3 @@ customCommands:
     context: "files"
     loadingText: "opening git mergetool"
     subprocess: true
-  - key: "<c-x>"
-    command: "git absorb -r"
-    context: "files"
-    loadingText: "absorbing staged files"
-    subprocess: true
