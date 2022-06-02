@@ -10,6 +10,7 @@
         name: "{{ item }}"
       with_items:
         - nili/pyenv
+        - boeroboy/hashicorp
 
     - name: Package Install - common
       package:
@@ -20,6 +21,7 @@
         - pyenv
         - jq
         - awscli
+        - terraform
 
     - name: Package Install - npm
       community.general.npm:

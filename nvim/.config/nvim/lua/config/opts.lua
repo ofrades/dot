@@ -17,6 +17,10 @@ vim.o.updatetime = 250
 -- show diagnostics on hover
 -- vim.cmd([[autocmd! CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]])
 
+-- reload when files change outside buffer
+vim.o.autoread = true
+vim.cmd [[ au FocusGained,BufEnter * checktime ]]
+
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
 vim.opt.backup = false -- creates a backupt file
 vim.opt.clipboard = "unnamedplus" -- sync with system clipboard
@@ -24,7 +28,7 @@ vim.opt.conceallevel = 2 -- Hide * markup for bold and italic
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.confirm = true -- confirm to save changes before exiting modified buffer
 vim.opt.cursorline = true -- Enable highlighting of the current line
-vim.opt.hlsearch = true
+vim.opt.hlsearch = true -- Search highlight
 vim.opt.ignorecase = true -- Ignore case
 vim.opt.mouse = "a" -- enable mouse mode
 vim.opt.pumblend = 10 -- Popup blend
@@ -52,9 +56,8 @@ vim.opt.splitbelow = true -- Put new windows below current
 vim.opt.splitright = true -- Put new windows right of current
 vim.opt.tabstop = 2 -- Number of spaces tabs count for
 vim.opt.termguicolors = true -- True color support
-vim.opt.undofile = true
+vim.opt.undofile = true -- save undos per buffer
 vim.opt.undolevels = 10000
-vim.opt.swapfile = false
 vim.opt.wildmode = "longest:full,full" -- Command-line completion mode
 vim.opt.wrap = false -- Disable line wrap
 vim.g.python_host_prog = "/usr/bin/python"

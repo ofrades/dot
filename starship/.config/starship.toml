@@ -1,7 +1,5 @@
 [package]
 disabled = true
 
-[env_var.HOSTNAME]
-variable = "HOSTNAME"
-default = "rpm-ostree"
-style = "bold red"
+[aws]
+disabled = true

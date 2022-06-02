@@ -1,5 +1,5 @@
 -- one statusline to rule them all
-vim.opt.laststatus = 3
+-- vim.opt.laststatus = 3
 
 -- vim.opt.statusline = '%#Pmenu#    %m %r %w %= %< %{FugitiveHead()} |  Ln %l, Col %c  %{&fileencoding?&fileencoding:&encoding}  '
 --
@@ -12,34 +12,6 @@ vim.opt.laststatus = 3
 -- %=                                             left/right separator
 -- %l/%L,%c                                       rownumber/total,colnumber
 -- %{&fileencoding?&fileencoding:&encoding}       file encoding
-local fn = vim.fn
-local api = vim.api
-local modes = {
-  ["n"] = "NORMAL",
-  ["no"] = "NORMAL",
-  ["v"] = "VISUAL",
-  ["V"] = "VISUAL LINE",
-  [""] = "VISUAL BLOCK",
-  ["s"] = "SELECT",
-  ["S"] = "SELECT LINE",
-  [""] = "SELECT BLOCK",
-  ["i"] = "INSERT",
-  ["ic"] = "INSERT",
-  ["R"] = "REPLACE",
-  ["Rv"] = "VISUAL REPLACE",
-  ["c"] = "COMMAND",
-  ["cv"] = "VIM EX",
-  ["ce"] = "EX",
-  ["r"] = "PROMPT",
-  ["rm"] = "MOAR",
-  ["r?"] = "CONFIRM",
-  ["!"] = "SHELL",
-  ["t"] = "TERMINAL",
-}
-local function mode()
-  local current_mode = api.nvim_get_mode().mode
-  return string.format(" %s ", modes[current_mode]):upper()
-end
 
 local function lsp()
   local count = {}
@@ -72,41 +44,61 @@ local function lsp()
     info = " %#LspDiagnosticsSignInformation# " .. count["info"]
   end
 
-  return errors .. warnings .. hints .. info .. "%#Normal#"
-end
-
-local function lineinfo()
-  if vim.bo.filetype == "alpha" then
-    return ""
-  end
-  return " %P %l:%c "
+  return errors .. warnings .. hints .. info
 end
 
 local function getfilename()
-  if api.nvim_win_get_width(0) < 140 then return " %<%f " end
-  return " %<%F "
+  if vim.api.nvim_win_get_width(0) < 100 then
+    return " %<%t "
+  end
+  return " %<%f "
 end
+
+local function getBranch()
+  if vim.api.nvim_win_get_width(0) < 160 then
+    return ""
+  end
+  return " %{FugitiveHead()} "
+end
+
+Statusline = {}
 
 local function holidays()
-  return "🌻" -- summer
   -- return "🔥" -- winter
-  -- return "🍁" -- autumn
-  -- return "🌼" -- spring
-  -- return "🎄" -- christmas
   -- return "🐰" -- easter
+  -- return "🌼" -- spring
+  return "🌻" -- summer
+  -- return "🍁" -- autumn
+  -- return "🎄" -- christmas
 end
 
-vim.opt.statusline = table.concat {
+Statusline.active = function()
+  return table.concat {
     holidays(),
-    "%#Normal#",
-    mode(),
-    "%#PmenuSel# ",
+    " %#PmenuSel# ",
     " ",
     getfilename(),
+    "%m",
     "%#Normal#",
-    lsp(),
     "%=",
-    " %< %{FugitiveHead()} ",
-    "%#Pmenu#",
-    lineinfo(),
-}
+    lsp(),
+    getBranch()
+  }
+end
+
+
+function Statusline.inactive()
+  return table.concat {
+    "%#Pmenu# ",
+    " ",
+    getfilename(),
+  }
+end
+
+vim.api.nvim_exec([[
+	augroup Statusline
+	au!
+	au WinEnter,BufEnter * setlocal statusline=%!v:lua.Statusline.active()
+	au WinLeave,BufLeave * setlocal statusline=%!v:lua.Statusline.inactive()
+	augroup END
+]], false)

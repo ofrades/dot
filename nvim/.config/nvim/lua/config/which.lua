@@ -26,10 +26,11 @@ local leader = {
 	g = {
 		name = "+git",
     a = { "<cmd>:Git commit -a --no-edit<cr>", "Amend" },
-    C = { "<cmd>:T checkout<cr>", "Checkout branch" },
+    b = { "<cmd>:GBrowse!<cr>", "Path to file" },
+    b = { "<cmd>:Telescope git_branches<cr>", "Git branches" },
     c = { "<cmd>:tab Git commit -v<cr>", "Commit" },
     d = { "<cmd>:Gvdiffsplit<cr>", "Buffer diff split"},
-    g = { "<cmd>:tab Git<cr>", "Git status" },
+    s = { "<cmd>:tab Git<cr>", "Git status" },
     l = { "<cmd>:LazyGit<cr>", "Lazygit" },
     p = { "<cmd>:Git pull<cr>", "Pull" },
     P = { "<cmd>:Git push<cr>", "Push" },
@@ -73,3 +74,11 @@ for i = 0, 10 do
 end
 
 wk.register(leader, { prefix = "<leader>" })
+
+local leaderv = {
+  g = {
+    name = "+git",
+    b = { "<cmd>:'<,'>GBrowse!<cr>", "Path to file" },
+  },
+}
+wk.register(leaderv, { mode = "v", prefix = "<leader>" })

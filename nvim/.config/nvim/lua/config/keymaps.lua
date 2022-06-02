@@ -45,6 +45,9 @@ vim.keymap.set("n", "Y", "y$")
 vim.keymap.set("n", "D", "d$")
 vim.keymap.set("n", "C", "c$")
 vim.keymap.set("n", ";", ":")
+vim.keymap.set("n", "<C-a>", "ggVG")
+
+vim.keymap.set("n", "<C-t>", "<cmd>:term<cr>")
 
 -- Copy file path
 vim.keymap.set("n", "<leader>yp", ":let @+=expand('%:p')<cr>")

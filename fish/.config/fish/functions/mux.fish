@@ -1,13 +1,15 @@
 function mux
+    set searchdir $HOME/dev
+    set -l tmpfile (mktemp)
+
     if set -q argv[1]
-        set searchdir $argv[1]
+      find -L $searchdir -maxdepth 4 -type d \
+      | fzf --query $argv[1] > $tmpfile
     else
-        set searchdir $HOME/dev
+      find -L $searchdir -maxdepth 4 -type d \
+      | fzf > $tmpfile
     end
 
-    set -l tmpfile (mktemp)
-    find -L $searchdir -maxdepth 4 -type d \
-    | fzf > $tmpfile
     set -l destdir (cat $tmpfile)
     rm -f $tmpfile
 
@@ -15,19 +17,12 @@ function mux
         return 1
     end
 
+    set -l name (basename $destdir)
+
     if not set -q TMUX
-      tmux new -A -s "$destdir" -c "$destdir"
+      tmux new -A -s "$name" -c "$destdir"
     else
-      TMUX= tmux new -d -s "$destdir" -c "$destdir"
-      tmux switch-client -t "$destdir"
+      TMUX= tmux new -d -s "$name" -c "$destdir"
+      tmux switch-client -t "$name"
     end
-
-#    if test -z "Session.vim"
-#        vi
-#    else if test -z "README.md"
-#        vi README.md
-#    else
-#        vi
-#    end
-
 end

@@ -9,21 +9,21 @@ set fish_greeting
 # fish_vi_key_bindings
 
 # Dracula Color Palette
-set -l foreground f8f8f2
-set -l selection 44475a
+set -l foreground b3b1ad
+set -l selection b3b1ad
 set -l comment 6272a4
-set -l red ff5555
-set -l orange ffb86c
-set -l yellow f1fa8c
-set -l green 50fa7b
-set -l purple bd93f9
-set -l cyan 8be9fd
-set -l pink ff79c6
+set -l red ff7b72
+set -l orange bc8cff
+set -l yellow d29922
+set -l green 3fb950
+set -l purple bc8cff
+set -l cyan 39c5cf
+set -l blue 58a6ff
 
 # Syntax Highlighting Colors
 set -g fish_color_normal $foreground
 set -g fish_color_command $cyan
-set -g fish_color_keyword $pink
+set -g fish_color_keyword $blue
 set -g fish_color_quote $yellow
 set -g fish_color_redirection $foreground
 set -g fish_color_end $orange
@@ -33,7 +33,7 @@ set -g fish_color_comment $comment
 set -g fish_color_selection --background=$selection
 set -g fish_color_search_match --background=$selection
 set -g fish_color_operator $green
-set -g fish_color_escape $pink
+set -g fish_color_escape $blue
 set -g fish_color_autosuggestion $comment
 set -g fish_color_cancel $red --reverse
 set -g fish_color_option $orange
@@ -121,8 +121,6 @@ abbr -a -g mxe 'tmuxinator edit'
 abbr -a -g mxn 'tmuxinator new'
 abbr -a -g mxc 'tmuxinator copy'
 
-abbr lambdas 'aws lambda list-functions | fzf'
-
 # Environment Variables
 set -ga fish_user_paths /usr/local/go/bin
 set -ga fish_user_paths ~/.local/bin
@@ -141,7 +139,6 @@ starship init fish | source
 switch (uname)
     case Linux
       eval (/var/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-      echo Hi Linux!
     case Darwin
       echo Hi Macos!
 end
@@ -153,3 +150,4 @@ set -gx PATH "$PYENV_ROOT/bin:$PATH"
 if command -v pyenv 1>/dev/null 2>&1
   pyenv init - | source
 end
+

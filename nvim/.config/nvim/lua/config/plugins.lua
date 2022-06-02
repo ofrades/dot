@@ -109,6 +109,14 @@ require("packer").startup(function(use)
     requires = {
       "tpope/vim-rhubarb",
       "kdheepak/lazygit.nvim",
+      {
+        "lewis6991/gitsigns.nvim",
+        config = function()
+          require('gitsigns').setup({
+            current_line_blame = false,
+          })
+        end,
+      }
     }
   })
 
@@ -322,11 +330,12 @@ require("packer").startup(function(use)
 	use({
 		"norcalli/nvim-colorizer.lua",
 		requires = {
-			"Mofiqul/dracula.nvim",
 			"projekt0n/github-nvim-theme",
-			"sainnhe/everforest",
+      "ellisonleao/gruvbox.nvim",
+      "luisiacc/gruvbox-baby"
 		},
 		config = function()
+      vim.cmd[[colorscheme github_dimmed]]
 			require("colorizer").setup(nil, {
 				RGB = true, -- #RGB hex codes
 				RRGGBB = true, -- #RRGGBB hex codes
@@ -347,10 +356,8 @@ require("packer").startup(function(use)
 			require("github-theme").setup({
 			  theme_style = "dimmed",
 			  function_style = "italic",
-			  transparent = false,
+			  transparent = true,
 			})
-
-			vim.cmd([[colorscheme github_dimmed]])
 
 			local set_hl = function(group, options)
 				local bg = options.bg == nil and "" or "guibg=" .. options.bg
