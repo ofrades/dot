@@ -182,6 +182,7 @@ require("packer").startup(function(use)
 	})
 	use({ "tpope/vim-dispatch" })
 	use({ "tpope/vim-commentary" })
+  use({ "tpope/vim-eunuch" })
 
 	use({ "JoosepAlviste/nvim-ts-context-commentstring" })
 
@@ -332,10 +333,10 @@ require("packer").startup(function(use)
 		requires = {
 			"projekt0n/github-nvim-theme",
       "ellisonleao/gruvbox.nvim",
-      "luisiacc/gruvbox-baby"
+      "luisiacc/gruvbox-baby",
+      "phha/zenburn.nvim"
 		},
 		config = function()
-      vim.cmd[[colorscheme github_dimmed]]
 			require("colorizer").setup(nil, {
 				RGB = true, -- #RGB hex codes
 				RRGGBB = true, -- #RRGGBB hex codes
@@ -353,6 +354,7 @@ require("packer").startup(function(use)
 				[[autocmd ColorScheme * lua package.loaded['colorizer'] = nil; require('colorizer').setup(); require('colorizer').attach_to_buffer(0)]]
 			)
 
+      vim.cmd[[colorscheme github_dimmed]]
 			require("github-theme").setup({
 			  theme_style = "dimmed",
 			  function_style = "italic",
@@ -374,6 +376,7 @@ require("packer").startup(function(use)
 			for _, highlight in ipairs(highlights) do
 				set_hl(highlight[1], highlight[2])
 			end
+
 		end,
 	})
 
