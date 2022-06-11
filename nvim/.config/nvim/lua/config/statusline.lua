@@ -63,19 +63,9 @@ end
 
 Statusline = {}
 
-local function holidays()
-  -- return "🔥" -- winter
-  -- return "🐰" -- easter
-  -- return "🌼" -- spring
-  return "🌻" -- summer
-  -- return "🍁" -- autumn
-  -- return "🎄" -- christmas
-end
-
 Statusline.active = function()
   return table.concat {
-    holidays(),
-    " %#PmenuSel# ",
+    " %#CursorLineNr# ",
     " ",
     getfilename(),
     "%m",

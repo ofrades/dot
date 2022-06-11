@@ -61,6 +61,29 @@ require("packer").startup(function(use)
 		end,
 	})
 
+use {
+  "rcarriga/neotest",
+  requires = {
+    "nvim-lua/plenary.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    "antoinemadec/FixCursorHold.nvim",
+    "haydenmeade/neotest-jest",
+    "rcarriga/neotest-python",
+    "rcarriga/neotest-vim-test"
+  },
+  config = function()
+    require('neotest').setup({
+      adapters = {
+        require('neotest-jest'),
+        require('neotest-python'),
+        require("neotest-vim-test")({
+          ignore_file_types = { "python", "vim", "lua" },
+      }),
+      }
+    })
+  end
+}
+
 	use({
 		"nvim-treesitter/nvim-treesitter",
 		config = function()
@@ -216,62 +239,79 @@ require("packer").startup(function(use)
 		},
 	})
 
-	use({
-		"kyazdani42/nvim-tree.lua",
-		requires = "kyazdani42/nvim-web-devicons",
-		config = function()
-			local tree_cb = require("nvim-tree.config").nvim_tree_callback
-			require("nvim-tree").setup({
-				disable_netrw = false,
-				hijack_netrw = false,
-				open_on_setup = false,
-				ignore_ft_on_setup = {},
-				open_on_tab = true,
-				hijack_cursor = false,
-				update_cwd = true,
-				update_focused_file = {
-					enable = true,
-					update_cwd = true,
-					ignore_list = {},
-				},
-				system_open = {
-					cmd = nil,
-					args = {},
-				},
-				git = {
-					enable = true,
-					ignore = true,
-					timeout = 500,
-				},
-				view = {
-					width = 40,
-					side = "left",
-					signcolumn = "yes",
-					number = true,
-					mappings = {
-						custom_only = false,
-						list = {
-							{ key = { "<cr>", "o", "l" }, cb = tree_cb("edit") },
-							{ key = "<C-v>", cb = tree_cb("vsplit") },
-							{ key = "<C-s>", cb = tree_cb("split") },
-							{ key = "<C-t>", cb = tree_cb("tabnew") },
-							{ key = "<BS>", cb = tree_cb("close_node") },
-							{ key = "<S-cr>", cb = tree_cb("close_node") },
-							{ key = "h", cb = tree_cb("close_node") },
-							{ key = "R", cb = tree_cb("refresh") },
-							{ key = "a", cb = tree_cb("create") },
-							{ key = "d", cb = tree_cb("remove") },
-							{ key = "r", cb = tree_cb("rename") },
-							{ key = "x", cb = tree_cb("cut") },
-							{ key = "c", cb = tree_cb("copy") },
-							{ key = "p", cb = tree_cb("paste") },
-							{ key = "q", cb = tree_cb("close") },
-						},
-					},
-				},
-			})
-		end,
-	})
+  use {
+    "nvim-neo-tree/neo-tree.nvim",
+      requires = { 
+        "nvim-lua/plenary.nvim",
+        "kyazdani42/nvim-web-devicons", -- not strictly required, but recommended
+        "MunifTanjim/nui.nvim",
+    }
+  }
+
+  use {
+    "nvim-telescope/telescope-frecency.nvim",
+    config = function()
+      require"telescope".load_extension("frecency")
+    end,
+    requires = {"tami5/sqlite.lua"}
+  }
+
+	-- use({
+	-- 	"kyazdani42/nvim-tree.lua",
+	-- 	requires = "kyazdani42/nvim-web-devicons",
+	-- 	config = function()
+	-- 		local tree_cb = require("nvim-tree.config").nvim_tree_callback
+	-- 		require("nvim-tree").setup({
+	-- 			disable_netrw = false,
+	-- 			hijack_netrw = false,
+	-- 			open_on_setup = false,
+	-- 			ignore_ft_on_setup = {},
+	-- 			open_on_tab = true,
+	-- 			hijack_cursor = false,
+	-- 			update_cwd = true,
+	-- 			update_focused_file = {
+	-- 				enable = true,
+	-- 				update_cwd = true,
+	-- 				ignore_list = {},
+	-- 			},
+	-- 			system_open = {
+	-- 				cmd = nil,
+	-- 				args = {},
+	-- 			},
+	-- 			git = {
+	-- 				enable = true,
+	-- 				ignore = true,
+	-- 				timeout = 500,
+	-- 			},
+	-- 			view = {
+	-- 				width = 40,
+	-- 				side = "left",
+	-- 				signcolumn = "yes",
+	-- 				number = true,
+	-- 				mappings = {
+	-- 					custom_only = false,
+	-- 					list = {
+	-- 						{ key = { "<cr>", "o", "l" }, cb = tree_cb("edit") },
+	-- 						{ key = "<C-v>", cb = tree_cb("vsplit") },
+	-- 						{ key = "<C-s>", cb = tree_cb("split") },
+	-- 						{ key = "<C-t>", cb = tree_cb("tabnew") },
+	-- 						{ key = "<BS>", cb = tree_cb("close_node") },
+	-- 						{ key = "<S-cr>", cb = tree_cb("close_node") },
+	-- 						{ key = "h", cb = tree_cb("close_node") },
+	-- 						{ key = "R", cb = tree_cb("refresh") },
+	-- 						{ key = "a", cb = tree_cb("create") },
+	-- 						{ key = "d", cb = tree_cb("remove") },
+	-- 						{ key = "r", cb = tree_cb("rename") },
+	-- 						{ key = "x", cb = tree_cb("cut") },
+	-- 						{ key = "c", cb = tree_cb("copy") },
+	-- 						{ key = "p", cb = tree_cb("paste") },
+	-- 						{ key = "q", cb = tree_cb("close") },
+	-- 					},
+	-- 				},
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- })
 
 	use({
 		"RRethy/vim-illuminate",
@@ -293,6 +333,7 @@ require("packer").startup(function(use)
 			"nvim-telescope/telescope-file-browser.nvim",
 			"ThePrimeagen/harpoon",
 			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+			"nvim-telescope/telescope-project.nvim",
 		},
 		config = function()
 			local actions = require("telescope.actions")
@@ -307,7 +348,32 @@ require("packer").startup(function(use)
 						},
 					},
 				},
+				extensions = {
+					project = {
+						base_dirs = {
+							{'~/dev', max_depth = 4},
+							{'~/dot'},
+						},
+            hidden_files = true,
+            theme = "ivy"
+					}
+				},
+        pickers = {
+          find_files = {
+            theme = "ivy",
+          },
+          oldfiles = {
+            theme = "ivy"
+          },
+          commands = {
+            theme = "ivy"
+          },
+          live_grep = {
+            theme = "ivy"
+          }
+        },
 			})
+      require'telescope'.load_extension('project')
 		end,
 	})
 
@@ -334,7 +400,7 @@ require("packer").startup(function(use)
 			"projekt0n/github-nvim-theme",
       "ellisonleao/gruvbox.nvim",
       "luisiacc/gruvbox-baby",
-      "phha/zenburn.nvim"
+      "~/dev/ofrades/seoul256.nvim"
 		},
 		config = function()
 			require("colorizer").setup(nil, {
@@ -354,12 +420,11 @@ require("packer").startup(function(use)
 				[[autocmd ColorScheme * lua package.loaded['colorizer'] = nil; require('colorizer').setup(); require('colorizer').attach_to_buffer(0)]]
 			)
 
-      vim.cmd[[colorscheme github_dimmed]]
-			require("github-theme").setup({
-			  theme_style = "dimmed",
-			  function_style = "italic",
-			  transparent = true,
-			})
+			-- require("github-theme").setup({
+			--   theme_style = "dimmed",
+			--   function_style = "italic",
+			--   transparent = true,
+			-- })
 
 			local set_hl = function(group, options)
 				local bg = options.bg == nil and "" or "guibg=" .. options.bg
@@ -376,6 +441,13 @@ require("packer").startup(function(use)
 			for _, highlight in ipairs(highlights) do
 				set_hl(highlight[1], highlight[2])
 			end
+
+      vim.g.seoul256_borders = false
+      vim.g.seoul256_disable_background = true
+      vim.g.seoul256_contrast = true
+      vim.g.seoul256_hl_current_line = true
+      -- vim.cmd[[ hi! TermCursor guifg=NONE guibg=#678568 gui=NONE cterm=NONE ]]
+      vim.cmd[[colorscheme seoul256]]
 
 		end,
 	})

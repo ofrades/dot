@@ -3,6 +3,13 @@ vim.cmd([[
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif
 ]])
 
+vim.cmd([[
+  set guicursor=n-v-c:block-Cursor
+  set guicursor+=i:ver100-iCursor
+  set guicursor+=n-v-c:blinkon0
+  set guicursor+=i:blinkwait10
+]])
+
 -- Highlight on yank
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -63,6 +70,9 @@ vim.opt.wrap = false -- Disable line wrap
 vim.g.python_host_prog = "/usr/bin/python"
 vim.g.python3_host_prog = "/usr/bin/python3"
 vim.opt.shell = "fish"
+vim.o.fileencoding = "utf-8"
+
+-- vim.cmd("language en_US.utf-8")
 
 -- don't load the plugins below
 vim.g.loaded_gzip = 1

@@ -5,50 +5,6 @@
     favcolor: blue
     user: ofrades
   tasks:
-    - name: copr
-      community.general.copr:
-        name: "{{ item }}"
-      with_items:
-        - nili/pyenv
-        - boeroboy/hashicorp
-
-    - name: Package Install - common
-      package:
-        state: installed
-        name: "{{ item }}"
-      with_items:
-        - pipenv
-        - pyenv
-        - jq
-        - awscli
-        - terraform
-
-    - name: Package Install - npm
-      community.general.npm:
-        name: "{{ item }}"
-        global: yes
-        path: "~/.npm-global"
-      with_items:
-        - serverless
-
-    - name: Brew packages
-      become: no
-      community.general.homebrew:
-        path: /home/linuxbrew/.linuxbrew/bin
-        name: "{{ item }}"
-      with_items:
-        - aws-vault
-
-    - name: Package Install - pip
-      pip:
-        name: "{{ item }}"
-      with_items:
-        - pyright
-        - pynvim
-        - flake8
-        - black
-        - awsume
-
     - name: Ensure folders exist
       file:
         path: "/home/{{ user }}/dev/cazoo"
@@ -71,7 +27,6 @@
         - cazoo-react-string-interpolate
         - crm-escalation-service
         - customer-force
-        - cx-api-end-to-end
         - cx-api-python
         - fulfilment-dispatch-escalation-service
         - logistics-scheduling

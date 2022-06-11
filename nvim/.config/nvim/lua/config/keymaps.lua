@@ -52,9 +52,6 @@ vim.keymap.set("n", "<C-t>", "<cmd>:term<cr>")
 -- Copy file path
 vim.keymap.set("n", "<leader>yp", ":let @+=expand('%:p')<cr>")
 
--- File tree
-vim.keymap.set("n", "<space><space>", "<cmd>:NvimTreeToggle<cr>")
-
 -- Better indenting
 vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")

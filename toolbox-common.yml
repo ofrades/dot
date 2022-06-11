@@ -12,6 +12,7 @@
         - agriffis/neovim-nightly
         - atim/lazygit
         - atim/starship
+        - boeroboy/hashicorp
 
     - name: Sytem packages
       package:
@@ -35,7 +36,8 @@
         - starship
         - libstdc++-static
         - gcc-c++
-
+        - awscli
+        - terraform
 
     - name: Npm packages
       community.general.npm:
@@ -50,6 +52,21 @@
         - markdownlint-cli
         - cspell
         - write-good
+        - serverless
+
+    - name: Brew packages
+      become: no
+      community.general.homebrew:
+        path: /home/linuxbrew/.linuxbrew/bin
+        name: "{{ item }}"
+      with_items:
+        - aws-vault
+
+    - name: Package Install - pip
+      pip:
+        name: "{{ item }}"
+      with_items:
+        - awsume
 
     - name: Set fish as default shell for {{ user }}
       become: true

@@ -1,0 +1,31 @@
+- name: Python toolbox
+  hosts: localhost
+  become: true
+  vars:
+    favcolor: blue
+    user: ofrades
+  tasks:
+    - name: copr
+      community.general.copr:
+        name: "{{ item }}"
+      with_items:
+        - nili/pyenv
+
+    - name: Package Install - common
+      package:
+        state: installed
+        name: "{{ item }}"
+      with_items:
+        - pipenv
+        - pyenv
+        - sqlite-devel
+        - jq
+
+    - name: Package Install - pip
+      pip:
+        name: "{{ item }}"
+      with_items:
+        - pyright
+        - pynvim
+        - flake8
+        - black
