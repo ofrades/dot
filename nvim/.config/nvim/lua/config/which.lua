@@ -14,7 +14,7 @@ local leader = {
 	c = { "<cmd>Telescope commands<cr>", "Commands" },
   b = { "<cmd>:Telescope git_branches<cr>", "Git branches" },
 	d = { "<cmd>:T dev<CR>", "Dev" },
-	e = { "<cmd>:NeoTreeShowToggle<CR>", "Tree" },
+	e = { "<cmd>:Neotree toggle reveal<CR>", "Tree" },
 	m = { "<cmd>:T mux<CR>", "Mux" },
 	f = { "<cmd>Telescope live_grep hidden=true<cr>", "Find Text" },
 	n = { "<cmd>:vsplit | enew<cr>", "New File" },

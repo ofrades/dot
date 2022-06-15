@@ -38,6 +38,8 @@
         - gcc-c++
         - awscli
         - terraform
+        - nodejs
+        - wl-clipboard
 
     - name: Npm packages
       community.general.npm:
@@ -61,12 +63,6 @@
         name: "{{ item }}"
       with_items:
         - aws-vault
-
-    - name: Package Install - pip
-      pip:
-        name: "{{ item }}"
-      with_items:
-        - awsume
 
     - name: Set fish as default shell for {{ user }}
       become: true

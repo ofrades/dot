@@ -20,12 +20,6 @@ if ! have "brew"; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-# if ! have "terraform"; then
-#   sudo dnf install -y dnf-plugins-core
-#   sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
-#   sudo dnf -y install terraform
-# fi
-
 if ! have "gh"; then
   sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
   sudo dnf install gh

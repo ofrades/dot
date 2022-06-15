@@ -72,7 +72,7 @@
         - ~/.ssh
 
     - name: Create symlinks
-      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig alacritty nvmrc gitignoreglobal tmux doom
+      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig alacritty nvmrc gitignoreglobal tmux doom sway waybar mako
 
     - name: Set ssh permissions
       file:

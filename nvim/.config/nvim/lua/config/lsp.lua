@@ -53,7 +53,7 @@ local function on_attach(client, bufnr)
 	vim.keymap.set("n", "g[", vim.diagnostic.goto_prev, opts)
 	vim.keymap.set("n", "g]", vim.diagnostic.goto_next, opts)
 	vim.keymap.set("n", "gq", vim.diagnostic.setloclist, opts)
-	vim.keymap.set("n", "gf", vim.lsp.buf.formatting, opts)
+	vim.keymap.set("n", "gf", vim.lsp.buf.format, opts)
 	vim.keymap.set("n", "X", "<cmd>lua vim.diagnostic.open_float(nil, { focus = false })<CR>", opts)
 	vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
 	vim.keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
@@ -63,7 +63,7 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
-vim.cmd([[autocmd BufWritePre *.tsx,*.ts,*.jsx,*.js EslintFixAll]])
+-- vim.cmd([[autocmd BufWritePre *.tsx,*.ts,*.jsx,*.js EslintFixAll]])
 
 local options = {
 	on_attach = on_attach,
@@ -108,11 +108,11 @@ nvim_lsp.tsserver.setup({
 	root_dir = nvim_lsp.util.root_pattern("package.json"),
 })
 
-nvim_lsp.eslint.setup({
-	on_attach = on_attach,
-	capabilities = capabilities,
-	root_dir = nvim_lsp.util.root_pattern("package.json"),
-})
+-- nvim_lsp.eslint.setup({
+-- 	on_attach = on_attach,
+-- 	capabilities = capabilities,
+-- 	root_dir = nvim_lsp.util.root_pattern("package.json"),
+-- })
 
 require("null-ls").setup({
 	sources = {
@@ -120,14 +120,14 @@ require("null-ls").setup({
 			filetypes = { "html", "json", "yaml", "markdown", "toml" },
 		}),
 		require("null-ls").builtins.formatting.stylua,
-		-- require("null-ls").builtins.formatting.eslint_d,
+		require("null-ls").builtins.formatting.eslint_d,
 		require("null-ls").builtins.formatting.terraform_fmt,
-		require("null-ls").builtins.formatting.black.with({ filetypes = { "python", "jq" } }),
+		require("null-ls").builtins.formatting.black,
 		require("null-ls").builtins.formatting.fixjson,
 		require("null-ls").builtins.formatting.rustfmt,
 		-- require("null-ls").builtins.formatting.deno_fmt,
 
-		-- require("null-ls").builtins.diagnostics.eslint_d,
+		require("null-ls").builtins.diagnostics.eslint_d,
 		require("null-ls").builtins.diagnostics.flake8,
 		require("null-ls").builtins.diagnostics.write_good,
 		require("null-ls").builtins.diagnostics.markdownlint,
@@ -141,7 +141,20 @@ require("null-ls").setup({
 
 		require("null-ls").builtins.hover.dictionary,
 	},
-	on_attach = on_attach,
+	-- on_attach = on_attach,
+	on_attach = function(client, bufnr)
+		if client.supports_method("textDocument/formatting") then
+			vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				group = augroup,
+				buffer = bufnr,
+				callback = function()
+					-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
+					vim.lsp.buf.format()
+				end,
+			})
+		end
+	end,
 })
 
 return M

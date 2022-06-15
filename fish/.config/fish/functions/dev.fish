@@ -19,10 +19,6 @@ function dev
 
     cd $destdir
 
-    if test -z "README.md"
-        nvim README.md
-    else
-        nvim
-    end
+    echo "🦸 jump to $destdir"
 
 end

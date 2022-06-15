@@ -27,11 +27,8 @@ have exa || rpm-ostree install exa
 # install rnnoise
 have exa || rpm-ostree install rnnoise
 
-# install tweaks
-have gnome-tweaks || rpm-ostree install gnome-tweaks
-
-# install pop-shell
-have gnome-tweaks || rpm-ostree install gnome-shell-extension-pop-shell
+# install rnnoise
+have sway || rpm-ostree install sway mako wl-clipboard waybar
 
 # install ansible
 have ansible || rpm-ostree install ansible

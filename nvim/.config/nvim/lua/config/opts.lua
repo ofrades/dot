@@ -51,7 +51,7 @@ vim.opt.inccommand = "split" -- preview incremental substitute
 vim.opt.joinspaces = false -- No double spaces with join after a dot
 vim.opt.list = true -- Show some invisible characters (tabs...
 vim.opt.number = true -- Print line number
-vim.opt.relativenumber = false -- Relative line numbers
+vim.opt.relativenumber = true -- Relative line numbers
 vim.opt.scrolloff = 5 -- Lines of context
 vim.opt.shiftround = true -- Round indent
 vim.opt.shiftwidth = 2 -- Size of an indent
@@ -71,6 +71,7 @@ vim.g.python_host_prog = "/usr/bin/python"
 vim.g.python3_host_prog = "/usr/bin/python3"
 vim.opt.shell = "fish"
 vim.o.fileencoding = "utf-8"
+vim.o.swapfile = false
 
 -- vim.cmd("language en_US.utf-8")
 
