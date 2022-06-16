@@ -26,7 +26,7 @@ vim.o.updatetime = 250
 
 -- reload when files change outside buffer
 vim.o.autoread = true
-vim.cmd [[ au FocusGained,BufEnter * checktime ]]
+vim.cmd([[ au FocusGained,BufEnter * checktime ]])
 
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
 vim.opt.backup = false -- creates a backupt file
@@ -85,4 +85,3 @@ vim.g.loaded_2html_plugin = 1
 -- vim.g.loaded_netrwPlugin = 1
 vim.g.loaded_matchit = 1
 vim.g.loaded_matchparen = 1
-

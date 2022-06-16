@@ -18,7 +18,7 @@ set $term alacritty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu dmenu_run -fn 'Noto-13.0'
+set $menu dmenu_run -fn 'Noto-10.0'
 set $chrome flatpak run com.google.Chrome
 set $slack flatpak run com.slack.Slack
 set $sound flatpak run com.github.wwmm.easyeffects
@@ -54,7 +54,7 @@ for_window [app_id=".*"] split toggle
 output * scale 1
 output * scale_filter linear
 # output DP-3 scale 1
-font pango:"JetBrainsMono Nerd Font" Regular 11
+# font pango:"JetBrainsMono Nerd Font" Regular 11
 # This is the only place where you must set GTK scaling
 exec_always {
     gsettings set org.gnome.desktop.interface text-scaling-factor 1

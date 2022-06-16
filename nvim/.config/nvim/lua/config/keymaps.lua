@@ -56,5 +56,28 @@ vim.keymap.set("n", "<leader>yp", ":let @+=expand('%:p')<cr>")
 vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
 
+vim.keymap.set("n", "<Tab>", "%", { remap = true })
+vim.keymap.set("x", "<Tab>", "%", { remap = true })
+vim.keymap.set("o", "<Tab>", "%", { remap = true })
+vim.keymap.set("n", "<C-t>", "<cmd>:tabnew<cr>")
+
 -- remap fugitive inline diff to tab
 vim.cmd("autocmd FileType fugitive nmap <buffer> <Tab> =")
+
+vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
+vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+vim.keymap.set("n", "K", vim.lsp.buf.hover)
+vim.keymap.set("n", "gh", vim.lsp.buf.hover)
+vim.keymap.set("n", "gi", vim.lsp.buf.implementation)
+vim.keymap.set("i", "<c-s>", vim.lsp.buf.signature_help)
+
+vim.keymap.set("n", "gR", vim.lsp.buf.rename)
+vim.keymap.set("n", "ga", vim.lsp.buf.code_action)
+vim.keymap.set("n", "g[", vim.diagnostic.goto_prev)
+vim.keymap.set("n", "g]", vim.diagnostic.goto_next)
+vim.keymap.set("n", "gq", vim.diagnostic.setloclist)
+vim.keymap.set("n", "gf", vim.lsp.buf.format)
+vim.keymap.set("n", "X", "<cmd>lua vim.diagnostic.open_float(nil, { focus = false })<CR>")
+vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>")
+vim.keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>")
+vim.keymap.set("n", "gx", "<cmd>Trouble document_diagnostics<CR>")

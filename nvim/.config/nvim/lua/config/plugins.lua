@@ -24,8 +24,69 @@ require("packer").startup(function(use)
 		"neovim/nvim-lspconfig",
 		requires = {
 			"nvim-lua/plenary.nvim",
-			"jose-elias-alvarez/null-ls.nvim",
+			{
+				"jose-elias-alvarez/null-ls.nvim",
+				config = function()
+					require("null-ls").setup({
+						sources = {
+							require("null-ls").builtins.formatting.prettier.with({
+								filetypes = { "html", "json", "yaml", "markdown", "toml" },
+							}),
+							require("null-ls").builtins.formatting.stylua,
+							require("null-ls").builtins.formatting.eslint_d,
+							require("null-ls").builtins.formatting.terraform_fmt,
+							require("null-ls").builtins.formatting.black,
+							require("null-ls").builtins.formatting.fixjson,
+							require("null-ls").builtins.formatting.rustfmt,
+							-- require("null-ls").builtins.formatting.deno_fmt,
+
+							require("null-ls").builtins.diagnostics.eslint_d,
+							require("null-ls").builtins.diagnostics.flake8,
+							require("null-ls").builtins.diagnostics.write_good,
+							require("null-ls").builtins.diagnostics.markdownlint,
+							require("null-ls").builtins.diagnostics.ansiblelint,
+							require("null-ls").builtins.diagnostics.jsonlint,
+							require("null-ls").builtins.diagnostics.golangci_lint,
+							-- require("null-ls").builtins.diagnostics.cspell,
+
+							require("null-ls").builtins.code_actions.eslint_d,
+							require("null-ls").builtins.code_actions.refactoring,
+
+							require("null-ls").builtins.hover.dictionary,
+						},
+						-- on_attach = on_attach,
+						on_attach = function(client, bufnr)
+							if client.supports_method("textDocument/formatting") then
+								vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+								vim.api.nvim_create_autocmd("BufWritePre", {
+									group = augroup,
+									buffer = bufnr,
+									callback = function()
+										-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
+										vim.lsp.buf.format()
+									end,
+								})
+							end
+						end,
+					})
+				end,
+			},
 			"jose-elias-alvarez/typescript.nvim",
+			{
+				"williamboman/nvim-lsp-installer",
+				config = function()
+					require("nvim-lsp-installer").setup({
+						automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
+						ui = {
+							icons = {
+								server_installed = "✓",
+								server_pending = "➜",
+								server_uninstalled = "✗",
+							},
+						},
+					})
+				end,
+			},
 		},
 		config = function()
 			require("typescript").setup({})
@@ -62,29 +123,6 @@ require("packer").startup(function(use)
 	})
 
 	use({
-		"rcarriga/neotest",
-		requires = {
-			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
-			"antoinemadec/FixCursorHold.nvim",
-			"haydenmeade/neotest-jest",
-			"rcarriga/neotest-python",
-			"rcarriga/neotest-vim-test",
-		},
-		config = function()
-			require("neotest").setup({
-				adapters = {
-					require("neotest-jest"),
-					require("neotest-python"),
-					require("neotest-vim-test")({
-						ignore_file_types = { "python", "vim", "lua" },
-					}),
-				},
-			})
-		end,
-	})
-
-	use({
 		"nvim-treesitter/nvim-treesitter",
 		config = function()
 			require("nvim-treesitter.configs").setup({
@@ -115,16 +153,31 @@ require("packer").startup(function(use)
 	})
 
 	use({
+		"is0n/fm-nvim",
+		config = function()
+			require("fm-nvim").setup({
+				ui = {
+					-- Default UI (can be "split" or "float")
+					default = "float",
+					float = {
+						float_hl = "Normal",
+						border_hl = "FloatBorder",
+						height = 1,
+						width = 1,
+					},
+				},
+			})
+		end,
+	})
+
+	use({
 		"tpope/vim-fugitive",
 		requires = {
 			"tpope/vim-rhubarb",
-			"kdheepak/lazygit.nvim",
 			{
 				"lewis6991/gitsigns.nvim",
 				config = function()
-					require("gitsigns").setup({
-						current_line_blame = false,
-					})
+					require("gitsigns").setup()
 				end,
 			},
 		},
@@ -225,6 +278,8 @@ require("packer").startup(function(use)
 			},
 		},
 	})
+
+	use({ "simnalamburt/vim-mundo" })
 
 	use({
 		"nvim-neo-tree/neo-tree.nvim",
@@ -349,6 +404,7 @@ require("packer").startup(function(use)
 		"norcalli/nvim-colorizer.lua",
 		requires = {
 			"EdenEast/nightfox.nvim",
+			"gruvbox-community/gruvbox",
 		},
 		config = function()
 			require("colorizer").setup(nil, {
@@ -386,20 +442,20 @@ require("packer").startup(function(use)
 
 			require("nightfox").setup({
 				options = {
-					transparent = false, -- Disable setting background
+					transparent = true, -- Disable setting background
 					terminal_colors = true, -- Set terminal colors (vim.g.terminal_color_*) used in `:terminal`
 					dim_inactive = true, -- Non focused panes set to alternative background
 					styles = { -- Style to be applied to different syntax groups
 						comments = "italic", -- Value is any valid attr-list value `:help attr-list`
-						-- conditionals = "NONE",
+						conditionals = "bold",
 						constants = "bold",
 						functions = "italic",
-						-- keywords = "NONE",
-						-- numbers = "NONE",
-						-- operators = "NONE",
-						-- strings = "NONE",
+						keywords = "NONE",
+						numbers = "NONE",
+						operators = "NONE",
+						strings = "italic",
 						types = "italic,bold",
-						-- variables = "NONE",
+						variables = "NONE",
 					},
 					inverse = { -- Inverse highlight for different types
 						match_paren = false,
@@ -407,22 +463,22 @@ require("packer").startup(function(use)
 						search = false,
 					},
 				},
-				palettes = {
-					nordfox = {
-						bg0 = "#282828",
-						bg1 = "#282C34",
-					},
-					nightfox = {
-						bg0 = "#282828",
-						bg1 = "#282C34",
-					},
-					duskfox = {
-						bg0 = "#282828",
-						bg1 = "#282C34",
-					},
-				},
+				-- palettes = {
+				-- 	nordfox = {
+				-- 		bg0 = "#222522",
+				-- 		bg1 = "#282C34",
+				-- 	},
+				-- 	nightfox = {
+				-- 		bg0 = "#222522",
+				-- 		bg1 = "#282C34",
+				-- 	},
+				-- 	duskfox = {
+				-- 		bg0 = "#222522",
+				-- 		bg1 = "#282C34",
+				-- 	},
+				-- },
 			})
-			vim.cmd([[colorscheme nightfox]])
+			vim.cmd([[colorscheme nordfox]])
 		end,
 	})
 
@@ -460,49 +516,57 @@ require("packer").startup(function(use)
 	})
 
 	use({
-		"Pocco81/dap-buddy.nvim",
-		branch = "dev",
+		"nvim-neotest/neotest",
 		requires = {
-			"mfussenegger/nvim-dap",
-			"theHamsta/nvim-dap-virtual-text",
-			"David-Kunz/jester",
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"antoinemadec/FixCursorHold.nvim",
+			"haydenmeade/neotest-jest",
+			"nvim-neotest/neotest-python",
+			"nvim-neotest/neotest-vim-test",
+		},
+		config = function()
+			require("neotest").setup({
+				adapters = {
+					-- require("neotest-jest"),
+					-- require("neotest-python"),
+					require("neotest-vim-test"),
+				},
+			})
+		end,
+	})
+
+	use({
+		"mfussenegger/nvim-dap",
+		requires = {
+			"mfussenegger/nvim-dap-python",
+			{
+				"theHamsta/nvim-dap-virtual-text",
+				requires = { "mfussenegger/nvim-dap" },
+				config = function()
+					require("nvim-dap-virtual-text").setup()
+					vim.g.dap_virtual_text = true
+				end,
+			},
+			{
+				"rcarriga/nvim-dap-ui",
+				requires = { "mfussenegger/nvim-dap" },
+				config = function()
+					require("dapui").setup({})
+				end,
+			},
+			{
+				"David-Kunz/jester",
+				requires = { "mfussenegger/nvim-dap" },
+				config = function()
+					require("jester").setup({})
+					vim.keymap.set("n", "F2", [[:lua require"jester".debug()<cr>]])
+				end,
+			},
 		},
 		config = function()
 			local dap = require("dap")
-			local dap_install = require("dap-install")
-
-			dap_install.setup({
-				installation_path = os.getenv("HOME") .. "/.local/share/nvim/dapinstall/",
-			})
-
-			dap_install.config("jsnode", {})
-
-			require("nvim-dap-virtual-text").setup()
-
-			vim.g.dap_virtual_text = true
-
-			vim.fn.sign_define("DapBreakpoint", { text = "🟥", texthl = "", linehl = "", numhl = "" })
-			vim.fn.sign_define("DapBreakpointRejected", { text = "🟦", texthl = "", linehl = "", numhl = "" })
-			vim.fn.sign_define("DapStopped", { text = "⭐️", texthl = "", linehl = "", numhl = "" })
-
-			vim.keymap.set("n", "<leader>dd", function()
-				require("jester").debug()
-			end)
-			vim.keymap.set("n", "<leader>df", function()
-				require("jester").debug_file()
-			end)
-			vim.keymap.set("n", "<leader>dl", function()
-				require("jester").debug_last()
-			end)
-			vim.keymap.set("n", "<leader>dq", function()
-				require("jester").terminate()
-			end)
-
-			vim.keymap.set("n", "<F1>", [[:lua require('dap').toggle_breakpoint()<cr>]])
-			vim.keymap.set("n", "<F5>", [[:lua require('dap').continue()<cr>]])
-			vim.keymap.set("n", "<F6>", [[:lua require('dap').step_over()<cr>]])
-			vim.keymap.set("n", "<F7>", [[:lua require('dap').step_into()<cr>]])
-			vim.keymap.set("n", "<F8>", [[:lua require('dap').step_out()<cr>]])
+			require("config.dap")
 		end,
 	})
 

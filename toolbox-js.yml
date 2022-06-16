@@ -10,11 +10,12 @@
         global: yes
         path: "~/.npm-global"
       with_items:
-      - yarn
-      - typescript
-      - typescript-language-server
-      - vscode-langservers-extracted
-      - emmet-ls
+        - yarn
+        - typescript
+        - typescript-language-server
+        - eslint_d
+        - vscode-langservers-extracted
+        - emmet-ls
 
     - name: Install nvm
       shell: curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
