@@ -38,6 +38,7 @@ require("packer").startup(function(use)
 							require("null-ls").builtins.formatting.black,
 							require("null-ls").builtins.formatting.fixjson,
 							require("null-ls").builtins.formatting.rustfmt,
+							require("null-ls").builtins.diagnostics.actionlint,
 							-- require("null-ls").builtins.formatting.deno_fmt,
 
 							require("null-ls").builtins.diagnostics.eslint_d,
@@ -404,7 +405,6 @@ require("packer").startup(function(use)
 		"norcalli/nvim-colorizer.lua",
 		requires = {
 			"EdenEast/nightfox.nvim",
-			"gruvbox-community/gruvbox",
 		},
 		config = function()
 			require("colorizer").setup(nil, {
@@ -442,7 +442,7 @@ require("packer").startup(function(use)
 
 			require("nightfox").setup({
 				options = {
-					transparent = true, -- Disable setting background
+					transparent = false, -- Disable setting background
 					terminal_colors = true, -- Set terminal colors (vim.g.terminal_color_*) used in `:terminal`
 					dim_inactive = true, -- Non focused panes set to alternative background
 					styles = { -- Style to be applied to different syntax groups
@@ -463,22 +463,28 @@ require("packer").startup(function(use)
 						search = false,
 					},
 				},
-				-- palettes = {
-				-- 	nordfox = {
-				-- 		bg0 = "#222522",
-				-- 		bg1 = "#282C34",
-				-- 	},
-				-- 	nightfox = {
-				-- 		bg0 = "#222522",
-				-- 		bg1 = "#282C34",
-				-- 	},
-				-- 	duskfox = {
-				-- 		bg0 = "#222522",
-				-- 		bg1 = "#282C34",
-				-- 	},
-				-- },
+				palettes = {
+					-- 	nordfox = {
+					-- 		bg0 = "#222522",
+					-- 		bg1 = "#282C34",
+					-- 	},
+					-- 	nightfox = {
+					-- 		bg0 = "#222522",
+					-- 		bg1 = "#282C34",
+					-- 	},
+					-- duskfox = {
+					-- 	bg0 = "#222522",
+					-- 	bg1 = "#282C34",
+					-- },
+				},
+				groups = {
+					all = {
+						TelescopeNormal = { bg = "bg1" },
+						TelescopeBorder = { bg = "bg1" },
+					},
+				},
 			})
-			vim.cmd([[colorscheme nordfox]])
+			vim.cmd([[colorscheme duskfox]])
 		end,
 	})
 
@@ -539,7 +545,7 @@ require("packer").startup(function(use)
 	use({
 		"mfussenegger/nvim-dap",
 		requires = {
-			"mfussenegger/nvim-dap-python",
+			"David-Kunz/jester",
 			{
 				"theHamsta/nvim-dap-virtual-text",
 				requires = { "mfussenegger/nvim-dap" },
@@ -553,14 +559,6 @@ require("packer").startup(function(use)
 				requires = { "mfussenegger/nvim-dap" },
 				config = function()
 					require("dapui").setup({})
-				end,
-			},
-			{
-				"David-Kunz/jester",
-				requires = { "mfussenegger/nvim-dap" },
-				config = function()
-					require("jester").setup({})
-					vim.keymap.set("n", "F2", [[:lua require"jester".debug()<cr>]])
 				end,
 			},
 		},

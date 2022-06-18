@@ -20,5 +20,4 @@ function dev
     cd $destdir
 
     echo "🦸 jump to $destdir"
-
 end

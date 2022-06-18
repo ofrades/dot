@@ -19,4 +19,4 @@
       with_items:
         - golangci-lint
         - gopls
-
+        - actionlint

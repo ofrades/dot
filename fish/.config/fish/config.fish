@@ -6,7 +6,7 @@ set -U fish_emoji_width 2
 # disable greeting
 set fish_greeting
 # vim
-# fish_vi_key_bindings
+fish_vi_key_bindings
 
 # git
 abbr clone 'git clone git@github.com:'
@@ -32,12 +32,8 @@ abbr rebase 'git rebase'
 abbr continue 'git rebase --continue'
 abbr g 'lazygit'
 abbr files 'nvim (fzf --preview "cat {}")'
-abbr checkout 'git branch -a | grep -v HEAD |  sed "s/remotes\/origin\///" |string trim | fzf | read -l result; and git checkout "$result"'
 abbr gedit 'flatpak run org.gnome.gedit'
-
-abbr -s ls 'exa --color=always --icons --group-directories-first'
-abbr -s la 'exa --color=always --icons --group-directories-first --all'
-abbr -s ll 'exa --color=always --icons --group-directories-first --all --long'
+abbr ch 'checkout'
 
 abbr weather "curl -s wttr.in/Oliveira+de+Frades | grep -v Follow"
 
@@ -55,7 +51,6 @@ abbr mv 'mv -iv'
 abbr cp 'cp -riv'
 abbr mkdir 'mkdir -vp'
 
-
 # tmux
 abbr -a -g tls 'tmux list-sessions'
 abbr -a -g td 'tmux detach'
@@ -63,12 +58,6 @@ abbr -a -g ta 'tmux attach-session -t'
 abbr -a -g tn 'tmux new-session -s'
 abbr -a -g tksv 'tmux kill-server'
 abbr -a -g tkss 'tmux kill-session -t'
-
-abbr -a -g mx tmuxinator
-abbr -a -g mxs 'tmuxinator start'
-abbr -a -g mxe 'tmuxinator edit'
-abbr -a -g mxn 'tmuxinator new'
-abbr -a -g mxc 'tmuxinator copy'
 
 # Environment Variables
 set -ga fish_user_paths /usr/local/go/bin

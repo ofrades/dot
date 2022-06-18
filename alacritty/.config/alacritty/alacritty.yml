@@ -1,8 +1,8 @@
 window:
   decorations: "None"
-  padding:
-    x: 10
-    y: 10
+  # padding:
+  #   x: 10
+  #   y: 10
   # startup_mode: Fullscreen
 
 # shell:

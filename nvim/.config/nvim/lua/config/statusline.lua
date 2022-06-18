@@ -78,7 +78,7 @@ end
 
 function Statusline.inactive()
 	return table.concat({
-		"%#Pmenu# ",
+		"%#Normal# ",
 		" ",
 		getfilename(),
 	})
