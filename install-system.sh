@@ -25,10 +25,7 @@ have fzf || rpm-ostree install fzf
 have exa || rpm-ostree install exa
 
 # install rnnoise
-have exa || rpm-ostree install rnnoise
-
-# install rnnoise
-have sway || rpm-ostree install sway mako wl-clipboard waybar
+have sway || rpm-ostree install sway mako wl-clipboard waybar ulauncher rnnoise
 
 # install ansible
 have ansible || rpm-ostree install ansible
