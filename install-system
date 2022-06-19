@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e
+
+function have {
+  command -v "$1" &> /dev/null
+}
+
+# install ansible
+have ansible || sudo dnf install ansible google-chrome-stable \
+  [ -d ~/.ansible/collections/ansible_collections/community ] || \
+  ansible-galaxy collection install community.general \
+  ansible-vault decrypt --vault-password-file ~/Dropbox/warden aws/.aws/config aws/.aws/credentials ssh/.ssh/id_ed25519 ssh/.ssh/id_ed25519.pub npmrc/.npmrc
+
+# Run Ansible
+ansible-playbook playbook-system.yml --ask-become-pass
+
+ansible-playbook playbook-js.yml
+
+ansible-playbook playbook-go.yml
+
+ansible-playbook playbook-rust.yml
+
+ansible-playbook playbook-cazoo.yml
+

@@ -92,37 +92,34 @@ local servers = {
 	"pyright",
 	"gopls",
 	"rust_analyzer",
+	"tsserver",
 }
+
+-- nvim_lsp.tsserver.setup({
+-- 	options,
+-- 	root_dir = nvim_lsp.util.root_pattern("package.json"),
+-- })
+
+nvim_lsp.emmet_ls.setup({
+	options,
+	filetypes = { "html", "css", "typescriptreact", "javascriptreact" },
+})
 
 for _, lsp in ipairs(servers) do
 	nvim_lsp[lsp].setup(options)
 end
 
 -- nvim_lsp.denols.setup({
--- 	on_attach = on_attach,
--- 	capabilities = capabilities,
+-- 	options,
 -- 	root_dir = nvim_lsp.util.root_pattern("deno.json"),
 -- 	init_options = {
 -- 		lint = true,
 -- 	},
 -- })
 
-nvim_lsp.emmet_ls.setup({
-	on_attach = on_attach,
-	capabilities = capabilities,
-	filetypes = { "html", "css", "typescriptreact", "javascriptreact" },
-})
-
-nvim_lsp.tsserver.setup({
-	on_attach = on_attach,
-	capabilities = capabilities,
-	root_dir = nvim_lsp.util.root_pattern("package.json"),
-})
-
 -- vim.cmd([[autocmd BufWritePre *.tsx,*.ts,*.jsx,*.js EslintFixAll]])
 
 -- nvim_lsp.eslint.setup({
--- 	on_attach = on_attach,
--- 	capabilities = capabilities,
+--  options,
 -- 	root_dir = nvim_lsp.util.root_pattern("package.json"),
 -- })

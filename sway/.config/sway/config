@@ -19,20 +19,15 @@ set $term alacritty
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 set $menu exec ulauncher
-set $chrome flatpak run com.google.Chrome
 set $slack flatpak run com.slack.Slack
-set $sound flatpak run com.github.wwmm.easyeffects
 set $files nautilus
 # set $printscreen flatpak run org.flameshot.Flameshot gui
 set $printscreen exec grim -g "$(slurp -d)" -t png - | wl-copy -t image/png
-
-# Start easyteffects for good mic noise reduction
-exec flatpak run com.github.wwmm.easyeffects --gapplication-service > dev/null 2>&1
-
+set $recordscreen exec wf-recorder -g "$(slurp)" -f ~/Videos/recording_$(date +"%Y-%m-%d_%H:%M:%S.mp4")
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /var/home/ofrades/Pictures/bright-rain.png fill
+output * bg ~/Pictures/bright-rain.png fill
 
 # gap # Borders
 default_border none
@@ -106,13 +101,15 @@ input "type:keyboard" {
     bindsym $mod+space exec $menu
 
     # Start chrome
-    bindsym $mod+b exec $chrome
+    bindsym $mod+b exec google-chrome
 
     # Start slack
     bindsym $mod+Shift+s exec $slack
 
     # Screeshot
     bindsym $mod+p exec $printscreen
+    bindsym $mod+Shift+p exec $recordscreen
+    bindsym $mod+Shift+BackSpace exec killall -s SIGINT wf-recorder
 
     # Files
     bindsym $mod+f exec $files
@@ -193,6 +190,9 @@ input "type:keyboard" {
     bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
     bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 
+    bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+    bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
+
     bindsym $mod+BackSpace exec pactl set-source-mute 0 toggle
 mode "resize" {
     # left will shrink the containers width
@@ -224,7 +224,9 @@ bar {
   swaybar_command waybar
 }
 
-include /etc/sway/config.d/*
-
 # Start notification daemon
 exec mako
+# Start easyteffects for good mic noise reduction
+exec easyeffects --gapplication-service > dev/null 2>&1
+
+include /etc/sway/config.d/*

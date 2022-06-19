@@ -6,7 +6,7 @@ set -U fish_emoji_width 2
 # disable greeting
 set fish_greeting
 # vim
-fish_vi_key_bindings
+# fish_vi_key_bindings
 
 # git
 abbr clone 'git clone git@github.com:'
@@ -36,11 +36,6 @@ abbr gedit 'flatpak run org.gnome.gedit'
 abbr ch 'checkout'
 
 abbr weather "curl -s wttr.in/Oliveira+de+Frades | grep -v Follow"
-
-abbr create "toolbox create"
-abbr enter "toolbox enter"
-abbr remove "toolbox rm"
-abbr list "toolbox list"
 
 # neovim
 abbr v 'nvim'
@@ -75,18 +70,16 @@ set -gx FZF_DEFAULT_OPTS '--height 50% --layout=reverse'
 set -ga PATH ~/.npm-global/bin:$PATH
 
 starship init fish | source
+
 switch (uname)
     case Linux
-      eval (/var/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+      eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
     case Darwin
       echo Hi Macos!
 end
 
-
 set -gx PYENV_ROOT "$HOME/.pyenv"
 set -gx PATH "$PYENV_ROOT/bin:$PATH"
 
-if command -v pyenv 1>/dev/null 2>&1
-  pyenv init - | source
-end
+pyenv init - | source
 

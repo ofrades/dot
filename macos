@@ -17,5 +17,5 @@ have ansible || brew install ansible
   ansible-galaxy collection install community.general
 
 # Run Ansible
-ansible-playbook macos.yml --ask-become-pass
+ansible-playbook playbook-macos.yml --ask-become-pass
 

@@ -16,15 +16,6 @@ window#waybar.hidden {
     opacity: 0.2;
 }
 
-/*
-window#waybar.empty {
-    background-color: transparent;
-}
-window#waybar.solo {
-    background-color: #FFFFFF;
-}
-*/
-
 window#waybar.chromium {
     background-color: #000000;
     border: none;
@@ -37,6 +28,7 @@ window#waybar.chromium {
     /* Avoid rounded borders under each workspace name */
     border: none;
     border-radius: 0;
+    color: #ffffff;
 }
 
 /* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */

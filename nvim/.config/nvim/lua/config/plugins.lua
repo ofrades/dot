@@ -24,71 +24,77 @@ require("packer").startup(function(use)
 		"neovim/nvim-lspconfig",
 		requires = {
 			"nvim-lua/plenary.nvim",
-			{
-				"jose-elias-alvarez/null-ls.nvim",
-				config = function()
-					require("null-ls").setup({
-						sources = {
-							require("null-ls").builtins.formatting.prettier.with({
-								filetypes = { "html", "json", "yaml", "markdown", "toml" },
-							}),
-							require("null-ls").builtins.formatting.stylua,
-							require("null-ls").builtins.formatting.eslint_d,
-							require("null-ls").builtins.formatting.terraform_fmt,
-							require("null-ls").builtins.formatting.black,
-							require("null-ls").builtins.formatting.fixjson,
-							require("null-ls").builtins.formatting.rustfmt,
-							require("null-ls").builtins.diagnostics.actionlint,
-							-- require("null-ls").builtins.formatting.deno_fmt,
-
-							require("null-ls").builtins.diagnostics.eslint_d,
-							require("null-ls").builtins.diagnostics.flake8,
-							require("null-ls").builtins.diagnostics.write_good,
-							require("null-ls").builtins.diagnostics.markdownlint,
-							require("null-ls").builtins.diagnostics.ansiblelint,
-							require("null-ls").builtins.diagnostics.jsonlint,
-							require("null-ls").builtins.diagnostics.golangci_lint,
-							-- require("null-ls").builtins.diagnostics.cspell,
-
-							require("null-ls").builtins.code_actions.eslint_d,
-							require("null-ls").builtins.code_actions.refactoring,
-
-							require("null-ls").builtins.hover.dictionary,
-						},
-						-- on_attach = on_attach,
-						on_attach = function(client, bufnr)
-							if client.supports_method("textDocument/formatting") then
-								vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-								vim.api.nvim_create_autocmd("BufWritePre", {
-									group = augroup,
-									buffer = bufnr,
-									callback = function()
-										-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
-										vim.lsp.buf.format()
-									end,
-								})
-							end
-						end,
-					})
-				end,
-			},
-			"jose-elias-alvarez/typescript.nvim",
-			{
-				"williamboman/nvim-lsp-installer",
-				config = function()
-					require("nvim-lsp-installer").setup({
-						automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
-						ui = {
-							icons = {
-								server_installed = "✓",
-								server_pending = "➜",
-								server_uninstalled = "✗",
-							},
-						},
-					})
-				end,
-			},
 		},
+		config = function()
+			require("config.lsp")
+		end,
+	})
+
+	use({
+		"jose-elias-alvarez/null-ls.nvim",
+		config = function()
+			require("null-ls").setup({
+				sources = {
+					require("null-ls").builtins.formatting.prettier.with({
+						filetypes = { "html", "json", "yaml", "markdown", "toml" },
+					}),
+					require("null-ls").builtins.formatting.stylua,
+					require("null-ls").builtins.formatting.eslint_d,
+					require("null-ls").builtins.formatting.terraform_fmt,
+					require("null-ls").builtins.formatting.black,
+					require("null-ls").builtins.formatting.fixjson,
+					require("null-ls").builtins.formatting.rustfmt,
+					require("null-ls").builtins.diagnostics.actionlint,
+					-- require("null-ls").builtins.formatting.deno_fmt,
+
+					require("null-ls").builtins.diagnostics.eslint_d,
+					require("null-ls").builtins.diagnostics.flake8,
+					require("null-ls").builtins.diagnostics.write_good,
+					require("null-ls").builtins.diagnostics.markdownlint,
+					require("null-ls").builtins.diagnostics.ansiblelint,
+					require("null-ls").builtins.diagnostics.jsonlint,
+					require("null-ls").builtins.diagnostics.golangci_lint,
+					-- require("null-ls").builtins.diagnostics.cspell,
+
+					require("null-ls").builtins.code_actions.eslint_d,
+					require("null-ls").builtins.code_actions.refactoring,
+
+					require("null-ls").builtins.hover.dictionary,
+				},
+				on_attach = function(client, bufnr)
+					if client.supports_method("textDocument/formatting") then
+						vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+						vim.api.nvim_create_autocmd("BufWritePre", {
+							group = augroup,
+							buffer = bufnr,
+							callback = function()
+								vim.lsp.buf.format({ bufnr = bufnr })
+							end,
+						})
+					end
+				end,
+			})
+		end,
+	})
+
+	use({
+		"williamboman/nvim-lsp-installer",
+		config = function()
+			require("nvim-lsp-installer").setup({
+				automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
+				ui = {
+					icons = {
+						server_installed = "✓",
+						server_pending = "➜",
+						server_uninstalled = "✗",
+					},
+				},
+			})
+		end,
+	})
+
+	use({
+		"jose-elias-alvarez/typescript.nvim",
 		config = function()
 			require("typescript").setup({})
 		end,
@@ -99,7 +105,6 @@ require("packer").startup(function(use)
 		config = function()
 			vim.g.neoterm_default_mod = "botright"
 			vim.g["neoterm_autoscroll"] = 1
-			vim.g["neoterm_autoinsert"] = 1
 			vim.g["neoterm_autojump"] = 1
 		end,
 	})
@@ -322,6 +327,18 @@ require("packer").startup(function(use)
 	})
 
 	use({
+		"pwntester/octo.nvim",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+			"kyazdani42/nvim-web-devicons",
+		},
+		config = function()
+			require("octo").setup()
+		end,
+	})
+
+	use({
 		"RRethy/vim-illuminate",
 	})
 
@@ -527,15 +544,11 @@ require("packer").startup(function(use)
 			"nvim-lua/plenary.nvim",
 			"nvim-treesitter/nvim-treesitter",
 			"antoinemadec/FixCursorHold.nvim",
-			"haydenmeade/neotest-jest",
-			"nvim-neotest/neotest-python",
 			"nvim-neotest/neotest-vim-test",
 		},
 		config = function()
 			require("neotest").setup({
 				adapters = {
-					-- require("neotest-jest"),
-					-- require("neotest-python"),
 					require("neotest-vim-test"),
 				},
 			})
@@ -545,7 +558,6 @@ require("packer").startup(function(use)
 	use({
 		"mfussenegger/nvim-dap",
 		requires = {
-			"David-Kunz/jester",
 			{
 				"theHamsta/nvim-dap-virtual-text",
 				requires = { "mfussenegger/nvim-dap" },
