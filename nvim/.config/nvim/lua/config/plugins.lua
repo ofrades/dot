@@ -501,7 +501,7 @@ require("packer").startup(function(use)
 					},
 				},
 			})
-			vim.cmd([[colorscheme duskfox]])
+			vim.cmd([[colorscheme nightfox]])
 		end,
 	})
 

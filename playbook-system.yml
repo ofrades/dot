@@ -53,6 +53,13 @@
         - jq
         - copyq
         - tmate
+        - wf-recorder
+        - v4l2loopback 
+        - kmod-v4l2loopback
+        - obs-studio
+
+    - name: Rpm fusion free
+      shell: sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 
     - name: Install with npm
       community.general.npm:

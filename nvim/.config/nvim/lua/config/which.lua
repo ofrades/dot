@@ -1,40 +1,24 @@
-local wk = require("which-key")
+local map = require("which-key")
 local presets = require("which-key.plugins.presets")
 
 presets.objects["a("] = nil
 
-wk.setup({
+map.setup({
 	show_help = false,
 	triggers = "auto",
 	plugins = { spelling = true },
 	key_labels = { ["<leader>"] = "SPC" },
 })
 
-local leader = {
-	c = { "<cmd>Telescope commands<cr>", "Commands" },
+map.register({
 	b = { "<cmd>:botright Ttoggle<cr>", "Terminal bottom" },
 	v = { "<cmd>:vertical Ttoggle<cr>", "Terminal side" },
 	e = { "<cmd>:Neotree toggle reveal<CR>", "Tree" },
-	m = { "<cmd>:T mux<CR>", "Mux" },
 	n = { "<cmd>:vsplit | enew<cr>", "New File" },
 	q = { "<cmd>:q<cr>", "Quit" },
 	u = { "<cmd>:MundoToggle<cr>", "Undo tree" },
 	x = { "<cmd>:TroubleToggle<cr>", "Trouble" },
 	w = { "<cmd>:w<cr>", "Save" },
-	p = {
-		name = "+telescope",
-		b = { "<cmd>:Telescope git_branches theme=ivy<cr>", "Git branches" },
-		c = { "<cmd>:Telescope commands theme=ivy<cr>", "Commands" },
-		d = { "<cmd>:lua require('telescope.builtin').find_files({cwd = '~/dot', hidden = true})<cr>", "Dot" },
-		f = { "<cmd>Telescope live_grep theme=ivy hidden=true<cr>", "Find Text" },
-		o = { "<cmd>:Telescope oldfiles theme=ivy hidden=true theme=ivy<cr>", "Recent Files" },
-		h = { "<cmd>:Telescope help_tags theme=ivy<cr>", "Help" },
-		k = { "<cmd>:Telescope keymaps theme=ivy<cr>", "Keymaps" },
-		m = { "<cmd>:Telescope man_pages theme=ivy<cr>", "Man pages" },
-		p = { "<cmd>:Telescope find_files theme=ivy hidden=true<cr>", "Find Files" },
-		P = { "<cmd>:Telescope frecency hidden=true theme=ivy<cr>", "Find Files frecency" },
-		r = { "<cmd>:Telescope project theme=ivy<cr>", "Projectile" },
-	},
 	g = {
 		name = "+git",
 		a = { "<cmd>:Git commit -a --no-edit<cr>", "Amend" },
@@ -56,43 +40,6 @@ local leader = {
 			m = { "<cmd>:T mob moo<cr>", "Mob moo!" },
 		},
 	},
-	t = {
-		name = "+test/term",
-		a = { "<cmd>:A<cr>", "Toggle test/source file" },
-		f = { "<cmd>:TestFile<cr>", "Test File" },
-		l = { "<cmd>:TestLast<cr>", "Test Last" },
-		n = { "<cmd>:TestNearest<cr>", "Test Nearest" },
-		s = { "<cmd>:TestSuite<cr>", "Test Suite" },
-		t = { "<cmd>:tab term<cr>", "Terminal" },
-		j = {
-			name = "+jester",
-			r = { "<cmd>:lua require'jester'.run()<cr>", "Run" },
-			f = { "<cmd>:lua require'jester'.run_file()<CR>", "Run test file" },
-			l = { "<cmd>:lua require'jester'.run_last()<CR>", "Run last test" },
-			d = { "<cmd>:lua require'jester'.debug()<CR>", "Debug" },
-			d = { "<cmd>:lua require'jester'.debug_file()<CR>", "Debug file" },
-			d = { "<cmd>:lua require'jester'.debug_last()<CR>", "Debug last" },
-		},
-		N = {
-			name = "+neotest",
-			n = { "<cmd>:lua require'neotest'.run.run()<cr>", "Run nearest test" },
-			f = { "<cmd>:lua require'neotest'.run.run(vim.fn.expand('%'))<CR>", "Run test file" },
-			d = { "<cmd>:lua require'neotest'.run.run({strategy = 'dap'})<CR>", "Debug nearest test" },
-			s = { "<cmd>:lua require'neotest'.run.run(vim.fn.getcwd())<CR>", "Run test suite" },
-			S = { "<cmd>:lua require'neotest'.run.stop()<CR>", "Stop nearest test" },
-			a = { "<cmd>:lua require'neotest'.run.attach()<CR>", "Attach nearest test" },
-			o = { "<cmd>:lua require'neotest'.output.open()<CR>", "Open output" },
-			t = { "<cmd>:lua require'neotest'.summary.toggle()<CR>", "Toggle summary" },
-		},
-		d = {
-			name = "+dap",
-			b = { "<cmd>:lua require'dap'.toggle_breakpoint()<cr>", "Toggle breakpoint" },
-			c = { "<cmd>:lua require'dap'.continue()<CR>", "Continue" },
-			o = { "<cmd>:lua require'dap'.step_over()<CR>", "Step over" },
-			i = { "<cmd>:lua require'dap'.step_into()<CR>", "Step into" },
-			t = { "<cmd>:lua require'dapui'.toggle()<CR>", "Toggle ui" },
-		},
-	},
 	s = {
 		name = "+search",
 		f = { "<cmd>Telescope grep_string theme=ivy<cr>", "Find string under cursor" },
@@ -107,18 +54,59 @@ local leader = {
 	-- 	p = { "<cmd>:lua require('harpoon.ui').nav_prev()<cr>", "Prev" },
 	-- 	n = { "<cmd>:lua require('harpoon.ui').nav_next()<cr>", "Next" },
 	-- },
-}
+}, { prefix = "<leader>" })
 
-for i = 0, 10 do
-	leader[tostring(i)] = "which_key_ignore"
-end
-
-wk.register(leader, { prefix = "<leader>" })
-
-local leaderv = {
-	g = {
-		name = "+git",
-		b = { "<cmd>:'<,'>GBrowse!<cr>", "Path to file" },
+map.register({
+	a = { "<cmd>:A<cr>", "Toggle test/source file" },
+	f = { "<cmd>:TestFile<cr>", "Test File" },
+	l = { "<cmd>:TestLast<cr>", "Test Last" },
+	c = { "<cmd>:TestNearest<cr>", "Test Nearest" },
+	s = { "<cmd>:TestSuite<cr>", "Test Suite" },
+	t = { "<cmd>:tab term<cr>", "Terminal" },
+	j = {
+		name = "+jester",
+		r = { "<cmd>:lua require'jester'.run()<cr>", "Run" },
+		f = { "<cmd>:lua require'jester'.run_file()<CR>", "Run test file" },
+		l = { "<cmd>:lua require'jester'.run_last()<CR>", "Run last test" },
+		d = { "<cmd>:lua require'jester'.debug()<CR>", "Debug" },
+		F = { "<cmd>:lua require'jester'.debug_file()<CR>", "Debug file" },
+		L = { "<cmd>:lua require'jester'.debug_last()<CR>", "Debug last" },
 	},
-}
-wk.register(leaderv, { mode = "v", prefix = "<leader>" })
+	n = {
+		name = "+neotest",
+		c = { "<cmd>:lua require'neotest'.run.run()<cr>", "Run nearest test" },
+		f = { "<cmd>:lua require'neotest'.run.run(vim.fn.expand('%'))<CR>", "Run test file" },
+		d = { "<cmd>:lua require'neotest'.run.run({strategy = 'dap'})<CR>", "Debug nearest test" },
+		s = { "<cmd>:lua require'neotest'.run.run(vim.fn.getcwd())<CR>", "Run test suite" },
+		S = { "<cmd>:lua require'neotest'.run.stop()<CR>", "Stop nearest test" },
+		a = { "<cmd>:lua require'neotest'.run.attach()<CR>", "Attach nearest test" },
+		o = { "<cmd>:lua require'neotest'.output.open()<CR>", "Open output" },
+		t = { "<cmd>:lua require'neotest'.summary.toggle()<CR>", "Toggle summary" },
+	},
+	d = {
+		name = "+dap",
+		b = { "<cmd>:lua require'dap'.toggle_breakpoint()<cr>", "Toggle breakpoint" },
+		c = { "<cmd>:lua require'dap'.continue()<CR>", "Continue" },
+		o = { "<cmd>:lua require'dap'.step_over()<CR>", "Step over" },
+		i = { "<cmd>:lua require'dap'.step_into()<CR>", "Step into" },
+		t = { "<cmd>:lua require'dapui'.toggle()<CR>", "Toggle ui" },
+	},
+}, { prefix = "t" })
+
+map.register({
+	b = { "<cmd>:Telescope git_branches theme=ivy<cr>", "Git branches" },
+	c = { "<cmd>:Telescope commands theme=ivy<cr>", "Commands" },
+	d = { "<cmd>:lua require('telescope.builtin').find_files({cwd = '~/dot', hidden = true})<cr>", "Dot" },
+	f = { "<cmd>Telescope live_grep theme=ivy hidden=true<cr>", "Find Text" },
+	o = { "<cmd>:Telescope oldfiles theme=ivy hidden=true theme=ivy<cr>", "Recent Files" },
+	h = { "<cmd>:Telescope help_tags theme=ivy<cr>", "Help" },
+	k = { "<cmd>:Telescope keymaps theme=ivy<cr>", "Keymaps" },
+	m = { "<cmd>:Telescope man_pages theme=ivy<cr>", "Man pages" },
+	p = { "<cmd>:Telescope find_files theme=ivy hidden=true<cr>", "Find Files" },
+	P = { "<cmd>:Telescope frecency hidden=true theme=ivy<cr>", "Find Files frecency" },
+	r = { "<cmd>:Telescope project theme=ivy<cr>", "Projectile" },
+}, { prefix = "<leader><leader>" })
+
+map.register({
+	b = { "<cmd>:'<,'>GBrowse!<cr>", "Path to file" },
+}, { mode = "v", prefix = "<leader>" })
