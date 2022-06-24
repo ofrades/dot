@@ -4,7 +4,7 @@ Clone this repo and chdir `git clone git@github.com:ofrades/dot.git && cd dot`
 
 File `playbook-system.yml` contains all the packages and vars e.g: user/home
 
-Basic system setup done by running `sh install-system`
+Basic system setup done by running `sh run-install-[os]`
 
 This will install Dropbox and ansible-vault will need the key to decrypt secrets
 

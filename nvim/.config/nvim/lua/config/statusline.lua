@@ -31,7 +31,7 @@ Statusline = {}
 
 Statusline.active = function()
 	return table.concat({
-		"%#PmenuSel# ",
+		"%#Pmenu# ",
 		" ",
 		getfilename(),
 		"%m",

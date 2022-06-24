@@ -4,7 +4,7 @@ local presets = require("which-key.plugins.presets")
 presets.objects["a("] = nil
 
 map.setup({
-	show_help = false,
+	show_help = true,
 	triggers = "auto",
 	plugins = { spelling = true },
 	key_labels = { ["<leader>"] = "SPC" },
@@ -13,12 +13,15 @@ map.setup({
 map.register({
 	b = { "<cmd>:botright Ttoggle<cr>", "Terminal bottom" },
 	v = { "<cmd>:vertical Ttoggle<cr>", "Terminal side" },
-	e = { "<cmd>:Neotree toggle reveal<CR>", "Tree" },
+	e = { "<cmd>:Neotree toggle reveal<CR>", "Tree sidebar" },
+	t = { "<cmd>:Ranger<CR>", "Ranger" },
 	n = { "<cmd>:vsplit | enew<cr>", "New File" },
 	q = { "<cmd>:q<cr>", "Quit" },
 	u = { "<cmd>:MundoToggle<cr>", "Undo tree" },
 	x = { "<cmd>:TroubleToggle<cr>", "Trouble" },
 	w = { "<cmd>:w<cr>", "Save" },
+	f = { "<cmd>:lua require('spectre').open()<CR>", "Search" },
+	F = { "<cmd>:lua require('spectre').open_visual({select_word=true})<CR>", "Search selected" },
 	g = {
 		name = "+git",
 		a = { "<cmd>:Git commit -a --no-edit<cr>", "Amend" },
@@ -40,20 +43,13 @@ map.register({
 			m = { "<cmd>:T mob moo<cr>", "Mob moo!" },
 		},
 	},
-	s = {
-		name = "+search",
-		f = { "<cmd>Telescope grep_string theme=ivy<cr>", "Find string under cursor" },
-		s = { "<cmd>:lua require('spectre').open()<CR>", "Search" },
-		v = { "<cmd>:lua require('spectre').open_visual()<CR>", "Search selected" },
-		w = { "<cmd>:lua require('spectre').open_visual({select_word=true})<CR>", "Search word under cursor" },
+	h = {
+		name = "+harpoon",
+		a = { "<cmd>:lua require('harpoon.mark').add_file()<cr>", "Add" },
+		m = { "<cmd>:lua require('harpoon.ui').toggle_quick_menu()<cr>", "Menu" },
+		p = { "<cmd>:lua require('harpoon.ui').nav_prev()<cr>", "Prev" },
+		n = { "<cmd>:lua require('harpoon.ui').nav_next()<cr>", "Next" },
 	},
-	-- h = {
-	-- 	name = "+harpoon",
-	-- 	a = { "<cmd>:lua require('harpoon.mark').add_file()<cr>", "Add" },
-	-- 	m = { "<cmd>:lua require('harpoon.ui').toggle_quick_menu()<cr>", "Menu" },
-	-- 	p = { "<cmd>:lua require('harpoon.ui').nav_prev()<cr>", "Prev" },
-	-- 	n = { "<cmd>:lua require('harpoon.ui').nav_next()<cr>", "Next" },
-	-- },
 }, { prefix = "<leader>" })
 
 map.register({

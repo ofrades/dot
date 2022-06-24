@@ -5,9 +5,9 @@
 }
 
 window#waybar {
-    background-color: rgba(100, 114, 125, 0.2);
-    border-bottom: 3px solid rgba(100, 114, 125, 0.5);
-    color: #ffffff;
+    background-color: rgba(43, 45, 53, 1);
+    border-bottom: 3px solid rgba(1, 1, 1, 0.1);
+    color: #dddcd3;
     transition-property: background-color;
     transition-duration: .5s;
 }
@@ -28,18 +28,18 @@ window#waybar.chromium {
     /* Avoid rounded borders under each workspace name */
     border: none;
     border-radius: 0;
-    color: #ffffff;
+    color: #dddcd3;
 }
 
 /* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
 #workspaces button:hover {
     background: rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 -3px #ffffff;
+    box-shadow: inset 0 -3px #dddcd3;
 }
 
 #workspaces button.focused {
     background-color: rgba(100, 114, 125, 0.8);;
-    box-shadow: inset 0 -3px #ffffff;
+    box-shadow: inset 0 -3px #dddcd3;
 }
 
 #workspaces button.urgent {
@@ -48,7 +48,7 @@ window#waybar.chromium {
 
 #mode {
     background-color: rgba(100, 114, 125, 0.5);;
-    border-bottom: 3px solid #ffffff;
+    border-bottom: 3px solid #dddcd3;
 }
 
 #clock,
@@ -67,7 +67,7 @@ window#waybar.chromium {
 #idle_inhibitor,
 #mpd {
     padding: 0 10px;
-    color: #ffffff;
+    color: #dddcd3;
 }
 
 #window,

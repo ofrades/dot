@@ -186,7 +186,7 @@
         - ~/.ssh
 
     - name: Create dot symlinks
-      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig alacritty nvmrc gitignoreglobal tmux doom sway waybar mako Pictures
+      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig alacritty gitignoreglobal tmux sway waybar mako Pictures ranger
 
     - name: Set ssh permissions
       file:

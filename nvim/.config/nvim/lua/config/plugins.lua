@@ -166,8 +166,6 @@ require("packer").startup(function(use)
 					-- Default UI (can be "split" or "float")
 					default = "float",
 					float = {
-						float_hl = "Normal",
-						border_hl = "FloatBorder",
 						height = 1,
 						width = 1,
 					},
@@ -288,37 +286,6 @@ require("packer").startup(function(use)
 	use({ "simnalamburt/vim-mundo" })
 
 	use({
-		"nvim-neo-tree/neo-tree.nvim",
-		requires = {
-			"nvim-lua/plenary.nvim",
-			"kyazdani42/nvim-web-devicons", -- not strictly required, but recommended
-			"MunifTanjim/nui.nvim",
-		},
-		config = function()
-			require("neo-tree").setup({
-				filesystem = {
-					filtered_items = {
-						visible = true,
-						hide_dotfiles = false,
-						hide_gitignored = false,
-						hide_hidden = true, -- only works on Windows for hidden files/directories
-						hide_by_name = {
-							--"node_modules"
-						},
-						hide_by_pattern = { -- uses glob style patterns
-							--"*.meta"
-						},
-						never_show = { -- remains hidden even if visible is toggled to true
-							--".DS_Store",
-							--"thumbs.db"
-						},
-					},
-				},
-			})
-		end,
-	})
-
-	use({
 		"nvim-telescope/telescope-frecency.nvim",
 		config = function()
 			require("telescope").load_extension("frecency")
@@ -421,7 +388,7 @@ require("packer").startup(function(use)
 	use({
 		"norcalli/nvim-colorizer.lua",
 		requires = {
-			"EdenEast/nightfox.nvim",
+			"~/dev/ofrades/nightfox.nvim",
 		},
 		config = function()
 			require("colorizer").setup(nil, {
@@ -501,7 +468,7 @@ require("packer").startup(function(use)
 					},
 				},
 			})
-			vim.cmd([[colorscheme nightfox]])
+			vim.cmd([[colorscheme eppzfox]])
 		end,
 	})
 
