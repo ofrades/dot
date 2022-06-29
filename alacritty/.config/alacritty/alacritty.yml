@@ -1,8 +1,8 @@
 window:
   decorations: "None"
-  # padding:
-  #   x: 10
-  #   y: 10
+  padding:
+    x: 10
+    y: 10
   # startup_mode: Fullscreen
 
 # shell:
@@ -14,19 +14,19 @@ window:
 font:
   size: 9
   normal:
-    family: JetBrainsMono Nerd Font
+    family: monospace
     style: Regular
 
   bold:
-    family: JetBrainsMono Nerd Font
+    family: monospace
     style: Bold
 
   italic:
-    family: JetBrainsMono Nerd Font
+    family: monospace
     style: Italic
 
   bold_italic:
-    family: JetBrainsMono Nerd Font
+    family: monospace
     style: Bold Italic
 
 import:

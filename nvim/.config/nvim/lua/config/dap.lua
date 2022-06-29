@@ -1,3 +1,5 @@
+require("dap-python").setup("~/.virtualenvs/debugpy/bin/python")
+
 vim.fn.sign_define("DapBreakpoint", { text = "→", texthl = "Error", linehl = "", numhl = "" })
 vim.fn.sign_define("DapStopped", { text = "→", texthl = "Success", linehl = "", numhl = "" })
 

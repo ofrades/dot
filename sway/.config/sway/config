@@ -29,12 +29,28 @@ set $recordscreen exec wf-recorder -g "$(slurp)" -f ~/Videos/recording_$(date +"
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 output * bg ~/Pictures/val.jpg fill
 
+# Theme
+set $bg #1f2026
+set $border #2b2d35
+set $fg #DDDCD3
+set $fg_high #4CA585
+set $border_high #4CA585
+set $fg_urg #cc6666
+set $border_urg #cc6666
+#                       Border  Background Text     Indicator Child border
+client.focused          $border_high $bg   $fg_high $fg       $border
+client.focused_inactive $border      $bg   $fg      $fg       $border
+client.unfocused        $border      $bg   $fg      $fg       $border
+client.urgent           $border_urg  $bg   $fg_urg  $fg       $border
+client.placeholder      $border      $bg   $fg      $fg       $border
+client.background       $border
+
 # gap # Borders
 default_border none
 default_floating_border none
 smart_gaps on
 gaps inner 4
-gaps outer 4
+gaps outer 6
 
 #
 # Example configuration:

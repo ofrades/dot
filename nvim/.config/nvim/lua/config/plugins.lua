@@ -21,12 +21,36 @@ require("packer").startup(function(use)
 	use({ "wbthomason/packer.nvim" })
 
 	use({
-		"neovim/nvim-lspconfig",
+		"VonHeikemen/lsp-zero.nvim",
 		requires = {
-			"nvim-lua/plenary.nvim",
+			-- LSP Support
+			{ "neovim/nvim-lspconfig" },
+			{ "williamboman/nvim-lsp-installer" },
+
+			-- Autocompletion
+			{ "hrsh7th/nvim-cmp" },
+			{ "hrsh7th/cmp-buffer" },
+			{ "hrsh7th/cmp-path" },
+			{ "saadparwaiz1/cmp_luasnip" },
+			{ "hrsh7th/cmp-nvim-lsp" },
+			{ "hrsh7th/cmp-nvim-lua" },
+
+			-- Snippets
+			{ "L3MON4D3/LuaSnip" },
+			{ "rafamadriz/friendly-snippets" },
 		},
 		config = function()
-			require("config.lsp")
+			local lsp = require("lsp-zero")
+
+			lsp.preset("recommended")
+			lsp.setup()
+
+			local luasnip = require("luasnip")
+
+			require("luasnip/loaders/from_vscode").load()
+			require("luasnip.loaders.from_vscode").load({ paths = { "~/.config/nvim/lua/config/snippets" } })
+			luasnip.filetype_extend("typescript", { "javascript" })
+			luasnip.filetype_extend("typescriptreact", { "javascriptreact" })
 		end,
 	})
 
@@ -73,22 +97,6 @@ require("packer").startup(function(use)
 						})
 					end
 				end,
-			})
-		end,
-	})
-
-	use({
-		"williamboman/nvim-lsp-installer",
-		config = function()
-			require("nvim-lsp-installer").setup({
-				automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
-				ui = {
-					icons = {
-						server_installed = "✓",
-						server_pending = "➜",
-						server_uninstalled = "✗",
-					},
-				},
 			})
 		end,
 	})
@@ -159,6 +167,123 @@ require("packer").startup(function(use)
 	})
 
 	use({
+		"nvim-neo-tree/neo-tree.nvim",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"kyazdani42/nvim-web-devicons", -- not strictly required, but recommended
+			"MunifTanjim/nui.nvim",
+		},
+		config = function()
+			require("neo-tree").setup({
+				close_if_last_window = true,
+				window = {
+					position = "current",
+				},
+				filesystem = {
+					filtered_items = {
+						visible = true,
+						hide_dotfiles = false,
+						hide_gitignored = false,
+						hide_hidden = true, -- only works on Windows for hidden files/directories
+						hide_by_name = {
+							--"node_modules"
+						},
+						hide_by_pattern = { -- uses glob style patterns
+							--"*.meta"
+						},
+						never_show = { -- remains hidden even if visible is toggled to true
+							--".DS_Store",
+							--"thumbs.db"
+						},
+					},
+				},
+				git_status = {
+					window = {
+						position = "float",
+						mappings = {
+							["A"] = "git_add_all",
+							["gu"] = "git_unstage_file",
+							["ga"] = "git_add_file",
+							["gr"] = "git_revert_file",
+							["gc"] = "git_commit",
+							["gp"] = "git_push",
+							["gg"] = "git_commit_and_push",
+						},
+					},
+				},
+			})
+		end,
+	})
+
+	use({
+		"goolord/alpha-nvim",
+		requires = { "kyazdani42/nvim-web-devicons" },
+		config = function()
+			local alpha = require("alpha")
+			local dashboard = require("alpha.themes.dashboard")
+
+			local function footer()
+				local plugins = #vim.tbl_keys(packer_plugins)
+				local v = vim.version()
+				local datetime = os.date(" %d-%m-%Y   %H:%M:%S")
+				local platform = ""
+				return string.format(
+					" %d   v%d.%d.%d %s  %s",
+					plugins,
+					v.major,
+					v.minor,
+					v.patch,
+					platform,
+					datetime
+				)
+			end
+
+			-- header
+			dashboard.section.header.val = {
+				"                                       ",
+				"               @@@@@       88888       ",
+				"    %%%%%    @@@@@@@@@   888888888     ",
+				"  %%%%%%%%% @@@@@@@@@@@ 88888888888    ",
+				" %%%%%%%%%%%@@@@@@@@@@@ 88888888888   /",
+				" %%%%%%%%%%% @@@@@@@@@   888888888   //",
+				"  %%%%%%%%%   @@@@@@@     8888888   /__",
+				"   %%%%%%%      |.|         |.|    |   ",
+				"     |.|        |.|         |.|    |   ",
+				"     |.|        |.|         |.|    |   ",
+				"____/..|_______/..|________/..|____|___",
+				"                                       ",
+			}
+
+			dashboard.section.buttons.val = {
+				dashboard.button("<Leader><leader>r", "Project Explorer"),
+				dashboard.button("<Leader><leader>p", "Find File"),
+				dashboard.button("<Leader><leader>f", "Find Word"),
+				dashboard.button("<Leader><leader>o", "Recent Files"),
+				dashboard.button(":PackerSync<cr>", "Update plugins"),
+				dashboard.button("<Leader>gg", "Lazygit", ":Lazygit<cr>"),
+				dashboard.button("q", "Quit", ":qa<cr>"),
+			}
+
+			-- footer
+			dashboard.section.footer.val = footer()
+			dashboard.section.footer.opts.hl = dashboard.section.header.opts.hl
+
+			-- quote
+			table.insert(dashboard.config.layout, { type = "padding", val = 1 })
+			table.insert(dashboard.config.layout, {
+				type = "text",
+				val = require("alpha.fortune")(),
+				opts = {
+					position = "center",
+					hl = "AlphaQuote",
+				},
+			})
+
+			alpha.setup(dashboard.opts)
+		end,
+	})
+
+	use({
 		"is0n/fm-nvim",
 		config = function()
 			require("fm-nvim").setup({
@@ -184,8 +309,17 @@ require("packer").startup(function(use)
 					require("gitsigns").setup()
 				end,
 			},
+			{
+				"TimUntersberger/neogit",
+				config = function()
+					require("neogit").setup({})
+				end,
+			},
 		},
 	})
+
+	use({ "kristijanhusak/vim-carbon-now-sh" })
+	use({ "s-u-d-o-e-r/vim-ray-so-beautiful" })
 
 	use({ "tpope/vim-surround" })
 	use({ "tpope/vim-repeat" })
@@ -254,33 +388,16 @@ require("packer").startup(function(use)
 	use({ "JoosepAlviste/nvim-ts-context-commentstring" })
 
 	use({
-		"hrsh7th/nvim-cmp",
-		requires = {
-			"hrsh7th/cmp-path",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-emoji",
-			"hrsh7th/cmp-cmdline",
-			"hrsh7th/cmp-nvim-lsp",
-			"saadparwaiz1/cmp_luasnip",
-			{ "hrsh7th/cmp-copilot", requires = { "github/copilot.vim" } },
-			{
-				"L3MON4D3/LuaSnip",
-				wants = "friendly-snippets",
-			},
-			"rafamadriz/friendly-snippets",
-			{
-				"windwp/nvim-autopairs",
-				config = function()
-					require("nvim-autopairs").setup()
-				end,
-			},
-			{
-				"windwp/nvim-ts-autotag",
-				config = function()
-					require("nvim-ts-autotag").setup()
-				end,
-			},
-		},
+		"windwp/nvim-autopairs",
+		config = function()
+			require("nvim-autopairs").setup()
+		end,
+	})
+	use({
+		"windwp/nvim-ts-autotag",
+		config = function()
+			require("nvim-ts-autotag").setup()
+		end,
 	})
 
 	use({ "simnalamburt/vim-mundo" })
@@ -533,6 +650,7 @@ require("packer").startup(function(use)
 					vim.g.dap_virtual_text = true
 				end,
 			},
+			"mfussenegger/nvim-dap-python",
 			{
 				"rcarriga/nvim-dap-ui",
 				requires = { "mfussenegger/nvim-dap" },
@@ -551,6 +669,7 @@ require("packer").startup(function(use)
 		"windwp/nvim-spectre",
 		config = function()
 			require("spectre").setup({
+				open_cmd = "tab",
 				is_insert_mode = true,
 				live_update = true,
 				mapping = {

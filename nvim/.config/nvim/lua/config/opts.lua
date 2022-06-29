@@ -3,21 +3,14 @@ vim.cmd([[
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif
 ]])
 
-vim.cmd([[
-  set guicursor=n-v-c:block-Cursor
-  set guicursor+=i:ver100-iCursor
-  set guicursor+=n-v-c:blinkon0
-  set guicursor+=i:blinkwait10
-]])
-
 -- Highlight on yank
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
-	callback = function()
-		vim.highlight.on_yank()
-	end,
-	group = highlight_group,
-	pattern = "*",
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+  group = highlight_group,
+  pattern = "*",
 })
 
 vim.o.updatetime = 250
@@ -43,7 +36,6 @@ vim.opt.pumheight = 10 -- Maximum number of entries in a popup
 vim.opt.showmode = false -- dont show mode since we have a statusline
 vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()" -- TreeSitter folding
-vim.opt.foldlevel = 10
 vim.opt.foldmethod = "expr" -- TreeSitter folding
 vim.opt.grepprg = "rg --vimgrep"
 vim.opt.grepformat = "%f:%l:%c:%m"
@@ -72,6 +64,9 @@ vim.g.python3_host_prog = "/usr/bin/python3"
 vim.opt.shell = "fish"
 vim.o.fileencoding = "utf-8"
 vim.o.swapfile = false
+vim.wo.foldcolumn = "1"
+vim.wo.foldlevel = 99 -- feel free to decrease the value
+vim.wo.foldenable = true
 
 -- vim.cmd("language en_US.utf-8")
 
