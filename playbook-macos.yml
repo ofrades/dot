@@ -31,7 +31,6 @@
         update_homebrew: yes
       with_items:
         - fish
-        - tmux
         - fzf
         - git
         - bat
@@ -89,7 +88,7 @@
         - ansible-lint
 
     - name: Create symlinks
-      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig wezterm nvmrc gitignoreglobal tmux
+      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig wezterm nvmrc gitignoreglobal
 
     - name: Ensure folders exist
       file:
