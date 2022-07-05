@@ -23,7 +23,6 @@ require("packer").startup(function(use)
 	use({
 		"VonHeikemen/lsp-zero.nvim",
 		requires = {
-			-- LSP Support
 			{ "neovim/nvim-lspconfig" },
 			{ "williamboman/nvim-lsp-installer" },
 
@@ -42,7 +41,60 @@ require("packer").startup(function(use)
 		config = function()
 			local lsp = require("lsp-zero")
 
+			-- local function lsp_highlight_document(client)
+			--   local loaded_plugin, illuminate = pcall(require, "illuminate")
+			--   if not loaded_plugin then
+			--     return
+			--   end
+
+			--   illuminate.on_attach(client)
+			-- end
+
+			-- local function lsp_keymaps(bufnr)
+			-- 	local opts = { buffer = bufnr, silent = true, remap = true }
+			-- 	vim.keymap.set("n", "ge", vim.diagnostic.open_float, opts)
+			-- 	vim.keymap.set("n", "g[", vim.diagnostic.goto_prev, opts)
+			-- 	vim.keymap.set("n", "g]", vim.diagnostic.goto_next, opts)
+			-- 	vim.keymap.set("n", "gq", vim.diagnostic.setloclist, opts)
+
+			-- 	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+			-- 	-- vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+			-- 	vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions theme=ivy<cr>", opts)
+			-- 	vim.keymap.set("n", "gh", vim.lsp.buf.hover, opts)
+			-- 	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+			-- 	vim.keymap.set("n", "<C-s>", vim.lsp.buf.signature_help, opts)
+			-- 	vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help, opts)
+			-- 	vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
+			-- 	vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts)
+			-- 	-- vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, opts)
+			-- 	vim.keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<cr>", opts)
+			-- 	vim.keymap.set("n", "gR", vim.lsp.buf.rename, opts)
+			-- 	vim.keymap.set("n", "ga", vim.lsp.buf.code_action, opts)
+			-- 	-- vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+			-- 	vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references theme=ivy<cr>", opts)
+			-- 	vim.keymap.set("n", "gf", vim.lsp.buf.formatting, opts)
+
+			-- 	vim.keymap.set("n", "X", "<cmd>lua vim.diagnostic.open_float(nil, { focus = false })<cr>", opts)
+			-- 	vim.keymap.set("n", "gx", "<cmd>Trouble document_diagnostics<cr>", opts)
+			-- end
+
 			lsp.preset("recommended")
+
+			-- lsp.set_preferences({
+			--   set_lsp_keymaps = true,
+			--   sign_icons = {
+			--     error = "",
+			--     warn = "▲",
+			--     hint = "",
+			--     info = "",
+			--   },
+			-- })
+
+			-- lsp.on_attach(function(client, bufnr)
+			--   lsp_keymaps(bufnr)
+			--   lsp_highlight_document(client)
+			-- end)
+
 			lsp.setup()
 
 			local luasnip = require("luasnip")
@@ -102,13 +154,6 @@ require("packer").startup(function(use)
 	})
 
 	use({
-		"jose-elias-alvarez/typescript.nvim",
-		config = function()
-			require("typescript").setup({})
-		end,
-	})
-
-	use({
 		"kassio/neoterm",
 		config = function()
 			vim.g.neoterm_default_mod = "botright"
@@ -116,8 +161,6 @@ require("packer").startup(function(use)
 			vim.g["neoterm_autojump"] = 1
 		end,
 	})
-
-	use({ "christoomey/vim-tmux-navigator" })
 
 	use({
 		"vim-test/vim-test",
@@ -170,14 +213,13 @@ require("packer").startup(function(use)
 		"nvim-neo-tree/neo-tree.nvim",
 		requires = {
 			"nvim-lua/plenary.nvim",
-			"kyazdani42/nvim-web-devicons", -- not strictly required, but recommended
 			"MunifTanjim/nui.nvim",
 		},
 		config = function()
 			require("neo-tree").setup({
 				close_if_last_window = true,
 				window = {
-					position = "current",
+					position = "left",
 				},
 				filesystem = {
 					filtered_items = {
@@ -217,7 +259,6 @@ require("packer").startup(function(use)
 
 	use({
 		"goolord/alpha-nvim",
-		requires = { "kyazdani42/nvim-web-devicons" },
 		config = function()
 			local alpha = require("alpha")
 			local dashboard = require("alpha.themes.dashboard")
@@ -255,11 +296,11 @@ require("packer").startup(function(use)
 			}
 
 			dashboard.section.buttons.val = {
-				dashboard.button("<Leader><leader>r", "Project Explorer"),
-				dashboard.button("<Leader><leader>p", "Find File"),
-				dashboard.button("<Leader><leader>f", "Find Word"),
+				dashboard.button("<Leader>e", "Tree explorer"),
 				dashboard.button("<Leader><leader>o", "Recent Files"),
-				dashboard.button(":PackerSync<cr>", "Update plugins"),
+				dashboard.button("<Leader><leader>p", "Find File"),
+				dashboard.button("<Leader><leader>r", "Find project"),
+				dashboard.button("<Leader><leader>f", "Find Word"),
 				dashboard.button("<Leader>gg", "Lazygit", ":Lazygit<cr>"),
 				dashboard.button("q", "Quit", ":qa<cr>"),
 			}
@@ -300,26 +341,16 @@ require("packer").startup(function(use)
 	})
 
 	use({
-		"tpope/vim-fugitive",
+		"lewis6991/gitsigns.nvim",
 		requires = {
 			"tpope/vim-rhubarb",
-			{
-				"lewis6991/gitsigns.nvim",
-				config = function()
-					require("gitsigns").setup()
-				end,
-			},
-			{
-				"TimUntersberger/neogit",
-				config = function()
-					require("neogit").setup({})
-				end,
-			},
 		},
+		config = function()
+			require("gitsigns").setup()
+		end,
 	})
 
 	use({ "kristijanhusak/vim-carbon-now-sh" })
-	use({ "s-u-d-o-e-r/vim-ray-so-beautiful" })
 
 	use({ "tpope/vim-surround" })
 	use({ "tpope/vim-repeat" })
@@ -403,34 +434,7 @@ require("packer").startup(function(use)
 	use({ "simnalamburt/vim-mundo" })
 
 	use({
-		"nvim-telescope/telescope-frecency.nvim",
-		config = function()
-			require("telescope").load_extension("frecency")
-		end,
-		requires = { "tami5/sqlite.lua" },
-	})
-
-	use({
-		"pwntester/octo.nvim",
-		requires = {
-			"nvim-lua/plenary.nvim",
-			"nvim-telescope/telescope.nvim",
-			"kyazdani42/nvim-web-devicons",
-		},
-		config = function()
-			require("octo").setup()
-		end,
-	})
-
-	use({
 		"RRethy/vim-illuminate",
-	})
-
-	use({
-		"kyazdani42/nvim-web-devicons",
-		config = function()
-			require("nvim-web-devicons").setup()
-		end,
 	})
 
 	use({ "stevearc/dressing.nvim" })
@@ -443,12 +447,10 @@ require("packer").startup(function(use)
 			"ThePrimeagen/harpoon",
 			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
 			"nvim-telescope/telescope-project.nvim",
+			{ "nvim-telescope/telescope-frecency.nvim", requires = { "tami5/sqlite.lua" } },
 		},
 		config = function()
 			local actions = require("telescope.actions")
-			require("telescope").load_extension("file_browser")
-			require("telescope").load_extension("fzf")
-			require("telescope").load_extension("harpoon")
 			require("telescope").setup({
 				defaults = {
 					mappings = {
@@ -465,6 +467,9 @@ require("packer").startup(function(use)
 						},
 						hidden_files = true,
 						theme = "ivy",
+					},
+					file_browser = {
+						previewer = false,
 					},
 				},
 				pickers = {
@@ -483,6 +488,10 @@ require("packer").startup(function(use)
 				},
 			})
 			require("telescope").load_extension("project")
+			require("telescope").load_extension("file_browser")
+			require("telescope").load_extension("fzf")
+			require("telescope").load_extension("frecency")
+			require("telescope").load_extension("harpoon")
 		end,
 	})
 
@@ -614,13 +623,6 @@ require("packer").startup(function(use)
 	})
 
 	use({ "folke/which-key.nvim" })
-
-	use({
-		"j-hui/fidget.nvim",
-		config = function()
-			require("fidget").setup()
-		end,
-	})
 
 	use({
 		"nvim-neotest/neotest",

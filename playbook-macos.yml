@@ -21,7 +21,6 @@
         - 1password
         - dropbox
         - google-chrome
-        - alacritty
         - slack
         - visual-studio-code
 
@@ -90,7 +89,7 @@
         - ansible-lint
 
     - name: Create symlinks
-      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig alacritty nvmrc gitignoreglobal tmux
+      shell: stow nvim fish aws ssh lazygit npmrc starship gitconfig wezterm nvmrc gitignoreglobal tmux
 
     - name: Ensure folders exist
       file:

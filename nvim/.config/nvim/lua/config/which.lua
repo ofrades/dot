@@ -14,7 +14,7 @@ map.register({
   b = { "<cmd>:botright Ttoggle<cr>", "Terminal bottom" },
   v = { "<cmd>:vertical Ttoggle<cr>", "Terminal side" },
   e = { "<cmd>:Neotree toggle reveal<CR>", "Tree sidebar" },
-  t = { "<cmd>:Ranger<CR>", "Ranger" },
+  t = { "<cmd>:term<CR>", "Terminal" },
   n = { "<cmd>:vsplit | enew<cr>", "New File" },
   q = { "<cmd>:q<cr>", "Quit" },
   u = { "<cmd>:MundoToggle<cr>", "Undo tree" },
@@ -25,8 +25,6 @@ map.register({
   g = {
     name = "+git",
     b = { "<cmd>:GBrowse<cr>", "Open repo in browser" },
-    s = { "<cmd>:tab Git<cr>", "Git status" },
-    n = { "<cmd>:Neogit<cr>", "Neogit" },
     g = { "<cmd>:Lazygit<cr>", "Lazygit" },
     t = { "<cmd>:Neotree git_status<cr>", "Neotree git_status" },
     m = {
@@ -89,7 +87,7 @@ map.register({
   b = { "<cmd>:Telescope git_branches theme=ivy<cr>", "Git branches" },
   c = { "<cmd>:Telescope commands theme=ivy<cr>", "Commands" },
   d = { "<cmd>:lua require('telescope.builtin').find_files({cwd = '~/dot', hidden = true})<cr>", "Dot" },
-  f = { "<cmd>Telescope live_grep theme=ivy hidden=true<cr>", "Find Text" },
+  f = { "<cmd>:Telescope live_grep theme=ivy hidden=true<cr>", "Find Text" },
   o = { "<cmd>:Telescope oldfiles theme=ivy hidden=true theme=ivy<cr>", "Recent Files" },
   h = { "<cmd>:Telescope help_tags theme=ivy<cr>", "Help" },
   k = { "<cmd>:Telescope keymaps theme=ivy<cr>", "Keymaps" },
@@ -97,6 +95,7 @@ map.register({
   p = { "<cmd>:Telescope find_files theme=ivy hidden=true<cr>", "Find Files" },
   P = { "<cmd>:Telescope frecency hidden=true theme=ivy<cr>", "Find Files frecency" },
   r = { "<cmd>:Telescope project theme=ivy<cr>", "Projectile" },
+  e = { "<cmd>:Telescope file_browser theme=ivy hidden=true<cr>", "File browser" },
 }, { prefix = "<leader><leader>" })
 
 map.register({

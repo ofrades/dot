@@ -3,15 +3,15 @@ vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
---Remap for dealing with word wrap
-vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
 -- Move to window using the <ctrl> movement keys
 vim.keymap.set("n", "<C-h>", "<C-w>h")
 vim.keymap.set("n", "<C-j>", "<C-w>j")
 vim.keymap.set("n", "<C-k>", "<C-w>k")
 vim.keymap.set("n", "<C-l>", "<C-w>l")
+
+-- lsp override <C-k>
+vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help)
+vim.keymap.set("n", "<C-s>", vim.lsp.buf.signature_help)
 
 -- Out
 vim.keymap.set("n", "<ESC><ESC>", ":q!<cr>")
@@ -64,26 +64,3 @@ vim.keymap.set("n", "<C-t>", "<cmd>:tabnew<cr>")
 
 -- remap fugitive inline diff to tab
 vim.cmd("autocmd FileType fugitive nmap <buffer> <Tab> =")
-
-vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
--- vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions theme=ivy<cr>")
-vim.keymap.set("n", "gh", vim.lsp.buf.hover)
-vim.keymap.set("n", "gi", vim.lsp.buf.implementation)
-vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help)
-vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help)
-vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder)
-vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder)
-vim.keymap.set("n", "<space>wl", function()
-	print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-end)
--- vim.keymap.set("n", "gt", vim.lsp.buf.type_definition)
-vim.keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<cr>")
-vim.keymap.set("n", "gR", vim.lsp.buf.rename)
-vim.keymap.set("n", "ga", vim.lsp.buf.code_action)
--- vim.keymap.set("n", "gr", vim.lsp.buf.references)
-vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references theme=ivy<cr>")
-vim.keymap.set("n", "gf", vim.lsp.buf.formatting)
-
-vim.keymap.set("n", "X", "<cmd>lua vim.diagnostic.open_float(nil, { focus = false })<cr>")
-vim.keymap.set("n", "gx", "<cmd>Trouble document_diagnostics<cr>")
