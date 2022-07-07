@@ -2,20 +2,14 @@
 # 👆-add-message--------------------------------------------
 # Header - type(scope): Brief description
 # ----------------------------------------------------------
-# empty line
-# ----------------------------------------------------------
 # Body - More description, if necessary
 # ----------------------------------------------------------
 #    * Motivation behind changes, more detail into how
 #      functionality might be affected, etc.
 # ----------------------------------------------------------
-# empty line
-# ----------------------------------------------------------
 # Footer - Associated issues, PRs, etc.
 # ----------------------------------------------------------
 #    * Ex: Resolves Issue #207, see PR #15, etc.
-# ----------------------------------------------------------
-# Conventional Commits
 # ----------------------------------------------------------
 #   ✨ * feat             A new feature
 #   🐛 * fix              A bug fix

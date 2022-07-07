@@ -16,7 +16,7 @@ abbr status 'git status'
 abbr add 'git add -p'
 abbr add-all 'git add .'
 abbr fetch-all 'git fetch -a'
-abbr commit 'git commit -m'
+abbr commit 'git commit'
 abbr amend 'git commit --amend --no-edit'
 abbr commit-chunk 'git commit -p'
 abbr pull 'git pull'
@@ -34,7 +34,6 @@ abbr rebase 'git rebase'
 abbr continue 'git rebase --continue'
 abbr g 'lazygit'
 abbr files 'nvim (fzf --preview "cat {}")'
-abbr gedit 'flatpak run org.gnome.gedit'
 abbr ch 'checkout'
 
 abbr weather "curl -s wttr.in/Oliveira+de+Frades | grep -v Follow"
@@ -48,14 +47,6 @@ abbr mv 'mv -iv'
 abbr cp 'cp -riv'
 abbr mkdir 'mkdir -vp'
 
-# tmux
-abbr -a -g tls 'tmux list-sessions'
-abbr -a -g td 'tmux detach'
-abbr -a -g ta 'tmux attach-session -t'
-abbr -a -g tn 'tmux new-session -s'
-abbr -a -g tksv 'tmux kill-server'
-abbr -a -g tkss 'tmux kill-session -t'
-
 # Environment Variables
 set -ga fish_user_paths /usr/local/go/bin
 set -ga fish_user_paths ~/.local/bin
@@ -65,7 +56,6 @@ set -Ux EDITOR nvim
 set -gx AWS_PROFILE default
 set -gx AWS_SDK_LOAD_CONFIG 1
 set -gx ANSIBLE_VAULT_PASSWORD_FILE ~/Dropbox/warden
-set -gx TERMINAL foot
 
 set -gx XDG_CONFIG_HOME $HOME/.config
 
@@ -86,4 +76,8 @@ set -gx PYENV_ROOT "$HOME/.pyenv"
 set -gx PATH "$PYENV_ROOT/bin:$PATH"
 
 pyenv init - | source
+
+# Bun
+set -Ux BUN_INSTALL "/home/ofrades/.bun"
+set -px --path PATH "/home/ofrades/.bun/bin"
 

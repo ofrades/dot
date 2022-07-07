@@ -28,6 +28,8 @@ set $recordscreen exec wf-recorder -g "$(slurp)" -f ~/Videos/recording_$(date +"
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 output * bg ~/Pictures/val.jpg fill
+output * scale 2
+seat seat0 xcursor_theme Simple-and-Soft 30
 
 # Theme
 set $bg_active #4CA585
@@ -49,8 +51,7 @@ client.background       $border
 default_border none
 default_floating_border none
 smart_gaps on
-gaps inner 4
-gaps outer 6
+gaps inner 3
 
 #
 # Example configuration:
