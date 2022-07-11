@@ -32,11 +32,11 @@ output * scale 2
 seat seat0 xcursor_theme Simple-and-Soft 30
 
 # Theme
-set $bg_active #4CA585
-set $bg #2B2D35
+set $bg_active #3B4252
+set $bg #2E3440
 set $border #2b2d35
-set $fg #DDDCD3
-set $fg_active #2b2d35
+set $fg #888888
+set $fg_active #ECEFF4
 set $fg_urg #cc6666
 set $border_urg #cc6666
 #                       Border  Background Text     Indicator Child border
@@ -50,8 +50,6 @@ client.background       $border
 # gap # Borders
 default_border none
 default_floating_border none
-smart_gaps on
-gaps inner 3
 
 #
 # Example configuration:

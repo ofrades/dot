@@ -8,7 +8,7 @@ set fish_greeting
 # vim
 # fish_vi_key_bindings
 
-source ~/dev/ofrades/nightfox.nvim/extra/eppzfox/nightfox_fish.fish
+source ~/dev/ofrades/nightfox.nvim/extra/nordfox//nightfox_fish.fish
 
 # git
 abbr clone 'git clone git@github.com:'

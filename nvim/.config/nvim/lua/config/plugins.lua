@@ -41,59 +41,7 @@ require("packer").startup(function(use)
 		config = function()
 			local lsp = require("lsp-zero")
 
-			-- local function lsp_highlight_document(client)
-			--   local loaded_plugin, illuminate = pcall(require, "illuminate")
-			--   if not loaded_plugin then
-			--     return
-			--   end
-
-			--   illuminate.on_attach(client)
-			-- end
-
-			-- local function lsp_keymaps(bufnr)
-			-- 	local opts = { buffer = bufnr, silent = true, remap = true }
-			-- 	vim.keymap.set("n", "ge", vim.diagnostic.open_float, opts)
-			-- 	vim.keymap.set("n", "g[", vim.diagnostic.goto_prev, opts)
-			-- 	vim.keymap.set("n", "g]", vim.diagnostic.goto_next, opts)
-			-- 	vim.keymap.set("n", "gq", vim.diagnostic.setloclist, opts)
-
-			-- 	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-			-- 	-- vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-			-- 	vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions theme=ivy<cr>", opts)
-			-- 	vim.keymap.set("n", "gh", vim.lsp.buf.hover, opts)
-			-- 	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-			-- 	vim.keymap.set("n", "<C-s>", vim.lsp.buf.signature_help, opts)
-			-- 	vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help, opts)
-			-- 	vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
-			-- 	vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts)
-			-- 	-- vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, opts)
-			-- 	vim.keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<cr>", opts)
-			-- 	vim.keymap.set("n", "gR", vim.lsp.buf.rename, opts)
-			-- 	vim.keymap.set("n", "ga", vim.lsp.buf.code_action, opts)
-			-- 	-- vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-			-- 	vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references theme=ivy<cr>", opts)
-			-- 	vim.keymap.set("n", "gf", vim.lsp.buf.formatting, opts)
-
-			-- 	vim.keymap.set("n", "X", "<cmd>lua vim.diagnostic.open_float(nil, { focus = false })<cr>", opts)
-			-- 	vim.keymap.set("n", "gx", "<cmd>Trouble document_diagnostics<cr>", opts)
-			-- end
-
 			lsp.preset("recommended")
-
-			-- lsp.set_preferences({
-			--   set_lsp_keymaps = true,
-			--   sign_icons = {
-			--     error = "",
-			--     warn = "▲",
-			--     hint = "",
-			--     info = "",
-			--   },
-			-- })
-
-			-- lsp.on_attach(function(client, bufnr)
-			--   lsp_keymaps(bufnr)
-			--   lsp_highlight_document(client)
-			-- end)
 
 			lsp.setup()
 
@@ -154,11 +102,24 @@ require("packer").startup(function(use)
 	})
 
 	use({
-		"kassio/neoterm",
+		"akinsho/toggleterm.nvim",
+		requires = {
+			"vim-test/vim-test",
+		},
+
 		config = function()
-			vim.g.neoterm_default_mod = "botright"
-			vim.g["neoterm_autoscroll"] = 1
-			vim.g["neoterm_autojump"] = 1
+			require("toggleterm").setup({
+				size = function(term)
+					if term.direction == "horizontal" then
+						return 20
+					elseif term.direction == "vertical" then
+						return vim.o.columns * 0.3
+					end
+				end,
+				start_in_insert = false,
+				open_mapping = [[<c-\>]],
+				direction = "float",
+			})
 		end,
 	})
 
@@ -166,10 +127,25 @@ require("packer").startup(function(use)
 		"vim-test/vim-test",
 		run = ":UpdateRemotePlugins",
 		config = function()
+			local tt = require("toggleterm")
+			local ttt = require("toggleterm.terminal")
+
+			vim.g["test#custom_strategies"] = {
+				tterm = function(cmd)
+					tt.exec(cmd)
+				end,
+
+				tterm_close = function(cmd)
+					local term_id = 0
+					tt.exec(cmd, term_id)
+					ttt.get_or_create_term(term_id):close()
+				end,
+			}
+
 			vim.g["test#strategy"] = {
-				nearest = "neoterm",
-				file = "neoterm",
-				suite = "neoterm",
+				nearest = "tterm",
+				file = "tterm",
+				suite = "tterm",
 			}
 			vim.g["test#javascript#jest#options"] = {
 				nearest = "--watch",
@@ -236,20 +212,6 @@ require("packer").startup(function(use)
 						never_show = { -- remains hidden even if visible is toggled to true
 							--".DS_Store",
 							--"thumbs.db"
-						},
-					},
-				},
-				git_status = {
-					window = {
-						position = "float",
-						mappings = {
-							["A"] = "git_add_all",
-							["gu"] = "git_unstage_file",
-							["ga"] = "git_add_file",
-							["gr"] = "git_revert_file",
-							["gc"] = "git_commit",
-							["gp"] = "git_push",
-							["gg"] = "git_commit_and_push",
 						},
 					},
 				},
@@ -494,11 +456,15 @@ require("packer").startup(function(use)
 			require("telescope").load_extension("harpoon")
 		end,
 	})
+	use({
+		"lalitmee/browse.nvim",
+		requires = { "nvim-telescope/telescope.nvim" },
+	})
 
 	use({
-		"karb94/neoscroll.nvim",
+		"declancm/cinnamon.nvim",
 		config = function()
-			require("neoscroll").setup()
+			require("cinnamon").setup()
 		end,
 	})
 
@@ -515,6 +481,9 @@ require("packer").startup(function(use)
 		"norcalli/nvim-colorizer.lua",
 		requires = {
 			"~/dev/ofrades/nightfox.nvim",
+			"eddyekofo94/gruvbox-flat.nvim",
+			"rmehri01/onenord.nvim",
+			"folke/tokyonight.nvim",
 		},
 		config = function()
 			require("colorizer").setup(nil, {
@@ -594,7 +563,7 @@ require("packer").startup(function(use)
 					},
 				},
 			})
-			vim.cmd([[colorscheme eppzfox]])
+			vim.cmd([[colorscheme nordfox]])
 		end,
 	})
 
