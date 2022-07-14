@@ -34,9 +34,9 @@ seat seat0 xcursor_theme Simple-and-Soft 30
 # Theme
 set $bg_active #3B4252
 set $bg #2E3440
-set $border #2b2d35
-set $fg #888888
-set $fg_active #ECEFF4
+set $border #2E3440
+set $fg #5E81AC
+set $fg_active #EBCB8B
 set $fg_urg #cc6666
 set $border_urg #cc6666
 #                       Border  Background Text     Indicator Child border
@@ -60,6 +60,18 @@ default_floating_border none
 output * scale 1
 output * scale_filter linear
 # output DP-3 scale 1
+# Define outputs
+set $output-primary DP-3
+set $output-secondary eDP-1
+
+# workspace to displays
+workspace 1 output $output-primary
+workspace 2 output $output-primary
+workspace 3 output $output-primary
+
+workspace 4 output $output-secondary
+workspace 5 output $output-secondary
+workspace 6 output $output-secondary
 # font pango:"JetBrainsMono Nerd Font" Regular 11
 # This is the only place where you must set GTK scaling
 exec_always {
@@ -69,11 +81,10 @@ exec_always {
 
 ### Input configuration
 # Touchpad
-input "2:14:SynPS/2_Synaptics_TouchPad" {
-    dwt enabled
+input type:touchpad {
     tap enabled
     natural_scroll enabled
-    middle_emulation enabled
+    tap_button_map lrm
 }
 
 # Keyboard

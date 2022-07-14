@@ -40,21 +40,27 @@
         "spacing": 10
     },
     "clock": {
-        // "timezone": "America/New_York",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "{:%Y-%m-%d}"
-    },
-    "cpu": {
-        "format": "{usage}% ",
-        "tooltip": false
+        "interval": 1,
+        "format": "🕗 {:%I:%M %p  %A %b %d}",
+        "tooltip-format": "{:%A, %d %B %Y}\n<tt>{calendar}</tt>"
     },
     "memory": {
-        "format": "{}% "
+        "interval": 1,
+        "format": "﬙ {percentage}%",
+        "states": {
+        	"warning": 85,
+        },
+    },
+    "cpu": {
+        "interval": 1,
+        "format": " {usage}%"
     },
     "backlight": {
-        // "device": "acpi_video1",
-        "format": "{percent}% {icon}",
-        "format-icons": ["", "", "", "", "", "", "", "", ""]
+            "format": "{percent}% {icon}",
+            "format-icons": ["", "", "", "", "", "", "", "", ""],
+            "on-scroll-up": "light -A 5",
+            "on-scroll-down": "light -U 5",
+           //"smooth-scrolling-threshold": 5,
     },
     "battery": {
         "states": {
@@ -74,14 +80,23 @@
         "bat": "BAT2"
     },
     "network": {
-        // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "{essid} ({signalStrength}%) ",
-        "format-ethernet": "{ipaddr}/{cidr} ",
-        "tooltip-format": "{ifname} via {gwaddr} ",
-        "format-linked": "{ifname} (No IP) ",
-        "format-disconnected": "Disconnected ⚠",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}"
+    	"interval": 1,
+        "format-wifi": "說",
+        "format-ethernet": "  {ifname} ({ipaddr})",
+        "format-linked": "說 {essid} (No IP)",
+        "format-disconnected": "說 Disconnected",
+        // "format-alt": "說 {ifname} ({ipaddr})",
+        "tooltip": false
     },
+    //"network": {
+    //    // "interface": "wlp2*", // (Optional) To force the use of this interface
+    //    "format-wifi": "{essid} ({signalStrength}%) ",
+    //    "format-ethernet": "{ipaddr}/{cidr} ",
+    //    "tooltip-format": "{ifname} via {gwaddr} ",
+    //    "format-linked": "{ifname} (No IP) ",
+    //    "format-disconnected": "Disconnected ⚠",
+    //    "format-alt": "{ifname}: {ipaddr}/{cidr}"
+    //},
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
         "format": "{volume}% {icon} {format_source}",
