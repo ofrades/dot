@@ -103,7 +103,7 @@ input "type:keyboard" {
 # Basics:
 #
 # Start a terminal
-bindsym $mod+Return exec $term
+bindsym $mod+Return exec $term start -- nvim ~/dev/
 bindsym $mod+t exec $term
 
 # Kill focused window
