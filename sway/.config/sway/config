@@ -39,6 +39,7 @@ set $fg #5E81AC
 set $fg_active #EBCB8B
 set $fg_urg #cc6666
 set $border_urg #cc6666
+
 #                       Border  Background Text     Indicator Child border
 client.focused          $border      $bg_active   $fg_active $fg       $border
 client.focused_inactive $border      $bg   $fg      $fg       $border
@@ -48,7 +49,9 @@ client.placeholder      $border      $bg   $fg      $fg       $border
 client.background       $border
 
 # gap # Borders
-default_border none
+gaps inner 12
+default_border pixel 4
+# default_border none
 default_floating_border none
 
 #
@@ -72,7 +75,7 @@ workspace 3 output $output-primary
 workspace 4 output $output-secondary
 workspace 5 output $output-secondary
 workspace 6 output $output-secondary
-# font pango:"JetBrainsMono Nerd Font" Regular 11
+font pango:FiraCode Nerd Font 11
 # This is the only place where you must set GTK scaling
 exec_always {
     gsettings set org.gnome.desktop.interface text-scaling-factor 1
@@ -89,7 +92,7 @@ input type:touchpad {
 
 # Keyboard
 input "type:keyboard" {
-  repeat_delay 250
+  repeat_delay 200
   repeat_rate 50
   xkb_layout us,pt
   xkb_options "grp:alt_shift_toggle,caps:escape"

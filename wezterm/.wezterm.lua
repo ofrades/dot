@@ -2,10 +2,9 @@ local wezterm = require("wezterm")
 
 local config = {
   enable_tab_bar = false,
-  cursor_blink_rate = 800,
   color_scheme = "nord",
   enable_wayland = false,
-  default_cursor_style = "BlinkingBar",
+  default_cursor_style = "BlinkingBlock",
   check_for_updates = false,
   colors = {
     background = "#2b2d35",
@@ -17,6 +16,7 @@ local config = {
     bottom = 0,
   },
   font_size = 10.0,
+  font = wezterm.font("FiraCode Nerd Font"),
   leader = { key = "a", mods = "CTRL" },
   keys = {
     -- Send "CTRL-A" to the terminal when pressing CTRL-A, CTRL-A

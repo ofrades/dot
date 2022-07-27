@@ -6,7 +6,7 @@ set -U fish_emoji_width 2
 # disable greeting
 set fish_greeting
 # vim
-# fish_vi_key_bindings
+fish_vi_key_bindings
 
 source ~/dev/ofrades/nightfox.nvim/extra/nordfox//nightfox_fish.fish
 
