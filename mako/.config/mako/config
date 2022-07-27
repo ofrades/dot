@@ -1,10 +1,10 @@
 sort=-time
 layer=overlay
-background-color=#3a2f3f
+background-color=#2E3440
 width=300
 height=110
 border-size=1
-border-color=#222222
+border-color=#3B4252
 border-radius=2
 icons=0
 max-icon-size=64
@@ -13,12 +13,13 @@ ignore-timeout=1
 font=monospace 9
 
 [urgency=low]
-border-color=#cccccc
+border-color=#EBCB8B
 
 [urgency=normal]
-border-color=#d08770
+border-color=#D08770
 
 [urgency=high]
-border-color=#bf616a
+border-color=#BF616A
 default-timeout=0
 
+progress-color=source #5E81AC

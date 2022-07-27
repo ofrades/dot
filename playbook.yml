@@ -8,17 +8,18 @@
     - name: Copr packages
       community.general.copr:
         name: "{{ item }}"
+        state: enabled
       with_items:
         - agriffis/neovim-nightly
         - atim/lazygit
-        - atim/starship
         - boeroboy/hashicorp
 
     - name: Sytem packages
       package:
-        state: installed
+        state: latest
         name: "{{ item }}"
       with_items:
+        - "@Development Tools"
         # sway
         - sway
         - wl-clipboard
@@ -26,15 +27,18 @@
         - mako
         - wf-recorder
         # linux
+        - curl
+        - wget
+        - gzip
         - rnnoise
         - ulauncher
         - stow
         - sqlite-devel
+        - copyq
+          # obs
         - obs-studio
         - v4l2loopback 
-        - copyq
         - kmod-v4l2loopback
-        - "@Development Tools"
         # tools
         - kitty
         - fish
@@ -59,6 +63,12 @@
         - pipenv
         - terraform
         - jq
+        - luarocks
+        - cargo
+        - golang
+        # delete
+        - code
+        - gh
 
     - name: Install with npm
       community.general.npm:
@@ -73,14 +83,11 @@
         - serverless
         - n
 
-    - name: Install brew
-      become: false
-      shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
     - name: Install with brew
       become: false
       community.general.homebrew:
         path: /home/linuxbrew/.linuxbrew/bin
+        state: present
         name: "{{ item }}"
       with_items:
         - aws-vault
@@ -89,6 +96,7 @@
     - name: Install with pip
       pip:
         name: "{{ item }}"
+        state: present
       with_items:
         - awsume
         - pynvim
@@ -97,17 +105,6 @@
       user:
         name: "{{ user }}"
         shell: /usr/bin/fish
-
-    - name: Install github cli
-      shell: |
-        sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-        sudo dnf install gh
-
-    - name: Install vscode
-      shell: |
-        sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-        sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
-        sudo dnf install code
 
     - name: Get Noto
       get_url:
@@ -166,8 +163,6 @@
         method: user
       with_items:
         - com.slack.Slack
-        - com.calibre_ebook.calibre
-        - com.github.wwmm.easyeffects
 
     - name: Ensure dot folders exist
       file:
@@ -180,8 +175,24 @@
         - ~/.aws
         - ~/.ssh
 
-    - name: Create dot symlinks
-      shell: stow nvim fish aws ssh lazygit npmrc starship kitty gitconfig gitignoreglobal gitcommitmessage sway waybar mako
+    - name: Stow items
+      shell: stow {{ item }}
+      with_items:
+        - nvim
+        - fish
+        - aws
+        - ssh
+        - lazygit
+        - npmrc
+        - starship
+        - kitty
+        - gitconfig
+        - gitignoreglobal
+        - gitcommitmessage
+        - sway
+        - waybar
+        - mako
+        - swaylock
 
     - name: Set ssh permissions
       file:

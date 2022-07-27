@@ -16,6 +16,11 @@ end
 require("packer").startup(function(use)
   use({ "wbthomason/packer.nvim" })
 
+  use({ "echasnovski/mini.nvim",
+    config = function()
+      require("mini.indentscope").setup({})
+    end })
+
   use({
     "VonHeikemen/lsp-zero.nvim",
     requires = {
@@ -28,6 +33,7 @@ require("packer").startup(function(use)
       { "saadparwaiz1/cmp_luasnip" },
       { "hrsh7th/cmp-nvim-lsp" },
       { "hrsh7th/cmp-nvim-lua" },
+      { "hrsh7th/cmp-nvim-lsp-signature-help" },
       { "L3MON4D3/LuaSnip" },
       { "rafamadriz/friendly-snippets" },
     },
@@ -35,8 +41,25 @@ require("packer").startup(function(use)
       local lsp = require("lsp-zero")
       lsp.preset("recommended")
 
+      lsp.setup_nvim_cmp({
+        sources = {
+          { name = 'nvim_lsp' },
+          { name = 'nvim_lua' },
+          { name = 'luasnip' },
+          { name = 'buffer' },
+          { name = 'path' },
+          { name = 'nvim_lsp_signature_help' },
+        },
+      })
+
       lsp.set_preferences({
         set_lsp_keymaps = false,
+        sign_icons = {
+          error = '✘',
+          warn = '▲',
+          hint = '⚑',
+          info = ''
+        }
       })
 
       lsp.ensure_installed({
@@ -736,6 +759,7 @@ map.register({
   g = {
     name = "+git",
     b = { "<cmd>:GBrowse<cr>", "Open repo in browser" },
+    d = { "<cmd>:Gitsigns preview_hunk<cr>", "Diff current line" },
     g = { "<cmd>:Lazygit<cr>", "Lazygit" },
     t = { "<cmd>:Neotree git_status<cr>", "Neotree git_status" },
     m = {
@@ -886,19 +910,76 @@ vim.g.loaded_2html_plugin = 1
 
 -- statusline
 local function getfilename()
-  if vim.api.nvim_win_get_width(0) < 100 then
+  if vim.o.columns < 100 then
     return " %<%t "
   end
   return " %<%f "
 end
 
-local function getBranch()
-  local signs = vim.b.gitsigns_status_dict or { head = "", added = 0, changed = 0, removed = 0 }
-
-  if vim.api.nvim_win_get_width(0) < 160 then
+local function git()
+  if not vim.b.gitsigns_head or vim.b.gitsigns_git_status then
     return ""
   end
-  return string.format(" +%s ~%s -%s |  %s ", signs.added, signs.changed, signs.removed, signs.head)
+
+  local git_status = vim.b.gitsigns_status_dict
+
+  local added = (git_status.added and git_status.added ~= 0) and ("  " .. git_status.added) or ""
+  local changed = (git_status.changed and git_status.changed ~= 0) and ("  " .. git_status.changed) or ""
+  local removed = (git_status.removed and git_status.removed ~= 0) and ("  " .. git_status.removed) or ""
+  local branch_name = "   " .. git_status.head .. " "
+
+  return (
+      vim.o.columns > 100 and "%#St_gitIcons#" .. branch_name .. added .. changed .. removed or
+          "%#St_gitIcons#" .. added .. changed .. removed)
+end
+
+local function lsp_diagnostics()
+  if not rawget(vim, "lsp") then
+    return ""
+  end
+  local errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+  local warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+  local hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
+  local info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
+
+  errors = (errors and errors > 0) and ("%#St_lspError#" .. " " .. errors .. " ") or ""
+  warnings = (warnings and warnings > 0) and ("%#St_lspWarning#" .. " " .. warnings .. " ") or ""
+  hints = (hints and hints > 0) and ("%#St_lspHints#" .. " " .. hints .. " ") or ""
+  info = (info and info > 0) and ("%#St_lspInfo#" .. " " .. info .. " ") or ""
+
+  return errors .. warnings .. hints .. info
+end
+
+local function lsp_progress()
+  if not rawget(vim, "lsp") then
+    return ""
+  end
+
+  local Lsp = vim.lsp.util.get_progress_messages()[1]
+
+  if vim.o.columns < 120 or not Lsp then
+    return ""
+  end
+
+  local msg = Lsp.message or ""
+  local percentage = Lsp.percentage or 0
+  local title = Lsp.title or ""
+  local spinners = { "", "" }
+  local ms = vim.loop.hrtime() / 1000000
+  local frame = math.floor(ms / 120) % #spinners
+  local content = string.format(" %%<%s %s %s (%s%%%%) ", spinners[frame + 1], title, msg, percentage)
+
+  return ("%#St_LspProgress#" .. content) or ""
+end
+
+local function lsp_status()
+  if rawget(vim, "lsp") then
+    for _, client in ipairs(vim.lsp.get_active_clients()) do
+      if client.attached_buffers[vim.api.nvim_get_current_buf()] then
+        return (vim.o.columns > 100 and "%#St_LspStatus#" .. "   " .. client.name .. " ") or "  "
+      end
+    end
+  end
 end
 
 Statusline = {}
@@ -906,12 +987,16 @@ Statusline = {}
 Statusline.active = function()
   return table.concat({
     "%#Pmenu# ",
-    " ",
+    " ",
     getfilename(),
+    lsp_diagnostics(),
     "%m",
     "%#Normal#",
     "%=",
-    getBranch(),
+    "%#Pmenu#",
+    git(),
+    lsp_progress(),
+    lsp_status()
   })
 end
 

@@ -1,110 +1,61 @@
 {
-    // "layer": "top", // Waybar at top layer
-    // "position": "bottom", // Waybar position (top|bottom|left|right)
-    "height": 30, // Waybar height (to be removed for auto height)
-    // "width": 1280, // Waybar width
-    "spacing": 4, // Gaps between modules (4px)
-    // Choose the order of the modules
-    "modules-left": ["sway/workspaces", "sway/mode", "custom/media", "sway/window"],
-    "modules-right": ["tray", "pulseaudio", "cpu", "memory", "backlight", "keyboard-state", "sway/language", "network", "battery", "battery#bat2", "clock"],
-    // Modules configuration
-    // "sway/workspaces": {
-    //     "disable-scroll": true,
-    //     "all-outputs": true,
-    //     "format": "{name}: {icon}",
-    //     "format-icons": {
-    //         "1": "",
-    //         "2": "",
-    //         "3": "",
-    //         "4": "",
-    //         "5": "",
-    //         "urgent": "",
-    //         "focused": "",
-    //         "default": ""
-    //     }
-    // },
-    "keyboard-state": {
-        "numlock": true,
-        "capslock": true,
-        "format": "{name} {icon}",
+    "position": "top", // Waybar position (top|bottom|left|right)
+    "height": 25, // Waybar height (to be removed for auto height)
+    "spacing": 5, // Gaps between modules (4px)
+    "modules-left": [
+      "sway/workspaces",
+      "sway/mode",
+      "sway/window"
+    ],
+    "modules-right": [
+      "tray",
+      "pulseaudio",
+      "memory",
+      "cpu",
+      "custom/weather",
+      "network",
+      "backlight",
+      "sway/language",
+      "battery",
+      "clock"
+    ],
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{name}", // {icon}
         "format-icons": {
-            "locked": "",
-            "unlocked": ""
+            "urgent": " ",
+            "focused": " ",
+            "default": " "
+        },
+        "persistent_workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": [],
+            "6": []
         }
+    },
+    "sway/language": {
+        "format": " {short} {variant}",
+        "on-click": "swaymsg input type:keyboard xkb_switch_layout next"
+    },
+    "custom/weather": {
+        "exec": "curl 'https://wttr.in/Oliveira+de+Frades?format=1'",
+        "interval": 3600
     },
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>"
     },
-    "tray": {
-        // "icon-size": 21,
-        "spacing": 10
-    },
-    "clock": {
-        "interval": 1,
-        "format": "🕗 {:%I:%M %p  %A %b %d}",
-        "tooltip-format": "{:%A, %d %B %Y}\n<tt>{calendar}</tt>"
-    },
-    "memory": {
-        "interval": 1,
-        "format": "﬙ {percentage}%",
-        "states": {
-        	"warning": 85,
-        },
-    },
-    "cpu": {
-        "interval": 1,
-        "format": " {usage}%"
-    },
-    "backlight": {
-            "format": "{percent}% {icon}",
-            "format-icons": ["", "", "", "", "", "", "", "", ""],
-            "on-scroll-up": "light -A 5",
-            "on-scroll-down": "light -U 5",
-           //"smooth-scrolling-threshold": 5,
-    },
-    "battery": {
-        "states": {
-            // "good": 95,
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "{capacity}% {icon}",
-        "format-charging": "{capacity}% ",
-        "format-plugged": "{capacity}% ",
-        "format-alt": "{time} {icon}",
-        // "format-good": "", // An empty format will hide the module
-        // "format-full": "",
-        "format-icons": ["", "", "", "", ""]
-    },
-    "battery#bat2": {
-        "bat": "BAT2"
-    },
-    "network": {
-    	"interval": 1,
-        "format-wifi": "說",
-        "format-ethernet": "  {ifname} ({ipaddr})",
-        "format-linked": "說 {essid} (No IP)",
-        "format-disconnected": "說 Disconnected",
-        // "format-alt": "說 {ifname} ({ipaddr})",
-        "tooltip": false
-    },
-    //"network": {
-    //    // "interface": "wlp2*", // (Optional) To force the use of this interface
-    //    "format-wifi": "{essid} ({signalStrength}%) ",
-    //    "format-ethernet": "{ipaddr}/{cidr} ",
-    //    "tooltip-format": "{ifname} via {gwaddr} ",
-    //    "format-linked": "{ifname} (No IP) ",
-    //    "format-disconnected": "Disconnected ⚠",
-    //    "format-alt": "{ifname}: {ipaddr}/{cidr}"
-    //},
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
         "format": "{volume}% {icon} {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
         "format-bluetooth-muted": " {icon} {format_source}",
         "format-muted": " {format_source}",
-        "format-source": "{volume}% ",
-        "format-source-muted": "",
+        "format-source": "/ {volume}% ",
+        "format-source-muted": "/ ",
         "format-icons": {
             "headphone": "",
             "hands-free": "",
@@ -116,17 +67,55 @@
         },
         "on-click": "pavucontrol"
     },
-    "custom/media": {
-        "format": "{icon} {}",
-        "return-type": "json",
-        "max-length": 40,
-        "format-icons": {
-            "spotify": "",
-            "default": "🎜"
-        },
-        "escape": true,
-        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
-        // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+    "clock": {
+        "format": "  {:%b %d %H:%M}",
+        "tooltip-format": "<b><big>{:%Y %B}</big></b>\n\n<tt>{calendar}</tt>",
     },
+    "memory": {
+        "interval": 1,
+        "format": "  {percentage}%",
+        "states": {
+        	"warning": 85,
+        },
+    },
+    "cpu": {
+        "interval": 1,
+        "format": "  {usage}%",
+        "on-click": "gnome-system-monitor"
+    },
+    "backlight": {
+        "format": "{percent}% {icon}",
+        "format-icons": [
+            "",
+            "",
+            ""
+        ],
+        "on-scroll-up": "light -A 5",
+        "on-scroll-down": "light -U 5",
+    },
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-alt": "{time} {icon}",
+        "format-icons": [
+            " ",
+            " ",
+            " ",
+            " ",
+            " "
+        ]
+    },
+    "network": {
+        "format-wifi": "直",
+        "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+        "format-linked": "{ifname} (No IP) ",
+        "format-disconnected": "睊",
+    }
 }
 

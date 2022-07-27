@@ -15,6 +15,7 @@ set $up k
 set $right l
 # Your preferred terminal emulator
 set $term kitty
+set $lock swaylock -f
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
@@ -40,17 +41,17 @@ set $fg_active #EBCB8B
 set $fg_urg #cc6666
 set $border_urg #cc6666
 
-#                       Border  Background Text     Indicator Child border
-client.focused          $border      $bg_active   $fg_active $fg       $border
-client.focused_inactive $border      $bg   $fg      $fg       $border
-client.unfocused        $border      $bg   $fg      $fg       $border
-client.urgent           $border      $bg   $fg_urg  $fg       $border
-client.placeholder      $border      $bg   $fg      $fg       $border
-client.background       $border
+#                       Border       Background Text     Indicator             Child       border
+client.focused          $border      $bg_active          $fg_active            $bg_active         $bg_active
+client.focused_inactive $border      $bg                 $fg                   $bg         $bg
+client.unfocused        $border      $bg                 $fg                   $bg         $bg
+client.urgent           $border_urg  $bg                 $fg_urg               $fg_urg     $fg_urg
+client.placeholder      $border      $bg                 $fg                   $fg         $fg
+client.background       $border      $bg                 $fg                   $fg         $fg
 
 # gap # Borders
-gaps inner 12
-default_border pixel 4
+gaps inner 3
+default_border pixel 3
 # default_border none
 default_floating_border none
 
@@ -67,6 +68,19 @@ output * scale_filter linear
 set $output-primary DP-3
 set $output-secondary eDP-1
 
+#################################################################
+## Screen Lock
+#################################################################
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+exec_always pkill swayidle; swayidle -w \
+         timeout 300 "$lock" \
+         timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+         before-sleep "$lock"
+bindswitch lid:on exec $lock
+bindsym $mod+Alt+l exec $lock
+
 # workspace to displays
 workspace 1 output $output-primary
 workspace 2 output $output-primary
@@ -76,6 +90,7 @@ workspace 4 output $output-secondary
 workspace 5 output $output-secondary
 workspace 6 output $output-secondary
 font pango:FiraCode Nerd Font 11
+
 # This is the only place where you must set GTK scaling
 exec_always {
     gsettings set org.gnome.desktop.interface text-scaling-factor 1
@@ -244,5 +259,6 @@ exec mako
 
 # Start easyteffects for good mic noise reduction
 exec easyeffects --gapplication-service > dev/null 2>&1
+exec swaymsg "workspace 6; exec thunderbird;"
 
 include /etc/sway/config.d/*
