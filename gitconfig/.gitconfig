@@ -25,6 +25,9 @@
 [push]
   default = current
 
+[commit]
+  template = /home/ofrades/.git-commit-message.txt
+
 [color]
   ui = true
 
