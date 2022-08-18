@@ -5,7 +5,10 @@
     "modules-left": [
       "sway/workspaces",
       "sway/mode",
-      "sway/window"
+      "sway/window",
+    ],
+    "modules-center": [
+      "custom/rhythmbox",
     ],
     "modules-right": [
       "tray",
@@ -17,7 +20,8 @@
       "backlight",
       "sway/language",
       "battery",
-      "clock"
+      "clock",
+      "custom/power",
     ],
     "sway/workspaces": {
         "disable-scroll": true,
@@ -37,6 +41,9 @@
             "6": []
         }
     },
+    "sway/window": {
+      "max-length": 20,
+    },
     "sway/language": {
         "format": " {short} {variant}",
         "on-click": "swaymsg input type:keyboard xkb_switch_layout next"
@@ -47,6 +54,15 @@
     },
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>"
+    },
+    "custom/rhythmbox": {
+      "format": "喇 {}",
+      "max-length": 20,
+      "interval": 10,
+      "tooltip": true,
+      "exec": "rhythmbox-client --print-playing-format=\"%at - %tt - %aa\"", // album title - track title - album artist
+      "on-click": "rhythmbox-client --play-pause",
+      "on-click-right": "rhythmbox-client --next"
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
@@ -65,7 +81,7 @@
             "car": "",
             "default": ["", "", ""]
         },
-        "on-click": "pavucontrol"
+        "on-click": "~/.config/rofi/applets/bin/volume.sh"
     },
     "clock": {
         "format": "  {:%b %d %H:%M}",
@@ -92,6 +108,7 @@
         ],
         "on-scroll-up": "light -A 5",
         "on-scroll-down": "light -U 5",
+        "on-click": "~/.config/rofi/applets/bin/brightness.sh"
     },
     "battery": {
         "states": {
@@ -116,6 +133,10 @@
         "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
         "format-linked": "{ifname} (No IP) ",
         "format-disconnected": "睊",
-    }
+    },
+    "custom/power": {
+        "format": "",
+        "on-click": "~/.config/rofi/powermenu/type-1/powermenu.sh"
+      }
 }
 

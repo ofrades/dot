@@ -1,24 +1,20 @@
--- packer install
-local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-
+-- Install packer
+local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
+local is_bootstrap = false
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  packer_bootstrap = vim.fn.system({
-    "git",
-    "clone",
-    "--depth",
-    "1",
-    "https://github.com/wbthomason/packer.nvim",
-    install_path,
-  })
+  is_bootstrap = true
+  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+  vim.cmd [[packadd packer.nvim]]
 end
 
--- plugins
 require("packer").startup(function(use)
   use({ "wbthomason/packer.nvim" })
 
   use({ "echasnovski/mini.nvim",
     config = function()
-      require("mini.indentscope").setup({})
+      require("mini.indentscope").setup()
+      require("mini.surround").setup()
+      require("mini.pairs").setup()
     end })
 
   use({
@@ -54,12 +50,6 @@ require("packer").startup(function(use)
 
       lsp.set_preferences({
         set_lsp_keymaps = false,
-        sign_icons = {
-          error = '✘',
-          warn = '▲',
-          hint = '⚑',
-          info = ''
-        }
       })
 
       lsp.ensure_installed({
@@ -126,9 +116,6 @@ require("packer").startup(function(use)
 
   use({
     "akinsho/toggleterm.nvim",
-    requires = {
-      "vim-test/vim-test",
-    },
     config = function()
       require("toggleterm").setup({
         size = function(term)
@@ -147,6 +134,9 @@ require("packer").startup(function(use)
 
   use({
     "vim-test/vim-test",
+    requires = {
+      "akinsho/toggleterm.nvim",
+    },
     run = ":UpdateRemotePlugins",
     config = function()
       local tt = require("toggleterm")
@@ -224,17 +214,6 @@ require("packer").startup(function(use)
             visible = true,
             hide_dotfiles = false,
             hide_gitignored = false,
-            hide_hidden = true, -- only works on Windows for hidden files/directories
-            hide_by_name = {
-              --"node_modules"
-            },
-            hide_by_pattern = { -- uses glob style patterns
-              --"*.meta"
-            },
-            never_show = { -- remains hidden even if visible is toggled to true
-              --".DS_Store",
-              --"thumbs.db"
-            },
           },
         },
       })
@@ -258,13 +237,6 @@ require("packer").startup(function(use)
   })
 
   use({
-    "rmagatti/auto-session",
-    config = function()
-      require("auto-session").setup()
-    end,
-  })
-
-  use({
     "lewis6991/gitsigns.nvim",
     requires = {
       "tpope/vim-rhubarb",
@@ -283,7 +255,6 @@ require("packer").startup(function(use)
   use({ "kristijanhusak/vim-carbon-now-sh" })
 
   use({
-    "tpope/vim-surround",
     "tpope/vim-repeat",
     "tpope/vim-dispatch",
     "tpope/vim-commentary",
@@ -347,14 +318,9 @@ require("packer").startup(function(use)
       }
     end,
   })
+
   use({ "JoosepAlviste/nvim-ts-context-commentstring" })
 
-  use({
-    "windwp/nvim-autopairs",
-    config = function()
-      require("nvim-autopairs").setup()
-    end,
-  })
   use({
     "windwp/nvim-ts-autotag",
     config = function()
@@ -455,11 +421,9 @@ require("packer").startup(function(use)
 
   use({ "mg979/vim-visual-multi" })
 
-  -- themes
   use({
     "rmehri01/onenord.nvim",
     "shaunsingh/nord.nvim",
-    "projekt0n/github-nvim-theme",
   })
 
   use({
@@ -511,6 +475,11 @@ require("packer").startup(function(use)
       })
     end,
   })
+
+  use({ "phaazon/mind.nvim",
+    config = function()
+      require 'mind'.setup()
+    end })
 
   use({
     "mfussenegger/nvim-dap",
@@ -599,70 +568,23 @@ require("packer").startup(function(use)
   use({
     "windwp/nvim-spectre",
     config = function()
-      require("spectre").setup({
-        open_cmd = "tab",
-        is_insert_mode = true,
-        live_update = true,
-        mapping = {
-          ["toggle_line"] = {
-            map = "dd",
-            cmd = "<cmd>lua require('spectre').toggle_line()<cr>",
-            desc = "toggle current item",
-          },
-          ["enter_file"] = {
-            map = "<cr>",
-            cmd = "<cmd>lua require('spectre.actions').select_entry()<cr>",
-            desc = "goto current file",
-          },
-          ["send_to_qf"] = {
-            map = "qq",
-            cmd = "<cmd>lua require('spectre.actions').send_to_qf()<cr>",
-            desc = "send all item to quickfix",
-          },
-          ["replace_cmd"] = {
-            map = "<leader>c",
-            cmd = "<cmd>lua require('spectre.actions').replace_cmd()<cr>",
-            desc = "input replace vim command",
-          },
-          ["show_option_menu"] = {
-            map = "<leader>o",
-            cmd = "<cmd>lua require('spectre').show_options()<cr>",
-            desc = "show option",
-          },
-          ["run_replace"] = {
-            map = "<leader>r",
-            cmd = "<cmd>lua require('spectre.actions').run_replace()<cr>",
-            desc = "replace all",
-          },
-          ["change_view_mode"] = {
-            map = "<leader>v",
-            cmd = "<cmd>lua require('spectre').change_view()<cr>",
-            desc = "change result view mode",
-          },
-          ["toggle_live_update"] = {
-            map = "<leader>u",
-            cmd = "<cmd>lua require('spectre').toggle_live_update()<cr>",
-            desc = "update change when vim write file.",
-          },
-          ["toggle_ignore_case"] = {
-            map = "<leader>i",
-            cmd = "<cmd>lua require('spectre').change_options('ignore-case')<cr>",
-            desc = "toggle ignore case",
-          },
-          ["toggle_ignore_hidden"] = {
-            map = "<leader>h",
-            cmd = "<cmd>lua require('spectre').change_options('hidden')<cr>",
-            desc = "toggle search hidden",
-          },
-        },
-      })
+      require("spectre").setup()
     end,
   })
 
-  if packer_bootstrap then
-    require("packer").sync()
+  if is_bootstrap then
+    require('packer').sync()
   end
 end)
+
+
+-- Automatically source and re-compile packer whenever you save this init.lua
+local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
+vim.api.nvim_create_autocmd('BufWritePost', {
+  command = 'source <afile> | PackerCompile',
+  group = packer_group,
+  pattern = vim.fn.expand '$MYVIMRC',
+})
 
 -- keymaps
 --Remap space as leader key
@@ -745,7 +667,7 @@ map.register({
   A = { "<cmd>:lua require('browse.devdocs').search_with_filetype()<cr>", "Browse devdocs" },
   b = { "<cmd>:ToggleTerm direction=horizontal<cr>", "Terminal bottom" },
   F = { "<cmd>:ToggleTerm direction=float<cr>", "Terminal bottom" },
-  t = { "<cmd>:ToggleTerm direction=tab<cr>", "Terminal bottom" },
+  t = { "<cmd>:MindOpenMain<cr>", "Notes" },
   v = { "<cmd>:ToggleTerm direction=vertical<cr>", "Terminal side" },
   e = { "<cmd>:Neotree toggle reveal<CR>", "Tree sidebar" },
   n = { "<cmd>:vsplit | enew<cr>", "New File" },
@@ -756,22 +678,7 @@ map.register({
   f = { "<cmd>:lua require('spectre').open()<CR>", "Search" },
   F = { "<cmd>:lua require('spectre').open_visual({select_word=true})<CR>", "Search selected" },
   d = { "<cmd>:e ~/.config/nvim/init.lua<CR>", "Neovim configuration" },
-  g = {
-    name = "+git",
-    b = { "<cmd>:GBrowse<cr>", "Open repo in browser" },
-    d = { "<cmd>:Gitsigns preview_hunk<cr>", "Diff current line" },
-    g = { "<cmd>:Lazygit<cr>", "Lazygit" },
-    t = { "<cmd>:Neotree git_status<cr>", "Neotree git_status" },
-    m = {
-      name = "+mob",
-      s = { "<cmd>:T mob start<cr>", "Mob start" },
-      n = { "<cmd>:T mob next<cr>", "Mob next" },
-      t = { ":T mob timer ", "Mob timer..." },
-      d = { "<cmd>:T mob done<cr>", "Mob done" },
-      r = { "<cmd>:T mob reset<cr>", "Mob reset" },
-      m = { "<cmd>:T mob moo<cr>", "Mob moo!" },
-    },
-  },
+  g = { "<cmd>:Lazygit<cr>", "Lazygit" },
   h = {
     name = "+harpoon",
     a = { "<cmd>:lua require('harpoon.mark').add_file()<cr>", "Add" },
@@ -866,9 +773,11 @@ vim.opt.pumblend = 10 -- Popup blend
 vim.opt.pumheight = 10 -- Maximum number of entries in a popup
 vim.opt.showmode = false -- dont show mode since we have a statusline
 vim.opt.expandtab = true -- Use spaces instead of tabs
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()" -- TreeSitter folding
-vim.opt.foldlevel = 99
 vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
 vim.opt.grepprg = "rg --vimgrep"
 vim.opt.grepformat = "%f:%l:%c:%m"
 vim.opt.inccommand = "split" -- preview incremental substitute
@@ -976,7 +885,7 @@ local function lsp_status()
   if rawget(vim, "lsp") then
     for _, client in ipairs(vim.lsp.get_active_clients()) do
       if client.attached_buffers[vim.api.nvim_get_current_buf()] then
-        return (vim.o.columns > 100 and "%#St_LspStatus#" .. "   " .. client.name .. " ") or "  "
+        return (vim.o.columns > 100 and "%#St_LspStatus#" .. " - " .. client.name .. " ") or "  "
       end
     end
   end

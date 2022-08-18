@@ -36,6 +36,14 @@ abbr g 'lazygit'
 abbr files 'nvim (fzf --preview "cat {}")'
 abbr ch 'checkout'
 
+# tmux
+abbr -a -g tls 'tmux list-sessions'
+abbr -a -g td 'tmux detach'
+abbr -a -g ta 'tmux attach-session -t'
+abbr -a -g tn 'tmux new-session -s'
+abbr -a -g tksv 'tmux kill-server'
+abbr -a -g tkss 'tmux kill-session -t'
+
 abbr weather "curl -s wttr.in/Oliveira+de+Frades | grep -v Follow"
 
 # neovim

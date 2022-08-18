@@ -25,6 +25,8 @@ set $files nautilus
 # set $printscreen flatpak run org.flameshot.Flameshot gui
 set $printscreen exec grim -g "$(slurp -d)" -t png - | wl-copy -t image/png
 set $recordscreen exec wf-recorder -g "$(slurp)" -f ~/Videos/recording_$(date +"%Y-%m-%d_%H:%M:%S.mp4")
+
+
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
@@ -121,14 +123,13 @@ input "type:keyboard" {
 # Basics:
 #
 # Start a terminal
-bindsym $mod+Return exec $term nvim ~/dev/
+bindsym $mod+Return exec $term mux
 bindsym $mod+t exec $term
 
 # Kill focused window
 bindsym $mod+q kill
 
 # Start your launcher
-bindsym $mod+d exec $menu
 bindsym $mod+space exec $menu
 
 # Start chrome
@@ -141,6 +142,10 @@ bindsym $mod+Shift+s exec $slack
 bindsym $mod+p exec $printscreen
 bindsym $mod+Shift+p exec $recordscreen
 bindsym $mod+Shift+BackSpace exec killall -s SIGINT wf-recorder
+
+# rofi
+bindsym $mod+d exec --no-startup-id ~/.config/rofi/launchers/type-1/launcher.sh
+bindsym $mod+x exec --no-startup-id powermenu_t2
 
 # Files
 bindsym $mod+f exec $files

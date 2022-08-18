@@ -193,6 +193,8 @@
         - waybar
         - mako
         - swaylock
+        - tmux
+        - local
 
     - name: Set ssh permissions
       file:
