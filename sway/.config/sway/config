@@ -22,10 +22,8 @@ set $lock swaylock -f
 set $menu exec ulauncher
 set $slack flatpak run com.slack.Slack
 set $files nautilus
-# set $printscreen flatpak run org.flameshot.Flameshot gui
 set $printscreen exec grim -g "$(slurp -d)" -t png - | wl-copy -t image/png
 set $recordscreen exec wf-recorder -g "$(slurp)" -f ~/Videos/recording_$(date +"%Y-%m-%d_%H:%M:%S.mp4")
-
 
 ### Output configuration
 #
