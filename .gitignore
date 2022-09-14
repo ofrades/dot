@@ -6,3 +6,4 @@ lazygit/.config/lazygit/state.yml
 nvim/.config/nvim/plugin
 ssh/.ssh/known_hosts.old
 .idea
+fish/.config/fish/completions

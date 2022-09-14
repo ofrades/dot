@@ -4,27 +4,25 @@ not_in_tmux() {
 	[ -z "$TMUX" ]
 }
 
-DIR=$HOME/dev/
+ARG="$1"
+
+DIR=$HOME/$ARG/
 
 # If no arguments are passed in try to immediately attach or start without further input
 echo "$DIR"
-if [ -z "$DIR" ]; then
-	if not_in_tmux; then
-		tmux attach && exit 1 || DIR="--start"
-	else
-		exit 1
-	fi
-fi
-
-# ask the user which directory to start in
 tmpfile=$(mktemp)
+if [ -z "$ARG" ]; then
+	DIR=$HOME/dev/
 
-find -L $DIR -maxdepth 2 -type d |
-	fzf --reverse --header="Select project from $(basename $DIR)" \
-		>"$tmpfile"
+	find -L $DIR -maxdepth 2 -type d |
+		fzf --reverse --header="Select project from $(basename $DIR)" \
+			>"$tmpfile"
 
-dest_dir=$(cat "$tmpfile")
-rm -f "$tmpfile"
+	dest_dir=$(cat "$tmpfile")
+	rm -f "$tmpfile"
+else
+	dest_dir=$DIR
+fi
 
 session_name=$(basename "$dest_dir")
 
