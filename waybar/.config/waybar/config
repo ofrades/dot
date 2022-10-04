@@ -5,12 +5,12 @@
     "modules-left": [
       "sway/workspaces",
       "sway/mode",
-      "sway/window",
+      "tray",
+    ],
+    "modules-center": [
+      "clock",
     ],
     "modules-right": [
-      "custom/media",
-      "custom/cmus",
-      "tray",
       "pulseaudio",
       "memory",
       "cpu",
@@ -19,7 +19,6 @@
       "backlight",
       "sway/language",
       "battery",
-      "clock",
       "custom/power",
     ],
     "sway/workspaces": {

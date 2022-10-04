@@ -1,11 +1,11 @@
-  @define-color dark-1 #2E3440;
-  @define-color dark-2 #3B4252;
-  @define-color dark-3 #434C5E;
-  @define-color dark-4 #4C566A;
-  @define-color blue #5E81AC;
-  @define-color white #D8DEE9;
-  @define-color yellow #EBCB8B;
-  @define-color red #BF616A;
+  @define-color dark-1 #282828;
+  @define-color dark-2 #3c3836;
+  @define-color dark-3 #504945;
+  @define-color dark-4 #665c54;
+  @define-color blue #83a598;
+  @define-color white #ebdbb2;
+  @define-color yellow #fabd2f;
+  @define-color red #cc241d;
 
 * {
     border: none;
@@ -16,7 +16,6 @@
 
 window#waybar {
     background-color: @dark-1;
-    border-bottom: 3px solid @dark-2;
     color: @white;
 }
 
@@ -39,7 +38,7 @@ window#waybar {
 }
 
 #workspaces button.focused {
-    background-color: @dark-4;
+    background-color: @dark-1;
     color: @yellow;
 }
 
@@ -62,18 +61,7 @@ tooltip label {
 widget label,
 widget image {
     padding: 0 8px;
-    border-right: 3px solid @dark-2;
 }
-
-/* If workspaces is the leftmost module, omit left margin */
-.modules-left > widget:first-child > #workspaces {
-    margin-left: 0;
-}
-
-.modules-right > widget:last-child > #workspaces {
-    margin-right: 0;
-}
-
 
 @keyframes blink {
   to {

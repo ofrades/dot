@@ -25,21 +25,21 @@ set $files nautilus
 set $printscreen exec grim -g "$(slurp -d)" -t png - | wl-copy -t image/png
 set $recordscreen exec wf-recorder -g "$(slurp)" -f ~/Videos/recording_$(date +"%Y-%m-%d_%H:%M:%S.mp4")
 
+# Theme
+set $bg_active #3c3836
+set $bg #282828
+set $border #282828
+set $fg #83a598
+set $fg_active #ebdbb2
+set $fg_urg #cc251d
+set $border_urg #cc251d
+
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg #4C566A solid_color
+output * bg $bg solid_color
 output * scale 2
 seat seat0 xcursor_theme Simple-and-Soft 30
-
-# Theme
-set $bg_active #3B4252
-set $bg #2E3440
-set $border #2E3440
-set $fg #5E81AC
-set $fg_active #EBCB8B
-set $fg_urg #cc6666
-set $border_urg #cc6666
 
 #                       Border       Background Text     Indicator             Child       border
 client.focused          $border      $bg_active          $fg_active            $bg_active         $bg_active
@@ -262,6 +262,5 @@ exec mako
 
 # Start easyteffects for good mic noise reduction
 exec easyeffects --gapplication-service > dev/null 2>&1
-exec swaymsg "workspace 6; exec thunderbird;"
 
 include /etc/sway/config.d/*
