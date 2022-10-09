@@ -138,6 +138,10 @@ require("packer").startup(function(use)
       mason_lspconfig.setup_handlers {
         function(servers)
           if servers == "tsserver" then
+            local root_pattern = require("lspconfig.util").root_pattern;
+            require('lspconfig').tsserver.setup {
+              root_dir = root_pattern("jest.config.js", "tsconfig.json", ".eslintrc.js", ".eslintrc.j,son", ".git")
+            }
             require("typescript").setup({ server = options })
           else
             require('lspconfig')[servers].setup(options)
@@ -375,19 +379,20 @@ require("packer").startup(function(use)
 
   use({
     "nvim-neo-tree/neo-tree.nvim",
+    branch = "v2.x",
     requires = {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
     },
     config = function()
       require("neo-tree").setup({
-        close_if_last_window = true,
         filesystem = {
           filtered_items = {
-            visible = true,
             hide_dotfiles = false,
             hide_gitignored = false,
+            hide_hidden = false,
           },
+          follow_current_file = true
         },
       })
     end,
@@ -626,19 +631,34 @@ require("packer").startup(function(use)
   })
 
   use({
-    "folke/noice.nvim",
-    requires = { "rcarriga/nvim-notify" },
-    config = function()
-      require("noice").setup()
-    end,
-  })
-
-  use({
     "folke/trouble.nvim",
     config = function()
       require("trouble").setup({})
     end,
   })
+
+  use({
+    "folke/noice.nvim",
+    event = "VimEnter",
+    config = function()
+      require("noice").setup()
+    end,
+    requires = {
+      "MunifTanjim/nui.nvim",
+      {
+        "rcarriga/nvim-notify",
+        config = function()
+          local notify = require("notify")
+          notify.setup({
+            render = "minimal",
+            stages = "static",
+            timeout = 1000,
+          })
+        end,
+      }
+    }
+  })
+
 
   use({
     "petertriho/nvim-scrollbar",
@@ -690,17 +710,20 @@ require("packer").startup(function(use)
       "nvim-treesitter/nvim-treesitter",
       "antoinemadec/FixCursorHold.nvim",
       "haydenmeade/neotest-jest",
+      "nvim-neotest/neotest-vim-test",
     },
     config = function()
       require("neotest").setup({
+        status = {
+          virtual_text = true,
+        },
+        icons = {
+          running = "",
+        },
         adapters = {
-          require("neotest-jest")({
-            jestCommand = "npm test --",
-            jestConfigFile = "custom.jest.config.ts",
-            env = { CI = true },
-            cwd = function(path)
-              return vim.fn.getcwd()
-            end,
+          require("neotest-jest")({}),
+          require("neotest-vim-test")({
+            ignore_file_types = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
           }),
         },
       })
@@ -872,8 +895,8 @@ vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
 
 -- tree
-vim.keymap.set("n", "<leader>E", "<cmd>:NeoTreeFloatToggle<cr>")
-vim.keymap.set("n", "<leader>e", "<cmd>:NeoTreeRevealToggle<cr>")
+vim.keymap.set("n", "<leader>e", "<cmd>:Neotree position=top focus toggle<cr>")
+vim.keymap.set("n", "<leader>G", "<cmd>:Neotree float git_status<cr>")
 
 vim.keymap.set("n", "<leader>ff", "<cmd>:Telescope live_grep<cr>")
 vim.keymap.set("n", "<leader>fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")

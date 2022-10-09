@@ -26,7 +26,7 @@ set $printscreen exec grim -g "$(slurp -d)" -t png - | wl-copy -t image/png
 set $recordscreen exec wf-recorder -g "$(slurp)" -f ~/Videos/recording_$(date +"%Y-%m-%d_%H:%M:%S.mp4")
 
 # Theme
-set $bg_active #3c3836
+set $bg_active #665c54
 set $bg #282828
 set $border #282828
 set $fg #83a598
@@ -50,9 +50,8 @@ client.placeholder      $border      $bg                 $fg                   $
 client.background       $border      $bg                 $fg                   $fg         $fg
 
 # gap # Borders
-gaps inner 3
+# gaps inner 3
 default_border pixel 3
-# default_border none
 default_floating_border none
 
 #
@@ -131,7 +130,7 @@ bindsym $mod+q kill
 bindsym $mod+space exec $menu
 
 # Start chrome
-bindsym $mod+b exec google-chrome
+bindsym $mod+b exec brave-browser
 
 # Start slack
 bindsym $mod+Shift+s exec $slack
@@ -223,6 +222,8 @@ bindsym $mod+m fullscreen
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym $mod+i exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym $mod+o exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 
 bindsym --locked XF86MonBrightnessUp exec light -T 1.4
 bindsym --locked XF86MonBrightnessDown exec light -T 0.72
