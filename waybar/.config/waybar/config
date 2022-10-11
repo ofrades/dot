@@ -5,7 +5,6 @@
     "modules-left": [
       "sway/workspaces",
       "sway/mode",
-      "tray",
     ],
     "modules-center": [
       "clock",
@@ -14,10 +13,11 @@
       "pulseaudio",
       "memory",
       "cpu",
-      "custom/weather",
+      // "custom/weather",
       "network",
       "backlight",
       "sway/language",
+      "tray",
       "battery",
       "custom/power",
     ],
@@ -25,19 +25,6 @@
         "disable-scroll": true,
         "all-outputs": true,
         "format": "{name}", // {icon}
-        "format-icons": {
-            "urgent": " ",
-            "focused": " ",
-            "default": " "
-        },
-        "persistent_workspaces": {
-            "1": [],
-            "2": [],
-            "3": [],
-            "4": [],
-            "5": [],
-            "6": []
-        }
     },
     "sway/window": {
       "max-length": 20,
@@ -76,12 +63,12 @@
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
-        "format": "{volume}% {icon} {format_source}",
+        "format": "{icon} {volume}% {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
         "format-bluetooth-muted": " {icon} {format_source}",
         "format-muted": " {format_source}",
-        "format-source": "/ {volume}% ",
-        "format-source-muted": "/ ",
+        "format-source": "|  {volume}%",
+        "format-source-muted": "| ",
         "format-icons": {
             "headphone": "",
             "hands-free": "",
@@ -91,7 +78,10 @@
             "car": "",
             "default": ["", "", ""]
         },
-        "on-click": "~/.config/rofi/applets/bin/volume.sh"
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%"
     },
     "clock": {
         "format": "  {:%b %d %H:%M}",

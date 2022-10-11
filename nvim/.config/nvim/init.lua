@@ -14,9 +14,9 @@ require("packer").startup(function(use)
     "nvim-treesitter/nvim-treesitter",
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = "all",
         highlight = {
           enable = true,
+          disable = { "javascript" },
         },
         incremental_selection = {
           enable = true,
@@ -38,6 +38,14 @@ require("packer").startup(function(use)
         },
       })
     end,
+  })
+
+  use({
+    'phaazon/hop.nvim',
+    branch = 'v2',
+    config = function()
+      require 'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
+    end
   })
 
   use({
@@ -82,7 +90,7 @@ require("packer").startup(function(use)
       )
 
       local function on_attach(client, bufnr)
-        local buf_opts = { noremap = true, silent = true, buffer = bufnr }
+
         if vim.fn.exists(":Telescope") then
           vim.keymap.set("n", "gr", "<cmd>:Telescope lsp_references theme=ivy<CR>", buf_opts)
           vim.keymap.set("n", "gd", "<cmd>:Telescope lsp_definitions theme=ivy<CR>", buf_opts)
@@ -114,7 +122,7 @@ require("packer").startup(function(use)
 
       require("mason").setup()
       local mason_lspconfig = require('mason-lspconfig')
-      local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
+      local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
       local servers = {
         tsserver = {},
@@ -122,6 +130,7 @@ require("packer").startup(function(use)
         jsonls = {},
         pyright = {},
         rust_analyzer = {},
+        marksman = {},
         sumneko_lua = {},
       }
 
@@ -139,9 +148,6 @@ require("packer").startup(function(use)
         function(servers)
           if servers == "tsserver" then
             local root_pattern = require("lspconfig.util").root_pattern;
-            require('lspconfig').tsserver.setup {
-              root_dir = root_pattern("jest.config.js", "tsconfig.json", ".eslintrc.js", ".eslintrc.j,son", ".git")
-            }
             require("typescript").setup({ server = options })
           else
             require('lspconfig')[servers].setup(options)
@@ -268,7 +274,6 @@ require("packer").startup(function(use)
     requires = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-file-browser.nvim",
-      "nvim-telescope/telescope-live-grep-args.nvim",
     },
     config = function()
       local actions = require("telescope.actions")
@@ -308,38 +313,7 @@ require("packer").startup(function(use)
         },
       })
       require("telescope").load_extension("file_browser")
-      require("telescope").load_extension("live_grep_args")
       require("telescope").load_extension("harpoon")
-    end,
-  })
-
-  use({
-    "vim-test/vim-test",
-    requires = {
-      "akinsho/toggleterm.nvim",
-    },
-    run = ":UpdateRemotePlugins",
-    config = function()
-      local tt = require("toggleterm")
-      local ttt = require("toggleterm.terminal")
-
-      vim.g["test#custom_strategies"] = {
-        tterm = function(cmd)
-          tt.exec(cmd)
-        end,
-
-        tterm_close = function(cmd)
-          local term_id = 0
-          tt.exec(cmd, term_id)
-          ttt.get_or_create_term(term_id):close()
-        end,
-      }
-
-      vim.g["test#strategy"] = {
-        nearest = "tterm",
-        file = "tterm",
-        suite = "tterm",
-      }
     end,
   })
 
@@ -394,84 +368,32 @@ require("packer").startup(function(use)
           },
           follow_current_file = true
         },
+        event_handlers = {
+
+          {
+            event = "file_opened",
+            handler = function(file_path)
+              --auto close
+              require("neo-tree").close_all()
+            end
+          },
+
+        }
       })
     end,
   })
 
   use({
     "lewis6991/gitsigns.nvim",
-    requires = {
-      "tpope/vim-rhubarb",
-      "sindrets/diffview.nvim",
-      "rhysd/git-messenger.vim",
-      {
-        "akinsho/git-conflict.nvim",
-        config = function()
-          require("git-conflict").setup()
-        end,
-      },
-      {
-        "akinsho/git-conflict.nvim",
-        config = function()
-          require("git-conflict").setup()
-        end,
-      },
-    },
+
     config = function()
       require("gitsigns").setup()
     end,
   })
 
-  use({
-    "ldelossa/gh.nvim",
-    requires = { { "ldelossa/litee.nvim" } },
-    config = function()
-      require("litee.lib").setup()
-      require("litee.gh").setup({
-        -- deprecated, around for compatability for now.
-        jump_mode = "invoking",
-        -- remap the arrow keys to resize any litee.nvim windows.
-        map_resize_keys = false,
-        -- do not map any keys inside any gh.nvim buffers.
-        disable_keymaps = false,
-        -- the icon set to use.
-        icon_set = "default",
-        -- any custom icons to use.
-        icon_set_custom = nil,
-        -- whether to register the @username and #issue_number omnifunc completion
-        -- in buffers which start with .git/
-        git_buffer_completion = true,
-        -- defines keymaps in gh.nvim buffers.
-        keymaps = {
-          -- when inside a gh.nvim panel, this key will open a node if it has
-          -- any futher functionality. for example, hitting <CR> on a commit node
-          -- will open the commit's changed files in a new gh.nvim panel.
-          open = "<CR>",
-          -- when inside a gh.nvim panel, expand a collapsed node
-          expand = "zo",
-          -- when inside a gh.nvim panel, collpased and expanded node
-          collapse = "zc",
-          -- when cursor is over a "#1234" formatted issue or PR, open its details
-          -- and comments in a new tab.
-          goto_issue = "gd",
-          -- show any details about a node, typically, this reveals commit messages
-          -- and submitted review bodys.
-          details = "d",
-          -- inside a convo buffer, submit a comment
-          submit_comment = "<C-s>",
-          -- inside a convo buffer, when your cursor is ontop of a comment, open
-          -- up a set of actions that can be performed.
-          actions = "<C-a>",
-          -- inside a thread convo buffer, resolve the thread.
-          resolve_thread = "<C-r>",
-          -- inside a gh.nvim panel, if possible, open the node's web URL in your
-          -- browser. useful particularily for digging into external failed CI
-          -- checks.
-          goto_web = "gx",
-        },
-      })
-    end,
-  })
+  use({ "TimUntersberger/neogit", config = function()
+    require("neogit").setup()
+  end })
 
   use({
     "windwp/nvim-autopairs",
@@ -580,16 +502,6 @@ require("packer").startup(function(use)
   use({ "stevearc/dressing.nvim" })
 
   use({
-    "lalitmee/browse.nvim",
-    requires = { "nvim-telescope/telescope.nvim" },
-    config = function()
-      require("browse").setup({
-        provider = "google",
-      })
-    end,
-  })
-
-  use({
     "declancm/cinnamon.nvim",
     config = function()
       require("cinnamon").setup()
@@ -603,16 +515,10 @@ require("packer").startup(function(use)
     end,
   })
 
-  use({ "mg979/vim-visual-multi" })
-
   use({
-    "shaunsingh/nord.nvim",
-    requires = {
-      "olimorris/onedarkpro.nvim",
-      "ellisonleao/gruvbox.nvim",
-    },
+    "ellisonleao/gruvbox.nvim",
     config = function()
-      vim.cmd([[colorscheme gruvbox]])
+      vim.cmd("colorscheme gruvbox")
     end,
   })
 
@@ -659,6 +565,29 @@ require("packer").startup(function(use)
     }
   })
 
+  use({
+    "gbprod/yanky.nvim",
+    config = function()
+      require("yanky").setup({
+        ring = {
+          history_length = 100,
+          storage = "shada",
+          sync_with_numbered_registers = true,
+          cancel_event = "update",
+        },
+        highlight = {
+          timer = 100,
+        },
+        system_clipboard = {
+          sync_with_ring = true,
+        },
+      })
+    end
+  })
+
+  use({ "Ostralyan/scribe.nvim", config = function()
+    require('scribe').setup {}
+  end })
 
   use({
     "petertriho/nvim-scrollbar",
@@ -703,6 +632,30 @@ require("packer").startup(function(use)
     end,
   })
 
+  use({ "vim-test/vim-test",
+    config = function()
+      local tt = require("toggleterm")
+      local ttt = require("toggleterm.terminal")
+
+      vim.g["test#custom_strategies"] = {
+        tterm = function(cmd)
+          tt.exec(cmd)
+        end,
+
+        tterm_close = function(cmd)
+          local term_id = 0
+          tt.exec(cmd, term_id)
+          ttt.get_or_create_term(term_id):close()
+        end,
+      }
+
+      vim.g["test#strategy"] = {
+        nearest = "tterm",
+        file = "tterm",
+        suite = "tterm",
+      }
+    end })
+
   use({
     "nvim-neotest/neotest",
     requires = {
@@ -714,26 +667,59 @@ require("packer").startup(function(use)
     },
     config = function()
       require("neotest").setup({
-        status = {
-          virtual_text = true,
-        },
         icons = {
-          running = "",
+          passed = "",
+          failed = "",
+          skipped = "ﭡ",
+          unknown = "",
+          running = "",
+          running_animated = { "", "", "", "", "", "", "", "", "" },
+        },
+        output = {
+          enabled = true,
+          open_on_run = true,
+        },
+        run = {
+          enabled = true
+        },
+        status = {
+          enabled = true,
+          virtual_text = true
+        },
+        strategies = {
+          integrated = {
+            height = 40,
+            width = 120
+          }
+        },
+        summary = {
+          enabled = true,
+          expand_errors = true,
+          follow = true,
+          mappings = {
+            attach = "a",
+            expand = { "<CR>", "<2-LeftMouse>" },
+            expand_all = "e",
+            jumpto = "i",
+            output = "o",
+            run = "r",
+            short = "O",
+            stop = "x"
+          }
         },
         adapters = {
-          require("neotest-jest")({}),
+          require("neotest-jest")({
+            jestCommand = "npm test --",
+            env = { CI = true },
+            cwd = function()
+              return vim.fn.getcwd()
+            end,
+          }),
           require("neotest-vim-test")({
             ignore_file_types = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
           }),
         },
       })
-    end,
-  })
-
-  use({
-    "phaazon/mind.nvim",
-    config = function()
-      require("mind").setup()
     end,
   })
 
@@ -831,10 +817,6 @@ require("packer").startup(function(use)
     end,
   })
 
-  use({
-    "dkprice/vim-easygrep",
-  })
-
   if is_bootstrap then
     require("packer").sync()
   end
@@ -895,18 +877,13 @@ vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
 
 -- tree
-vim.keymap.set("n", "<leader>e", "<cmd>:Neotree position=top focus toggle<cr>")
-vim.keymap.set("n", "<leader>G", "<cmd>:Neotree float git_status<cr>")
+vim.keymap.set("n", "<leader>e", "<cmd>:Neotree position=left focus toggle<cr>")
+vim.keymap.set("n", "<leader><leader>", "<cmd>:Neotree position=current focus toggle<cr>")
 
-vim.keymap.set("n", "<leader>ff", "<cmd>:Telescope live_grep<cr>")
-vim.keymap.set("n", "<leader>fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
-vim.keymap.set("n", "<leader>fo", "<cmd>:lua require('spectre').open()<cr>")
-vim.keymap.set("n", "<leader>fv", "<cmd>:lua require('spectre').open_visual({select_word=true})<cr>")
-
-vim.keymap.set("n", "<leader>m", "<cmd>:MindOpenMain<cr>") -- notes
-vim.keymap.set("n", "<leader>n", "<cmd>:vsplit | enew<cr>") -- new file
+vim.keymap.set("n", "<leader>s", "<cmd>:lua require('spectre').open()<cr>")
 vim.keymap.set("n", "<leader>o", "<cmd>:Telescope oldfiles hidden=true<cr>")
 vim.keymap.set("n", "<leader>p", "<cmd>:Telescope find_files theme=ivy hidden=true<cr>")
+vim.keymap.set("n", "<leader>f", "<cmd>:Telescope live_grep<cr>")
 vim.keymap.set("n", "<leader>E", "<cmd>:Telescope file_browser theme=ivy hidden=true<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>:q<cr>") -- exit
 vim.keymap.set("n", "<leader>w", "<cmd>:w<cr>") -- save
@@ -923,7 +900,6 @@ vim.keymap.set("n", "<leader>/", "<cmd>:Telescope current_buffer_fuzzy_find<cr>"
 vim.keymap.set("n", "gb", "<cmd>:Gitsigns blame_line<cr>")
 vim.keymap.set("n", "gp", "<cmd>:Gitsigns preview_hunk<cr>")
 vim.keymap.set("n", "<leader>g", "<cmd>:Lazygit<cr>")
-vim.keymap.set("n", "gk", "<cmd>:GitMessenger<cr>")
 
 vim.keymap.set("n", "<leader>ha", "<cmd>:lua require('harpoon.mark').add_file()<cr>")
 vim.keymap.set("n", "<leader>hm", "<cmd>:lua require('harpoon.ui').toggle_quick_menu()<cr>")
@@ -941,13 +917,23 @@ vim.keymap.set("n", "tn", "<cmd>:TestNearest<cr>")
 vim.keymap.set("n", "tw", "<cmd>:TestNearest --watch<cr>")
 vim.keymap.set("n", "ts", "<cmd>:TestSuite<cr>")
 
-vim.keymap.set("n", "<leader>tn", "<cmd>:lua require('neotest').run.run()<cr>")
-vim.keymap.set("n", "<leader>tf", "<cmd>:lua require('neotest').run.run(vim.fn.expand('%'))<cr>")
-vim.keymap.set("n", "<leader>td", "<cmd>:lua require('neotest').run.run({strategy = 'dap'})<cr>")
-vim.keymap.set("n", "<leader>tx", "<cmd>:lua require('neotest').run.stop()<cr>")
-vim.keymap.set("n", "<leader>ta", "<cmd>:lua require('neotest').run.attach()<cr>")
-vim.keymap.set("n", "<leader>to", "<cmd>:lua require('neotest').output.open({enter = true})<cr>")
-vim.keymap.set("n", "<leader>ts", "<cmd>:lua require('neotest').summary.toggle()<cr>")
+vim.keymap.set("n", "<leader>nn", "<cmd>:lua require('neotest').run.run()<cr>")
+vim.keymap.set("n", "<leader>nf", "<cmd>:lua require('neotest').run.run(vim.fn.expand('%'))<cr>")
+vim.keymap.set("n", "<leader>nd", "<cmd>:lua require('neotest').run.run({strategy = 'dap'})<cr>")
+vim.keymap.set("n", "<leader>nx", "<cmd>:lua require('neotest').run.stop()<cr>")
+vim.keymap.set("n", "<leader>na", "<cmd>:lua require('neotest').run.attach()<cr>")
+vim.keymap.set("n", "<leader>no", "<cmd>:lua require('neotest').output.open({enter = true})<cr>")
+vim.keymap.set("n", "<leader>ns", "<cmd>:lua require('neotest').summary.toggle()<cr>")
+
+vim.keymap.set("n", "f", "<cmd>:HopWord<cr>")
+
+vim.keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
+vim.keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
+vim.keymap.set({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
+vim.keymap.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
+vim.keymap.set("n", "<c-n>", "<Plug>(YankyCycleForward)")
+vim.keymap.set("n", "<c-p>", "<Plug>(YankyCycleBackward)")
+
 
 -- options
 vim.o.updatetime = 250
@@ -1010,9 +996,13 @@ vim.g.loaded_tarPlugin = 1
 vim.g.loaded_zipPlugin = 1
 vim.g.loaded_2html_plugin = 1
 
+if vim.fn.has("nvim-0.9.0") == 1 then
+  vim.opt.splitkeep = "screen"
+end
+
 -- statusline
 local function getfilename()
-  if vim.api.nvim_win_get_width(0) < 110 then
+  if vim.api.nvim_win_get_width(0) < 90 then
     return " %<%t "
   end
   return " %<%f "
@@ -1119,7 +1109,7 @@ end
 Statusline = {}
 
 Statusline.active = function()
-  if vim.api.nvim_win_get_width(0) > 100 then
+  if vim.api.nvim_win_get_width(0) > 90 then
     return table.concat({
       "%#PMenu#",
       getcurrentmode(),
@@ -1178,5 +1168,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   pattern = "*",
 })
 
-vim.cmd([[autocmd BufWritePre *.ts,*.tsx,*.js,*.jsx EslintFixAll]])
-vim.cmd([[autocmd BufWritePre * lua vim.lsp.buf.format()]])
+
+vim.cmd("autocmd BufWritePre *.lua lua vim.lsp.buf.format({ async = true })")
+vim.cmd("autocmd BufWritePre *.tsx,*.ts,*.jsx,*.js EslintFixAll")

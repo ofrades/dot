@@ -14,7 +14,7 @@ tmpfile=$(mktemp)
 if [ -z "$ARG" ]; then
 	DIR=$HOME/dev/
 
-	find -L $DIR -maxdepth 2 -type d |
+	find -L $DIR -maxdepth 4 -type d |
 		fzf --reverse --header="Select project from $(basename $DIR)" \
 			>"$tmpfile"
 

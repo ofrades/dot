@@ -1,14 +1,8 @@
 set -Ux fish_user_paths
-# Path
+set -ga fish_user_paths ~/.local/bin
+set -ga fish_user_paths ~/.yarn/bin
 
-set -U fish_emoji_width 2
-
-# disable greeting
 set fish_greeting
-# vim
-fish_vi_key_bindings
-
-source ~/dev/ofrades/nightfox.nvim/extra/nordfox//nightfox_fish.fish
 
 # git
 abbr clone 'git clone git@github.com:'
@@ -44,8 +38,6 @@ abbr -a -g tn 'tmux new-session -s'
 abbr -a -g tksv 'tmux kill-server'
 abbr -a -g tkss 'tmux kill-session -t'
 
-abbr weather "curl -s wttr.in/Oliveira+de+Frades | grep -v Follow"
-
 # neovim
 abbr v 'nvim'
 abbr cat 'bat'
@@ -55,23 +47,21 @@ abbr mv 'mv -iv'
 abbr cp 'cp -riv'
 abbr mkdir 'mkdir -vp'
 
+abbr weather "curl -s wttr.in/Oliveira+de+Frades | grep -v Follow"
+
 # Environment Variables
-set -ga fish_user_paths /usr/local/go/bin
-set -ga fish_user_paths ~/.local/bin
-set -ga fish_user_paths ~/.yarn/bin
-set -ga fish_user_paths ~/.cargo/bin
 set -Ux EDITOR nvim
 set -gx AWS_PROFILE default
 set -gx AWS_SDK_LOAD_CONFIG 1
 set -gx ANSIBLE_VAULT_PASSWORD_FILE ~/Dropbox/warden
-
 set -gx XDG_CONFIG_HOME $HOME/.config
+set -gx FZF_DEFAULT_OPTS '--height 25% --layout=reverse'
 
-set -gx FZF_DEFAULT_OPTS '--height 50% --layout=reverse'
-
+set -gx PYENV_ROOT "$HOME/.pyenv"
+set -gx PATH "$PYENV_ROOT/bin:$PATH"
+set -Ux BUN_INSTALL "/home/ofrades/.bun"
+set -px --path PATH "/home/ofrades/.bun/bin"
 set -ga PATH ~/.npm-global/bin:$PATH
-
-starship init fish | source
 
 switch (uname)
     case Linux
@@ -80,12 +70,7 @@ switch (uname)
       echo Hi Macos!
 end
 
-set -gx PYENV_ROOT "$HOME/.pyenv"
-set -gx PATH "$PYENV_ROOT/bin:$PATH"
-
 pyenv init - | source
+starship init fish | source
 
-# Bun
-set -Ux BUN_INSTALL "/home/ofrades/.bun"
-set -px --path PATH "/home/ofrades/.bun/bin"
 

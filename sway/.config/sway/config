@@ -16,14 +16,18 @@ set $right l
 # Your preferred terminal emulator
 set $term kitty
 set $lock swaylock -f
+set $volume $scripts/volume
+set $notify $scripts/notify
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 set $menu exec ulauncher
 set $slack flatpak run com.slack.Slack
 set $files nautilus
-set $printscreen exec grim -g "$(slurp -d)" -t png - | wl-copy -t image/png
-set $recordscreen exec wf-recorder -g "$(slurp)" -f ~/Videos/recording_$(date +"%Y-%m-%d_%H:%M:%S.mp4")
+
+bindsym Print exec grim - | wl-copy && $notify screenshot "Full Screen Captured"
+set $printscreen exec grim -g "$(slurp -d)" - | wl-copy && $notify screenshot "Screenshot Captured"
+set $recordscreen exec $scripts/cast
 
 # Theme
 set $bg_active #665c54
@@ -67,6 +71,15 @@ output * scale_filter linear
 set $output-primary DP-3
 set $output-secondary eDP-1
 
+# Workspace names
+set $ws1 "1:"
+set $ws2 "2:"
+set $ws3 "3:聆"
+set $ws4 "4:"
+
+set $ws9 "9:"
+set $ws8 "8:"
+
 #################################################################
 ## Screen Lock
 #################################################################
@@ -81,13 +94,16 @@ bindswitch lid:on exec $lock
 bindsym $mod+Alt+l exec $lock
 
 # workspace to displays
-workspace 1 output $output-primary
-workspace 2 output $output-primary
-workspace 3 output $output-primary
+workspace $ws1 output $output-primary
+workspace $ws2 output $output-primary
+workspace $ws3 output $output-primary
+workspace $ws4 output $output-primary
 
-workspace 4 output $output-secondary
-workspace 5 output $output-secondary
-workspace 6 output $output-secondary
+workspace $ws9 output $output-secondary
+workspace $ws8 output $output-secondary
+
+
+
 font pango:FiraCode Nerd Font 11
 
 # This is the only place where you must set GTK scaling
@@ -99,8 +115,14 @@ exec_always {
 ### Input configuration
 # Touchpad
 input type:touchpad {
+    dwt enabled
     tap enabled
+    drag disabled
+    drag_lock disabled
+    click_method clickfinger
     natural_scroll enabled
+    accel_profile adaptive
+    pointer_accel 0.5
     tap_button_map lrm
 }
 
@@ -111,6 +133,7 @@ input "type:keyboard" {
   xkb_layout us,pt
   xkb_options "grp:alt_shift_toggle,caps:escape"
 }
+
 #
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
@@ -187,27 +210,19 @@ bindsym $mod+Shift+Right move right
 # Workspaces:
 #
 # Switch to workspace
-bindsym $mod+1 workspace number 1
-bindsym $mod+2 workspace number 2
-bindsym $mod+3 workspace number 3
-bindsym $mod+4 workspace number 4
-bindsym $mod+5 workspace number 5
-bindsym $mod+6 workspace number 6
-bindsym $mod+7 workspace number 7
-bindsym $mod+8 workspace number 8
-bindsym $mod+9 workspace number 9
-bindsym $mod+0 workspace number 10
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+8 workspace number $ws8
 # Move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace number 1
-bindsym $mod+Shift+2 move container to workspace number 2
-bindsym $mod+Shift+3 move container to workspace number 3
-bindsym $mod+Shift+4 move container to workspace number 4
-bindsym $mod+Shift+5 move container to workspace number 5
-bindsym $mod+Shift+6 move container to workspace number 6
-bindsym $mod+Shift+7 move container to workspace number 7
-bindsym $mod+Shift+8 move container to workspace number 8
-bindsym $mod+Shift+9 move container to workspace number 9
-bindsym $mod+Shift+0 move container to workspace number 10
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+8 move container to workspace number $ws8
 #
 # Layout stuff:
 #
@@ -220,10 +235,10 @@ bindsym $mod+e layout toggle split
 bindsym $mod+m fullscreen
 
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym $mod+i exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym $mod+o exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5% && $volume
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && $volume
+bindsym $mod+i exec pactl set-sink-volume @DEFAULT_SINK@ +5% && $volume
+bindsym $mod+o exec pactl set-sink-volume @DEFAULT_SINK@ -5% && $volume
 
 bindsym --locked XF86MonBrightnessUp exec light -T 1.4
 bindsym --locked XF86MonBrightnessDown exec light -T 0.72
