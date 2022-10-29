@@ -1,74 +1,98 @@
-- name: Fedora system
+- name: System
   hosts: localhost
   become: true
   vars:
     favcolor: green
     user: ofrades
   tasks:
-    - name: Copr packages
-      community.general.copr:
-        name: "{{ item }}"
-        state: enabled
-      with_items:
-        - agriffis/neovim-nightly
-        - atim/lazygit
-        - boeroboy/hashicorp
 
     - name: Sytem packages
       package:
         state: latest
         name: "{{ item }}"
       with_items:
-        - "@Development Tools"
         # sway
         - sway
         - wl-clipboard
         - waybar
-        - mako
+        - mako-notifier
         - wf-recorder
-        # linux
+        - clipman
+        - rofi
+        - blueman
+        # system
         - curl
         - wget
         - gzip
-        - rnnoise
-        - ulauncher
-        - stow
-        - sqlite-devel
-        - copyq
-          # obs
-        - obs-studio
-        - v4l2loopback 
-        - kmod-v4l2loopback
+        - ninja-build
+        - gettext
+        - libtool
+        - libtool-bin
+        - autoconf
+        - automake
+        - cmake
+        - g++
+        - pkg-config
+        - unzip
+        - doxygen
         # tools
+        - stow
         - kitty
         - fish
         - fzf
-        - starship
         - git
-        - git-delta
         - bat
         - exa
         - fd-find
         - ripgrep
-        - zoxide
-        - lazygit
         - tmate
-        # neovim
-        - neovim
         - python3-neovim
         - python3-pip
-        # programming
         - awscli
-        - nodejs
         - pipenv
-        - terraform
-        - jq
-        - luarocks
-        - cargo
-        - golang
-        # delete
-        - code
         - gh
+        # languages
+        - golang
+        - nodejs
+        - npm
+        - cargo
+        - luarocks
+        - jq
+
+    - name: Download neovim
+      git:
+        repo: https://github.com/neovim/neovim
+        dest: "{{ lookup('env', 'HOME') }}/neovim"
+
+    - name: Build neovim
+      shell:
+        cmd: |
+          make -j 20
+          make install
+        chdir: "{{ lookup('env', 'HOME') }}/neovim"
+
+    - name: Download noisetorch
+      git:
+        repo: https://github.com/noisetorch/NoiseTorch
+        dest: "{{ lookup('env', 'HOME') }}/noisetorch"
+
+    - name: Build noisetorch
+      shell:
+        cmd: |
+          sudo make
+          cp ./bin/noisetorch "{{ lookup('env', 'HOME') }}/.local/bin"
+          cp ./assets/noisetorch.desktop "{{ lookup('env', 'HOME') }}/.local/share/applications"
+          cp ./assets/icon/noisetorch.png "{{ lookup('env', 'HOME') }}/.local/share/icons/hicolor/256x256/apps"
+        chdir: "{{ lookup('env', 'HOME') }}/noisetorch"
+
+    - name: Install with snap
+      community.general.snap:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - slack
+        - lazygit
+        - starship
 
     - name: Install with npm
       community.general.npm:
@@ -90,6 +114,7 @@
         state: present
         name: "{{ item }}"
       with_items:
+        - lazygit
         - aws-vault
         - pyenv
 
@@ -106,11 +131,6 @@
         name: "{{ user }}"
         shell: /usr/bin/fish
 
-    - name: Get Noto
-      get_url:
-        url: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Noto.zip
-        dest: /etc/Noto.zip
-
     - name: Get JetBrainsMono
       get_url:
         url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/JetBrainsMono.zip
@@ -126,11 +146,6 @@
         path: "/home/{{ user }}/.fonts/"
         state: directory
 
-    - name: Installing Noto
-      unarchive:
-        src: /etc/Noto.zip
-        dest: "/home/{{ user }}/.fonts/"
-
     - name: Installing JetBrainsMono
       unarchive:
         src: /etc/JetBrainsMono.zip
@@ -140,29 +155,6 @@
       unarchive:
         src: /etc/FiraCode.zip
         dest: "/home/{{ user }}/.fonts/"
-
-    - name: Flatpak - Flathub repository
-      flatpak_remote:
-        name: flathub
-        state: present
-        flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
-        method: user
-
-    - name: Flatpak - Fedora repository
-      flatpak_remote:
-        name: fedora
-        state: present
-        flatpakrepo_url: oci+https://registry.fedoraproject.org
-        method: user
-
-    - name: Flatpak - Packages install
-      flatpak:
-        name: "{{ item }}"
-        state: present
-        remote: flathub
-        method: user
-      with_items:
-        - com.slack.Slack
 
     - name: Ensure dot folders exist
       file:

@@ -600,16 +600,11 @@ require("packer").startup(function(use)
   })
 
   use({
-    "olimorris/persisted.nvim",
-    --module = "persisted", -- For lazy loading
+    "folke/persistence.nvim",
+    event = "BufReadPre", -- this will only start session saving when an actual file was opened
+    module = "persistence",
     config = function()
-      require("persisted").setup({
-        autoload = true,
-        on_autoload_no_session = function()
-          vim.notify("No existing session to load.")
-        end,
-      })
-      require("telescope").load_extension("persisted") -- To load the telescope extension
+      require("persistence").setup()
     end,
   })
 
@@ -878,13 +873,12 @@ vim.keymap.set("v", ">", ">gv")
 
 -- tree
 vim.keymap.set("n", "<leader>e", "<cmd>:Neotree position=left focus toggle<cr>")
-vim.keymap.set("n", "<leader><leader>", "<cmd>:Neotree position=current focus toggle<cr>")
 
 vim.keymap.set("n", "<leader>s", "<cmd>:lua require('spectre').open()<cr>")
 vim.keymap.set("n", "<leader>o", "<cmd>:Telescope oldfiles hidden=true<cr>")
 vim.keymap.set("n", "<leader>p", "<cmd>:Telescope find_files theme=ivy hidden=true<cr>")
 vim.keymap.set("n", "<leader>f", "<cmd>:Telescope live_grep<cr>")
-vim.keymap.set("n", "<leader>E", "<cmd>:Telescope file_browser theme=ivy hidden=true<cr>")
+vim.keymap.set("n", "<leader><leader>", "<cmd>:Telescope file_browser theme=ivy hidden=true<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>:q<cr>") -- exit
 vim.keymap.set("n", "<leader>w", "<cmd>:w<cr>") -- save
 vim.keymap.set("n", "<leader>x", "<cmd>:TroubleToggle<cr>") -- project diagnostics

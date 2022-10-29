@@ -7,3 +7,5 @@ nvim/.config/nvim/plugin
 ssh/.ssh/known_hosts.old
 .idea
 fish/.config/fish/completions
+nvim/.config/nvim/sessions
+local/.local/bin

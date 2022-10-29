@@ -21,8 +21,16 @@ set $notify $scripts/notify
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu exec ulauncher
-set $slack flatpak run com.slack.Slack
+set $menu exec ~/.config/rofi/launchers/type-4/launcher.sh
+set $links exec ~/.config/rofi/applets/bin/quicklinks.sh
+set $powermenu exec ~/.config/rofi/applets/bin/powermenu.sh
+set $clipboard exec clipman pick -t rofi
+exec_always pkill wl-paste
+exec_always wl-paste -p -t text --watch clipman store --max-items 1024
+exec_always wl-paste -t text --watch clipman store --max-items 1024
+exec_always clipman restore
+
+set $slack exec slack
 set $files nautilus
 
 bindsym Print exec grim - | wl-copy && $notify screenshot "Full Screen Captured"
@@ -151,6 +159,13 @@ bindsym $mod+q kill
 
 # Start your launcher
 bindsym $mod+space exec $menu
+bindsym $mod+v exec $links
+bindsym $mod+d exec $menu
+bindsym $mod+x exec $powermenu
+bindsym $mod+c exec $clipboard
+
+bindsym $mod+Shift+i sleep 3 && exec noisetorch -i -t 95
+bindsym $mod+Shift+u sleep 3 && exec noisetorch -u
 
 # Start chrome
 bindsym $mod+b exec brave-browser
@@ -162,10 +177,6 @@ bindsym $mod+Shift+s exec $slack
 bindsym $mod+p exec $printscreen
 bindsym $mod+Shift+p exec $recordscreen
 bindsym $mod+Shift+BackSpace exec killall -s SIGINT wf-recorder
-
-# rofi
-bindsym $mod+d exec --no-startup-id ~/.config/rofi/launchers/type-1/launcher.sh
-bindsym $mod+x exec --no-startup-id powermenu_t2
 
 # Files
 bindsym $mod+f exec $files
@@ -273,10 +284,7 @@ bar {
   swaybar_command waybar
 }
 
-# Start notification daemon
+exec --no-startup-id ~/.local/bin/noisetorch -i -t 95
 exec mako
-
-# Start easyteffects for good mic noise reduction
-exec easyeffects --gapplication-service > dev/null 2>&1
 
 include /etc/sway/config.d/*
