@@ -15,7 +15,6 @@
         - sway
         - wl-clipboard
         - waybar
-        - mako-notifier
         - wf-recorder
         - clipman
         - rofi
@@ -27,7 +26,6 @@
         - ninja-build
         - gettext
         - libtool
-        - libtool-bin
         - autoconf
         - automake
         - cmake
@@ -58,6 +56,24 @@
         - cargo
         - luarocks
         - jq
+
+    - name: Sytem packages
+      package:
+        state: latest
+        name: "{{ item }}"
+      with_items:
+        - mako-notifier
+        - libtool-bin
+      when: ansible_distribution == "Ubuntu"
+
+
+    - name: Sytem packages
+      package:
+        state: latest
+        name: "{{ item }}"
+      with_items:
+        - mako
+      when: ansible_distribution == "Fedora"
 
     - name: Download neovim
       git:
@@ -91,8 +107,17 @@
         state: present
       with_items:
         - slack
-        - lazygit
         - starship
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install with flatpak
+      community.general.flatpak:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - slack
+      when: ansible_distribution == "Fedora"
+
 
     - name: Install with npm
       community.general.npm:
