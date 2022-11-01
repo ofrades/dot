@@ -21,9 +21,9 @@ set $notify $scripts/notify
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu exec ~/.config/rofi/launchers/type-4/launcher.sh
-set $links exec ~/.config/rofi/applets/bin/quicklinks.sh
-set $powermenu exec ~/.config/rofi/applets/bin/powermenu.sh
+set $menu exec rofi -show drun
+set $emoji exec rofimoji -a copy
+set $powermenu exec ~/.config/rofi/powermenu.sh
 set $clipboard exec clipman pick -t rofi
 exec_always pkill wl-paste
 exec_always wl-paste -p -t text --watch clipman store --max-items 1024
@@ -158,11 +158,10 @@ bindsym $mod+t exec $term
 bindsym $mod+q kill
 
 # Start your launcher
-bindsym $mod+space exec $menu
-bindsym $mod+v exec $links
 bindsym $mod+d exec $menu
 bindsym $mod+x exec $powermenu
 bindsym $mod+c exec $clipboard
+bindsym $mod+e exec $emoji
 
 bindsym $mod+Shift+i sleep 3 && exec noisetorch -i -t 95
 bindsym $mod+Shift+u sleep 3 && exec noisetorch -u
@@ -240,7 +239,7 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 # Switch the current container between different layout styles
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
+bindsym $mod+r layout toggle split
 
 # Make the current focus fullscreen
 bindsym $mod+m fullscreen
@@ -277,7 +276,7 @@ mode "resize" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-bindsym $mod+r mode "resize"
+bindsym $mod+Shift+r mode "resize"
 
 # Bar
 bar {
@@ -285,6 +284,8 @@ bar {
 }
 
 exec --no-startup-id ~/.local/bin/noisetorch -i -t 95
+
+exec --no-startup-id /usr/libexec/polkit-gnome-authentication-agent-1
 exec mako
 
 include /etc/sway/config.d/*

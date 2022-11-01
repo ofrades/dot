@@ -19,6 +19,8 @@
         - clipman
         - rofi
         - blueman
+        - rofimoji
+        - polkit-gnome
         # system
         - curl
         - wget
