@@ -58,12 +58,14 @@
         - cargo
         - luarocks
         - jq
+        - gem
 
     - name: Sytem packages
       package:
         state: latest
         name: "{{ item }}"
       with_items:
+        - build-essential
         - mako-notifier
         - libtool-bin
       when: ansible_distribution == "Ubuntu"
@@ -74,27 +76,35 @@
         state: latest
         name: "{{ item }}"
       with_items:
+        - "@development-tools"
         - mako
       when: ansible_distribution == "Fedora"
 
+    - name: Remove neovim
+      file: 
+        state: absent
+        path: "{{ lookup('env', 'HOME') }}/neovim"
     - name: Download neovim
       git:
         repo: https://github.com/neovim/neovim
         dest: "{{ lookup('env', 'HOME') }}/neovim"
-
-    - name: Build neovim
+    - name: Install neovim
       shell:
         cmd: |
           make -j 20
           make install
         chdir: "{{ lookup('env', 'HOME') }}/neovim"
 
+
+    - name: Download noisetorch
+      file: 
+        state: absent
+        path: "{{ lookup('env', 'HOME') }}/noisetorch"
     - name: Download noisetorch
       git:
         repo: https://github.com/noisetorch/NoiseTorch
         dest: "{{ lookup('env', 'HOME') }}/noisetorch"
-
-    - name: Build noisetorch
+    - name: Install noisetorch
       shell:
         cmd: |
           sudo make
@@ -133,6 +143,7 @@
         - typescript
         - serverless
         - n
+        - pnpm
 
     - name: Install with brew
       become: false

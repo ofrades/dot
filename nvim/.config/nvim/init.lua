@@ -48,6 +48,59 @@ require("packer").startup(function(use)
     end
   })
 
+  use({ 'glepnir/dashboard-nvim',
+    config = function()
+
+
+      local home = os.getenv('HOME')
+      local db = require('dashboard')
+
+      db.preview_file_path = home .. '/.config/nvim/static/neovim.cat'
+      db.custom_header = {
+        ' ██████╗ ███████╗██████╗  █████╗ ██████╗ ███████╗███████╗',
+        '██╔═══██╗██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝',
+        '██║   ██║█████╗  ██████╔╝███████║██║  ██║█████╗  ███████╗',
+        '██║   ██║██╔══╝  ██╔══██╗██╔══██║██║  ██║██╔══╝  ╚════██║',
+        '╚██████╔╝██║     ██║  ██║██║  ██║██████╔╝███████╗███████║',
+        ' ╚═════╝ ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝',
+      }
+
+
+      db.custom_center = {
+        { icon = '  ',
+          desc = 'Recently latest session                  ',
+          shortcut = 'SPC s l',
+          action = 'SessionLoad' },
+        { icon = '  ',
+          desc = 'Recently opened files                   ',
+          action = 'Telescope oldfiles',
+          shortcut = 'SPC f h' },
+        { icon = '  ',
+          desc = 'Find  File                              ',
+          action = 'Telescope find_files find_command=rg,--hidden,--files',
+          shortcut = 'SPC f f' },
+        { icon = '  ',
+          desc = 'File Browser                            ',
+          action = 'Telescope file_browser',
+          shortcut = 'SPC f b' },
+        { icon = '  ',
+          desc = 'Find  word                              ',
+          action = 'Telescope live_grep',
+          shortcut = 'SPC f w' },
+        { icon = '  ',
+          desc = 'Open Personal dotfiles                  ',
+          action = 'Telescope dotfiles path=' .. home .. '/dot',
+          shortcut = 'SPC f d' },
+      }
+
+    end })
+  use({
+    "folke/drop.nvim",
+    config = function()
+      require("drop").setup()
+    end,
+  })
+
   use({
     "neovim/nvim-lspconfig",
     requires = {
@@ -328,7 +381,7 @@ require("packer").startup(function(use)
             return vim.o.columns * 0.3
           end
         end,
-        start_in_insert = true,
+        start_in_insert = false,
         open_mapping = [[<c-\>]],
         direction = "float",
       })
@@ -516,9 +569,12 @@ require("packer").startup(function(use)
   })
 
   use({
-    "ellisonleao/gruvbox.nvim",
+    "folke/tokyonight.nvim",
+    requires = {
+      "ellisonleao/gruvbox.nvim",
+    },
     config = function()
-      vim.cmd("colorscheme gruvbox")
+      vim.cmd("colorscheme tokyonight-storm")
     end,
   })
 
@@ -901,9 +957,9 @@ vim.keymap.set("n", "<leader>ho", "<cmd>:lua require('harpoon.ui').nav_prev()<cr
 vim.keymap.set("n", "<leader>hi", "<cmd>:lua require('harpoon.ui').nav_next()<cr>")
 vim.keymap.set("n", "<leader>hh", "<cmd>:Telescope harpoon marks theme=ivy hidden=true<cr>")
 
-vim.keymap.set("n", "<leader>tt", "<cmd>:ToggleTerm direction=float<cr>")
-vim.keymap.set("n", "<leader>tb", "<cmd>:ToggleTerm direction=horizontal<cr>")
-vim.keymap.set("n", "<leader>tv", "<cmd>:ToggleTerm direction=vertical<cr>")
+vim.keymap.set("n", "<leader>\\", "<cmd>:ToggleTerm direction=float<cr>")
+vim.keymap.set("n", "<leader>b", "<cmd>:ToggleTerm direction=horizontal<cr>")
+vim.keymap.set("n", "<leader>v", "<cmd>:ToggleTerm direction=vertical<cr>")
 
 vim.keymap.set("n", "tf", "<cmd>:TestFile<cr>")
 vim.keymap.set("n", "tl", "<cmd>:TestLast<cr>")
@@ -1161,7 +1217,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   group = highlight_group,
   pattern = "*",
 })
-
 
 vim.cmd("autocmd BufWritePre *.lua lua vim.lsp.buf.format({ async = true })")
 vim.cmd("autocmd BufWritePre *.tsx,*.ts,*.jsx,*.js EslintFixAll")

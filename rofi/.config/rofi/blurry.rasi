@@ -1,15 +1,16 @@
 
 * {
-  background-color: #282828;
-  bg-alt: #3c3836;
-  blue-light: #458588;
-  yellow: #d79921;
+  background-color: #24283b;
+  bg-alt: #364a82;
+  blue-light: #7aa2f7;
+  yellow: #e0af68;
 	transparent: #00000000;
-	foreground: #ebdbb2;
-	background-selected: #282828;
-	background-active: #F2F2F230;
-	urgent: #cc241d;
-	urgent-selected: #fb4934;
+	foreground: #c0caf5;
+	foreground-selected: #c0caf5;
+	background-selected: #24283b;
+	background-active: #c0caf5;
+	urgent: #f7768e;
+	urgent-selected: #db4b4b;
 }
 
 window {

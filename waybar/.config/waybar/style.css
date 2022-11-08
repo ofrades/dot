@@ -1,11 +1,11 @@
-  @define-color dark-1 #282828;
-  @define-color dark-2 #3c3836;
-  @define-color dark-3 #504945;
-  @define-color dark-4 #665c54;
-  @define-color blue #83a598;
-  @define-color white #ebdbb2;
-  @define-color yellow #fabd2f;
-  @define-color red #cc241d;
+  @define-color dark-1 #1f2335;
+  @define-color dark-2 #24283b;
+  @define-color dark-3 #364a82;
+  @define-color dark-4 #545c7e;
+  @define-color blue #7aa2f7;
+  @define-color white #c0caf5;
+  @define-color green #9ece6a;
+  @define-color red #f7768e;
 
 * {
     border: none;
@@ -21,7 +21,7 @@ window#waybar {
 
 #window {
     border: none;
-    color: @yellow;
+    color: @green;
 }
 
 
@@ -34,12 +34,12 @@ window#waybar {
 
 #workspaces button:hover {
     background: @dark-2;
-    color: @yellow;
+    color: @green;
 }
 
 #workspaces button.focused {
     background-color: @dark-1;
-    color: @yellow;
+    color: @green;
 }
 
 #workspaces button.urgent {
@@ -65,13 +65,13 @@ widget image {
 @keyframes blink {
   to {
       background-color: @white;
-      color: black;
+      color: @dark-1;
   }
 }
 
 #battery.warning:not(.charging) {
     background: @red;
-    color: white;
+    color: @white;
     animation-name: blink;
     animation-duration: 0.5s;
     animation-timing-function: linear;

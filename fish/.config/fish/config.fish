@@ -40,7 +40,6 @@ abbr -a -g tkss 'tmux kill-session -t'
 
 # neovim
 abbr v 'nvim'
-abbr cat 'batcat'
 abbr tree 'broot'
 
 abbr mv 'mv -iv'
