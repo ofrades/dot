@@ -10,6 +10,13 @@ end
 require("packer").startup(function(use)
   use({ "wbthomason/packer.nvim" })
 
+  use({ "folke/neodev.nvim", module = "neodev" })
+  use({
+    "folke/neoconf.nvim",
+    module = "neoconf",
+    cmd = "Neoconf",
+  })
+
   use({
     "nvim-treesitter/nvim-treesitter",
     config = function()
@@ -101,12 +108,30 @@ require("packer").startup(function(use)
     end,
   })
 
+  use {
+    'rmagatti/goto-preview',
+    config = function()
+      require('goto-preview').setup {}
+      vim.api.nvim_set_keymap("n", "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>",
+        { noremap = true })
+      vim.api.nvim_set_keymap("n", "gpt", "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>",
+        { noremap = true })
+      vim.api.nvim_set_keymap("n", "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>",
+        { noremap = true })
+      vim.api.nvim_set_keymap("n", "gP", "<cmd>lua require('goto-preview').close_all_win()<CR>",
+        { noremap = true })
+      vim.api.nvim_set_keymap("n", "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>",
+        { noremap = true })
+    end
+  }
+
   use({
     "neovim/nvim-lspconfig",
     requires = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "jose-elias-alvarez/typescript.nvim",
+      "mrshmllow/document-color.nvim"
     },
     config = function()
       vim.lsp.handlers["textDocument/publishDiagnostics"] =
@@ -122,6 +147,10 @@ require("packer").startup(function(use)
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
       end
+
+      require("document-color").setup {
+        mode = "background", -- "background" | "foreground" | "single"
+      }
 
       local opts = { noremap = true, silent = true }
 
@@ -170,6 +199,8 @@ require("packer").startup(function(use)
           vim.keymap.set("n", "gF", vim.lsp.buf.format, buf_opts)
         elseif client.server_capabilities.documentRangeFormatting then
           vim.keymap.set("n", "gF", vim.lsp.buf.range_formatting, buf_opts)
+        elseif client.server_capabilities.colorProvider then
+          require("document-color").buf_attach(bufnr)
         end
       end
 
@@ -189,6 +220,9 @@ require("packer").startup(function(use)
 
       mason_lspconfig.setup {
         ensure_installed = servers
+      }
+      capabilities.textDocument.colorProvider = {
+        dynamicRegistration = true
       }
       local options = {
         on_attach = on_attach,
@@ -421,6 +455,9 @@ require("packer").startup(function(use)
           },
           follow_current_file = true
         },
+        window = {
+          position = "current",
+        },
         event_handlers = {
 
           {
@@ -601,7 +638,6 @@ require("packer").startup(function(use)
 
   use({
     "folke/noice.nvim",
-    event = "VimEnter",
     config = function()
       require("noice").setup()
     end,
@@ -620,6 +656,114 @@ require("packer").startup(function(use)
       }
     }
   })
+
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = {
+      'kyazdani42/nvim-web-devicons',
+      "SmiteshP/nvim-navic",
+      "folke/noice.nvim",
+    },
+    config = function()
+      require("lualine").setup({
+        options = {
+          theme = "auto",
+          section_separators = { left = "", right = "" },
+          component_separators = { left = "", right = "" },
+          icons_enabled = true,
+          globalstatus = true,
+          disabled_filetypes = { statusline = { "dashboard" } },
+        },
+        sections = {
+          lualine_a = { { "mode", separator = { left = "" } } },
+          lualine_b = { "branch" },
+          lualine_c = {
+            { "diagnostics", sources = { "nvim_diagnostic" } },
+            { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+            { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
+            {
+              function()
+                local navic = require("nvim-navic")
+                local ret = navic.get_location()
+                return ret:len() > 2000 and "navic error" or ret
+              end,
+              cond = function()
+                local navic = require("nvim-navic")
+                return navic.is_available()
+              end,
+              color = { fg = "#ff9e64" },
+            },
+          },
+          lualine_x = {
+            -- {
+            --   require("noice").api.status.message.get_hl,
+            --   cond = require("noice").api.status.message.has,
+            -- },
+            {
+              require("noice").api.status.command.get,
+              cond = require("noice").api.status.command.has,
+              color = { fg = "#ff9e64" },
+            },
+            {
+              require("noice").api.status.mode.get,
+              cond = require("noice").api.status.mode.has,
+              color = { fg = "#ff9e64" },
+            },
+            {
+              require("noice").api.status.search.get,
+              cond = require("noice").api.status.search.has,
+              color = { fg = "#ff9e64" },
+            },
+            -- function()
+            --   return require("messages.view").status
+            -- end,
+            {
+              function()
+                return require("util.dashboard").status()
+              end,
+            },
+          },
+          lualine_y = { "location" },
+          lualine_z = { " " .. os.date("%H:%M") },
+        },
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = {},
+          lualine_x = {},
+          lualine_y = {},
+          lualine_z = {},
+        },
+        -- winbar = {
+        --   lualine_a = {},
+        --   lualine_b = {},
+        --   lualine_c = { "filename" },
+        --   lualine_x = {},
+        --   lualine_y = {},
+        --   lualine_z = {},
+        -- },
+        --
+        -- inactive_winbar = {
+        --   lualine_a = {},
+        --   lualine_b = {},
+        --   lualine_c = { "filename" },
+        --   lualine_x = {},
+        --   lualine_y = {},
+        --   lualine_z = {},
+        -- },
+        extensions = { "nvim-tree" },
+      })
+
+    end
+  }
+
+  use {
+    'tamton-aquib/duck.nvim',
+    config = function()
+      vim.keymap.set('n', '<leader>dd', function() require("duck").hatch("🦆", 10) end, {}) -- A pretty fast duck
+      vim.keymap.set('n', '<leader>dk', function() require("duck").cook() end, {})
+    end
+  }
 
   use({
     "gbprod/yanky.nvim",
@@ -652,6 +796,7 @@ require("packer").startup(function(use)
     },
     config = function()
       require("scrollbar").setup()
+      require("hlslens").setup()
     end,
   })
 
@@ -1050,165 +1195,11 @@ if vim.fn.has("nvim-0.9.0") == 1 then
   vim.opt.splitkeep = "screen"
 end
 
--- statusline
-local function getfilename()
-  if vim.api.nvim_win_get_width(0) < 90 then
-    return " %<%t "
-  end
-  return " %<%f "
-end
-
-local function git()
-  if not vim.b.gitsigns_head or vim.b.gitsigns_git_status then
-    return ""
-  end
-
-  local git_status = vim.b.gitsigns_status_dict
-
-  local added = (git_status.added and git_status.added ~= 0) and ("%#DiffAdd#  " .. git_status.added .. " ") or ""
-  local changed = (git_status.changed and git_status.changed ~= 0)
-      and ("%#DiffChange#  " .. git_status.changed .. " ")
-      or ""
-  local removed = (git_status.removed and git_status.removed ~= 0)
-      and ("%#DiffDelete#  " .. git_status.removed .. " ")
-      or ""
-  local branch_name = "  " .. git_status.head .. " "
-
-  return (
-      vim.api.nvim_win_get_width(0) > 100 and "%#St_gitIcons#" .. branch_name .. added .. changed .. removed
-          or "%#St_gitIcons#" .. added .. changed .. removed
-      )
-end
-
-local function lsp_diagnostics()
-  if not rawget(vim, "lsp") then
-    return ""
-  end
-  local errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-  local warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-  local hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
-  local info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
-
-  errors = (errors and errors > 0) and ("%#St_lspError#" .. "%#DiagnosticError#  " .. errors .. " ") or ""
-  warnings = (warnings and warnings > 0) and ("%#St_lspWarning#" .. "%#DiagnosticWarn#  " .. warnings .. " ") or ""
-  hints = (hints and hints > 0) and ("%#St_lspHints#" .. "%#DiagnosticHint#  " .. hints .. " ") or ""
-  info = (info and info > 0) and ("%#St_lspInfo#" .. "%#DiagnosticInfo#  " .. info .. " ") or ""
-
-  return errors .. warnings .. hints .. info
-end
-
-local function lsp_progress()
-  if not rawget(vim, "lsp") then
-    return ""
-  end
-
-  local Lsp = vim.lsp.util.get_progress_messages()[1]
-
-  if vim.api.nvim_win_get_width(0) < 120 or not Lsp then
-    return ""
-  end
-
-  local msg = Lsp.message or ""
-  local percentage = Lsp.percentage or 0
-  local title = Lsp.title or ""
-  local spinners = { "", "" }
-  local ms = vim.loop.hrtime() / 1000000
-  local frame = math.floor(ms / 120) % #spinners
-  local content = string.format(" %%<%s %s %s (%s%%%%) ", spinners[frame + 1], title, msg, percentage)
-
-  return ("%#St_LspProgress#" .. content) or ""
-end
-
-local modes = setmetatable({
-  ["n"] = { "Normal", "N" },
-  ["no"] = { "N·Pending", "N·P" },
-  ["v"] = { "Visual", "V" },
-  ["V"] = { "V·Line", "V·L" },
-  [""] = { "V·Block", "V·B" },
-  ["s"] = { "Select", "S" },
-  ["S"] = { "S·Line", "S·L" },
-  [""] = { "S·Block", "S·B" },
-  ["i"] = { "Insert", "I" },
-  ["ic"] = { "Insert", "I" },
-  ["R"] = { "Replace", "R" },
-  ["Rv"] = { "V·Replace", "V·R" },
-  ["c"] = { "Command", "C" },
-  ["cv"] = { "Vim·Ex ", "V·E" },
-  ["ce"] = { "Ex ", "E" },
-  ["r"] = { "Prompt ", "P" },
-  ["rm"] = { "More ", "M" },
-  ["r?"] = { "Confirm ", "C" },
-  ["!"] = { "Shell ", "S" },
-  ["t"] = { "Terminal ", "T" },
-}, {
-  __index = function()
-    return { "Unknown", "U" } -- handle edge cases
-  end,
-})
-
-local function getcurrentmode()
-  local current_mode = vim.api.nvim_get_mode().mode
-
-  if vim.api.nvim_win_get_width(0) < 120 then
-    return string.format(" %s ", modes[current_mode][2]):upper()
-  end
-
-  return string.format(" %s ", modes[current_mode][1]):upper()
-end
-
-Statusline = {}
-
-Statusline.active = function()
-  if vim.api.nvim_win_get_width(0) > 90 then
-    return table.concat({
-      "%#PMenu#",
-      getcurrentmode(),
-      git(),
-      "%#PMenu#",
-      "%=",
-      "",
-      getfilename(),
-      "%=",
-      lsp_diagnostics(),
-      "%#PMenu#",
-      "Ln %L, Col %c ",
-      "%p%%",
-      lsp_progress(),
-    })
-  end
-  return table.concat({
-    " ",
-    getfilename(),
-    "%=",
-    "%p%%",
-  })
-end
-
-function Statusline.inactive()
-  return table.concat({
-    "%#Normal# ",
-    " ",
-    getfilename(),
-  })
-end
-
-vim.api.nvim_exec(
-  [[
-	augroup Statusline
-	au!
-	au WinEnter,BufEnter * setlocal statusline=%!v:lua.Statusline.active()
-	au WinLeave,BufLeave * setlocal statusline=%!v:lua.Statusline.inactive()
-	augroup END
-]] ,
-  false
-)
-
 -- open session in last location
 vim.cmd([[
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif
 ]])
 
--- Highlight on yank
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
   callback = function()

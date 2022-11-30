@@ -34,7 +34,8 @@ set $slack exec slack
 set $files nautilus
 
 bindsym Print exec grim - | wl-copy && $notify screenshot "Full Screen Captured"
-set $printscreen exec grim -g "$(slurp -d)" - | wl-copy && $notify screenshot "Screenshot Captured"
+# set $printscreen exec grim -g "$(slurp -d)" - | wl-copy && $notify screenshot "Screenshot Captured"
+set $printscreen exec grim -g "$(slurp)" - | swappy -f -
 set $recordscreen exec $scripts/cast
 
 # Theme
@@ -287,5 +288,7 @@ exec --no-startup-id ~/.local/bin/noisetorch -i -t 95
 
 exec --no-startup-id /usr/libexec/polkit-gnome-authentication-agent-1
 exec mako
+
+for_window [app_id="flameshot"] floating enable, fullscreen disable, move absolute position 0 0, border pixe0
 
 include /etc/sway/config.d/*

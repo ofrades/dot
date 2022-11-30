@@ -21,6 +21,7 @@
         - blueman
         - rofimoji
         - polkit-gnome
+        - swappy
         # system
         - curl
         - wget
@@ -145,6 +146,13 @@
         - n
         - pnpm
 
+    - name: Tap Homebrew repositories
+      community.general.homebrew_tap:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - common-fate/granted
+
     - name: Install with brew
       become: false
       community.general.homebrew:
@@ -153,15 +161,14 @@
         name: "{{ item }}"
       with_items:
         - lazygit
-        - aws-vault
         - pyenv
+        - granted
 
     - name: Install with pip
       pip:
         name: "{{ item }}"
         state: present
       with_items:
-        - awsume
         - pynvim
 
     - name: Set fish as default shell for {{ user }}

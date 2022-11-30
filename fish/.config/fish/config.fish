@@ -1,7 +1,7 @@
 set -Ux fish_user_paths
 set -ga fish_user_paths ~/.local/bin
 set -ga fish_user_paths ~/.yarn/bin
-
+set -ga fish_user_paths ~/.config/fish/conf.d/bin
 set fish_greeting
 
 # git
@@ -48,28 +48,11 @@ abbr mkdir 'mkdir -vp'
 
 abbr weather "curl -s wttr.in/Oliveira+de+Frades | grep -v Follow"
 
-# Environment Variables
 set -Ux EDITOR nvim
-set -gx AWS_PROFILE default
-set -gx AWS_SDK_LOAD_CONFIG 1
-set -gx ANSIBLE_VAULT_PASSWORD_FILE ~/Dropbox/warden
+set -gx ANSIBLE_VAULT_PASSWORD_FILE ~/Dropbox/wardeg
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx FZF_DEFAULT_OPTS '--height 25% --layout=reverse'
 
-set -gx PYENV_ROOT "$HOME/.pyenv"
-set -gx PATH "$PYENV_ROOT/bin:$PATH"
-set -Ux BUN_INSTALL "/home/ofrades/.bun"
-set -px --path PATH "/home/ofrades/.bun/bin"
-set -ga PATH ~/.npm-global/bin:$PATH
-
-switch (uname)
-    case Linux
-      eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-    case Darwin
-      echo Hi Macos!
-end
-
-pyenv init - | source
 starship init fish | source
 
-
+alias assume="source /home/linuxbrew/.linuxbrew/bin/assume.fish"
