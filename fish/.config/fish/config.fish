@@ -1,7 +1,6 @@
 set -Ux fish_user_paths
 set -ga fish_user_paths ~/.local/bin
 set -ga fish_user_paths ~/.yarn/bin
-set -ga fish_user_paths ~/.config/fish/conf.d/bin
 set fish_greeting
 
 # git
