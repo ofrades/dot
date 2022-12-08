@@ -836,18 +836,6 @@ require("packer").startup(function(use)
   })
 
   use({
-    "tamton-aquib/duck.nvim",
-    config = function()
-      vim.keymap.set("n", "<leader>dd", function()
-        require("duck").hatch("🦆", 10)
-      end, {}) -- A pretty fast duck
-      vim.keymap.set("n", "<leader>dk", function()
-        require("duck").cook()
-      end, {})
-    end,
-  })
-
-  use({
     "gbprod/yanky.nvim",
     config = function()
       require("yanky").setup({
@@ -867,6 +855,21 @@ require("packer").startup(function(use)
     end,
   })
 
+  use({ 'toppair/peek.nvim',
+    run = 'deno task --quiet build:fast',
+    config = function()
+      require('peek').setup({
+        auto_load = true,
+        close_on_bdelete = true,
+        syntax = true,
+        theme = 'dark',
+        update_on_change = true,
+        throttle_at = 200000,
+        throttle_time = 'auto'
+      })
+    end
+  })
+
   use({
     "Ostralyan/scribe.nvim",
     config = function()
@@ -882,15 +885,6 @@ require("packer").startup(function(use)
     config = function()
       require("scrollbar").setup()
       require("hlslens").setup()
-    end,
-  })
-
-  use({
-    "folke/persistence.nvim",
-    event = "BufReadPre", -- this will only start session saving when an actual file was opened
-    module = "persistence",
-    config = function()
-      require("persistence").setup()
     end,
   })
 
@@ -1155,6 +1149,12 @@ vim.keymap.set(
   "<leader>.",
   "<cmd>:lua require('telescope.builtin').find_files({cwd = '~/dot', hidden = true})<cr>"
 )
+
+vim.keymap.set(
+  "n",
+  "<leader>m",
+  "<cmd>:lua require('telescope').extensions.file_browser.file_browser({cwd = '~/notes'})<cr>"
+)
 vim.keymap.set("n", "<leader>/", "<cmd>:Telescope current_buffer_fuzzy_find<cr>")
 
 vim.keymap.set("n", "gb", "<cmd>:Gitsigns blame_line<cr>")
@@ -1194,6 +1194,9 @@ vim.keymap.set({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
 vim.keymap.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
 vim.keymap.set("n", "<c-n>", "<Plug>(YankyCycleForward)")
 vim.keymap.set("n", "<c-p>", "<Plug>(YankyCycleBackward)")
+
+vim.api.nvim_create_user_command('PeekOpen', require('peek').open, {})
+vim.api.nvim_create_user_command('PeekClose', require('peek').close, {})
 
 -- options
 vim.o.updatetime = 250

@@ -163,6 +163,8 @@
         - lazygit
         - pyenv
         - granted
+        - deno
+        - tfenv
 
     - name: Install with pip
       pip:
