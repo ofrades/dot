@@ -59,14 +59,6 @@ require("packer").startup(function(use)
   })
 
   use({
-    "phaazon/hop.nvim",
-    branch = "v2",
-    config = function()
-      require("hop").setup({ keys = "etovxqpdygfblzhckisuran" })
-    end,
-  })
-
-  use({
     "glepnir/dashboard-nvim",
     config = function()
       local home = os.getenv("HOME")
@@ -125,7 +117,9 @@ require("packer").startup(function(use)
   use({
     "folke/drop.nvim",
     config = function()
-      require("drop").setup()
+      require("drop").setup({
+        theme = "snow"
+      })
     end,
   })
 
@@ -214,11 +208,11 @@ require("packer").startup(function(use)
 
       local function on_attach(client, bufnr)
         if vim.fn.exists(":Telescope") then
-          vim.keymap.set("n", "gr", "<cmd>:Telescope lsp_references theme=ivy<CR>", buf_opts)
-          vim.keymap.set("n", "gd", "<cmd>:Telescope lsp_definitions theme=ivy<CR>", buf_opts)
-          vim.keymap.set("n", "gD", "<cmd>:Telescope lsp_declarations theme=ivy<CR>", buf_opts)
-          vim.keymap.set("n", "gi", "<cmd>:Telescope lsp_implementations theme=ivy<CR>", buf_opts)
-          vim.keymap.set("n", "gt", "<cmd>:Telescope lsp_type_definitions theme=ivy<CR>", buf_opts)
+          vim.keymap.set("n", "gr", "<cmd>:Telescope lsp_references<CR>", buf_opts)
+          vim.keymap.set("n", "gd", "<cmd>:Telescope lsp_definitions<CR>", buf_opts)
+          vim.keymap.set("n", "gD", "<cmd>:Telescope lsp_declarations<CR>", buf_opts)
+          vim.keymap.set("n", "gi", "<cmd>:Telescope lsp_implementations<CR>", buf_opts)
+          vim.keymap.set("n", "gt", "<cmd>:Telescope lsp_type_definitions<CR>", buf_opts)
         else
           vim.keymap.set("n", "gr", vim.lsp.buf.references, buf_opts)
           vim.keymap.set("n", "gd", vim.lsp.buf.definition, buf_opts)
@@ -296,12 +290,14 @@ require("packer").startup(function(use)
           null_ls.builtins.diagnostics.write_good,
           null_ls.builtins.diagnostics.yamllint,
           null_ls.builtins.diagnostics.flake8,
+          null_ls.builtins.formatting.prettierd,
           null_ls.builtins.formatting.jq,
           null_ls.builtins.formatting.black,
           -- null_ls.builtins.formatting.stylua,
           null_ls.builtins.formatting.fixjson,
           null_ls.builtins.formatting.yamlfmt,
           null_ls.builtins.formatting.markdownlint,
+          null_ls.builtins.code_actions.refactoring
         },
       })
     end,
@@ -441,24 +437,9 @@ require("packer").startup(function(use)
               { "~/dev", max_depth = 4 },
             },
             hidden_files = true,
-            theme = "ivy",
           },
           file_browser = {
             previewer = false,
-          },
-        },
-        pickers = {
-          find_files = {
-            theme = "ivy",
-          },
-          oldfiles = {
-            theme = "ivy",
-          },
-          commands = {
-            theme = "ivy",
-          },
-          live_grep = {
-            theme = "ivy",
           },
         },
       })
@@ -582,7 +563,6 @@ require("packer").startup(function(use)
 
   use({
     "kylechui/nvim-surround",
-    event = "BufReadPre",
     config = function()
       require("nvim-surround").setup({})
     end,
@@ -688,11 +668,30 @@ require("packer").startup(function(use)
     "folke/tokyonight.nvim",
     requires = {
       "ellisonleao/gruvbox.nvim",
+      "nyoom-engineering/oxocarbon.nvim",
+      "xEgoist/nightfox.nvim"
     },
     config = function()
-      vim.cmd("colorscheme tokyonight-storm")
+      -- vim.cmd("colorscheme tokyonight-storm")
+      vim.cmd("colorscheme oxocarbon")
     end,
   })
+
+  use({
+    "jackMort/ChatGPT.nvim",
+    config = function()
+      require("chatgpt").setup()
+    end,
+    requires = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim"
+    }
+  })
+
+  use({ "naps62/pair-gpt.nvim", config = function()
+    require("pair-gpt").setup()
+  end })
 
   use({
     "brenoprata10/nvim-highlight-colors",
@@ -983,7 +982,12 @@ require("packer").startup(function(use)
 
   use({
     "mfussenegger/nvim-dap",
+    requires = {
+      "rcarriga/nvim-dap-ui",
+    },
     config = function()
+
+      require("dapui").setup({})
       vim.fn.sign_define("DapBreakpoint", { text = "→", texthl = "Error", linehl = "", numhl = "" })
       vim.fn.sign_define("DapStopped", { text = "→", texthl = "Success", linehl = "", numhl = "" })
 
@@ -999,14 +1003,6 @@ require("packer").startup(function(use)
       local dap = require("dap")
 
       dap.set_log_level("TRACE")
-    end,
-  })
-
-  use({
-    "rcarriga/nvim-dap-ui",
-    requires = { "mfussenegger/nvim-dap" },
-    config = function()
-      require("dapui").setup({})
     end,
   })
 
@@ -1136,9 +1132,9 @@ vim.keymap.set("n", "<leader>e", "<cmd>:Neotree position=left focus toggle<cr>")
 
 vim.keymap.set("n", "<leader>s", "<cmd>:lua require('spectre').open()<cr>")
 vim.keymap.set("n", "<leader>o", "<cmd>:Telescope oldfiles hidden=true<cr>")
-vim.keymap.set("n", "<leader>p", "<cmd>:Telescope find_files theme=ivy hidden=true<cr>")
+vim.keymap.set("n", "<leader>p", "<cmd>:Telescope find_files hidden=true<cr>")
 vim.keymap.set("n", "<leader>f", "<cmd>:Telescope live_grep<cr>")
-vim.keymap.set("n", "<leader><leader>", "<cmd>:Telescope file_browser theme=ivy hidden=true<cr>")
+vim.keymap.set("n", "<leader><leader>", "<cmd>:Telescope file_browser hidden=true<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>:q<cr>") -- exit
 vim.keymap.set("n", "<leader>w", "<cmd>:w<cr>") -- save
 vim.keymap.set("n", "<leader>x", "<cmd>:TroubleToggle<cr>") -- project diagnostics
@@ -1166,7 +1162,7 @@ vim.keymap.set("n", "<leader>ha", "<cmd>:lua require('harpoon.mark').add_file()<
 vim.keymap.set("n", "<leader>hm", "<cmd>:lua require('harpoon.ui').toggle_quick_menu()<cr>")
 vim.keymap.set("n", "<leader>ho", "<cmd>:lua require('harpoon.ui').nav_prev()<cr>")
 vim.keymap.set("n", "<leader>hi", "<cmd>:lua require('harpoon.ui').nav_next()<cr>")
-vim.keymap.set("n", "<leader>hh", "<cmd>:Telescope harpoon marks theme=ivy hidden=true<cr>")
+vim.keymap.set("n", "<leader>hh", "<cmd>:Telescope harpoon marks hidden=true<cr>")
 
 vim.keymap.set("n", "<leader>\\", "<cmd>:ToggleTerm direction=float<cr>")
 vim.keymap.set("n", "<leader>b", "<cmd>:ToggleTerm direction=horizontal<cr>")
@@ -1185,8 +1181,6 @@ vim.keymap.set("n", "<leader>nx", "<cmd>:lua require('neotest').run.stop()<cr>")
 vim.keymap.set("n", "<leader>na", "<cmd>:lua require('neotest').run.attach()<cr>")
 vim.keymap.set("n", "<leader>no", "<cmd>:lua require('neotest').output.open({enter = true})<cr>")
 vim.keymap.set("n", "<leader>ns", "<cmd>:lua require('neotest').summary.toggle()<cr>")
-
-vim.keymap.set("n", "f", "<cmd>:HopWord<cr>")
 
 vim.keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
 vim.keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")

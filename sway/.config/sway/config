@@ -39,13 +39,13 @@ set $printscreen exec grim -g "$(slurp)" - | swappy -f -
 set $recordscreen exec $scripts/cast
 
 # Theme
-set $bg_active #545c7e
-set $bg #292e42
-set $border #292e42
-set $fg #7aa2f7
-set $fg_active #c0caf5
-set $fg_urg #f7768e
-set $border_urg #f7768e
+set $bg_active #393939
+set $bg #161616
+set $border #262626
+set $fg #08bdba
+set $fg_active #f2f4f8
+set $fg_urg #ee5396
+set $border_urg #ee5396
 
 ### Output configuration
 #
@@ -113,7 +113,7 @@ workspace $ws8 output $output-secondary
 
 
 
-font pango:FiraCode Nerd Font 11
+font pango:BlexMono Nerd Font 11
 
 # This is the only place where you must set GTK scaling
 exec_always {
@@ -284,11 +284,7 @@ bar {
   swaybar_command waybar
 }
 
-exec --no-startup-id ~/.local/bin/noisetorch -i -t 95
-
 exec --no-startup-id /usr/libexec/polkit-gnome-authentication-agent-1
 exec mako
-
-for_window [app_id="flameshot"] floating enable, fullscreen disable, move absolute position 0 0, border pixe0
 
 include /etc/sway/config.d/*

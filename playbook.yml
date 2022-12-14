@@ -1,12 +1,15 @@
+---
 - name: System
   hosts: localhost
   become: true
   vars:
     favcolor: green
     user: ofrades
+    font: IBMPlexMono
+
   tasks:
 
-    - name: Sytem packages
+    - name: System packages
       package:
         state: latest
         name: "{{ item }}"
@@ -82,13 +85,15 @@
       when: ansible_distribution == "Fedora"
 
     - name: Remove neovim
-      file: 
+      file:
         state: absent
         path: "{{ lookup('env', 'HOME') }}/neovim"
+
     - name: Download neovim
       git:
         repo: https://github.com/neovim/neovim
         dest: "{{ lookup('env', 'HOME') }}/neovim"
+
     - name: Install neovim
       shell:
         cmd: |
@@ -97,14 +102,16 @@
         chdir: "{{ lookup('env', 'HOME') }}/neovim"
 
 
-    - name: Download noisetorch
-      file: 
+    - name: Remove noisetorch
+      file:
         state: absent
         path: "{{ lookup('env', 'HOME') }}/noisetorch"
+
     - name: Download noisetorch
       git:
         repo: https://github.com/noisetorch/NoiseTorch
         dest: "{{ lookup('env', 'HOME') }}/noisetorch"
+
     - name: Install noisetorch
       shell:
         cmd: |
@@ -136,7 +143,7 @@
       community.general.npm:
         name: "{{ item }}"
         state: present
-        global: yes
+        global: true
         path: "~/.npm-global"
       with_items:
         - neovim
@@ -145,13 +152,6 @@
         - serverless
         - n
         - pnpm
-
-    - name: Tap Homebrew repositories
-      community.general.homebrew_tap:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - common-fate/granted
 
     - name: Install with brew
       become: false
@@ -162,9 +162,9 @@
       with_items:
         - lazygit
         - pyenv
-        - granted
         - deno
         - tfenv
+        - cdktf
 
     - name: Install with pip
       pip:
@@ -178,29 +178,19 @@
         name: "{{ user }}"
         shell: /usr/bin/fish
 
-    - name: Get JetBrainsMono
+    - name: Get Font
       get_url:
-        url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/JetBrainsMono.zip
-        dest: /etc/JetBrainsMono.zip
-
-    - name: Get FiraCode
-      get_url:
-        url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
-        dest: /etc/FiraCode.zip
+        url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/{{ font }}.zip
+        dest: /etc/{{ font }}.zip
 
     - name: Create fonts folder
       file:
         path: "/home/{{ user }}/.fonts/"
         state: directory
 
-    - name: Installing JetBrainsMono
+    - name: Move Font
       unarchive:
-        src: /etc/JetBrainsMono.zip
-        dest: "/home/{{ user }}/.fonts/"
-
-    - name: Installing FiraCode
-      unarchive:
-        src: /etc/FiraCode.zip
+        src: /etc/{{ font }}.zip
         dest: "/home/{{ user }}/.fonts/"
 
     - name: Ensure dot folders exist

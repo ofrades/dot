@@ -2,6 +2,7 @@ set -Ux fish_user_paths
 set -ga fish_user_paths ~/.local/bin
 set -ga fish_user_paths ~/.yarn/bin
 set fish_greeting
+fish_vi_key_bindings
 
 # git
 abbr clone 'git clone git@github.com:'

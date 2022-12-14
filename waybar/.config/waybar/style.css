@@ -1,11 +1,11 @@
-  @define-color dark-1 #1f2335;
-  @define-color dark-2 #24283b;
-  @define-color dark-3 #364a82;
-  @define-color dark-4 #545c7e;
-  @define-color blue #7aa2f7;
-  @define-color white #c0caf5;
-  @define-color green #9ece6a;
-  @define-color red #f7768e;
+  @define-color dark-1 #161616;
+  @define-color dark-2 #262626;
+  @define-color dark-3 #393939;
+  @define-color dark-4 #525252;
+  @define-color blue #78a9ff;
+  @define-color white #f2f4f8;
+  @define-color green #3ddbd9;
+  @define-color red #ee5396;
 
 * {
     border: none;

@@ -1,16 +1,16 @@
 
 * {
-  background-color: #24283b;
-  bg-alt: #364a82;
-  blue-light: #7aa2f7;
+  background-color: #161616;
+  bg-alt: #262626;
+  blue-light: #08bdba;
   yellow: #e0af68;
 	transparent: #00000000;
-	foreground: #c0caf5;
-	foreground-selected: #c0caf5;
-	background-selected: #24283b;
-	background-active: #c0caf5;
-	urgent: #f7768e;
-	urgent-selected: #db4b4b;
+	foreground: #f2f4f8;
+	foreground-selected: #dde1e6;
+	background-selected: #161616;
+	background-active: #ffffff;
+	urgent: #ee5396;
+	urgent-selected: #ff7eb6;
 }
 
 window {
