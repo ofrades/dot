@@ -1,10 +1,11 @@
+  @define-color black #0c0c0c;
   @define-color dark-1 #161616;
   @define-color dark-2 #262626;
   @define-color dark-3 #393939;
   @define-color dark-4 #525252;
   @define-color blue #78a9ff;
   @define-color white #f2f4f8;
-  @define-color green #3ddbd9;
+  @define-color green #08bdba;
   @define-color red #ee5396;
 
 * {
@@ -15,8 +16,8 @@
 }
 
 window#waybar {
-    background-color: @dark-1;
-    color: @white;
+    background-color: @black;
+    color: @green;
 }
 
 #window {
@@ -29,17 +30,17 @@ window#waybar {
     padding: 0px;
     border-radius: 0;
     border: none;
-    color: @blue;
+    color: @green;
 }
 
 #workspaces button:hover {
     background: @dark-2;
-    color: @green;
+    color: @red;
 }
 
 #workspaces button.focused {
     background-color: @dark-1;
-    color: @green;
+    color: @red;
 }
 
 #workspaces button.urgent {

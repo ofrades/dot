@@ -1,6 +1,7 @@
 set -Ux fish_user_paths
 set -ga fish_user_paths ~/.local/bin
 set -ga fish_user_paths ~/.yarn/bin
+set -ga fish_user_paths ~/.yarn/bin
 set fish_greeting
 fish_vi_key_bindings
 
@@ -52,6 +53,7 @@ set -Ux EDITOR nvim
 set -gx ANSIBLE_VAULT_PASSWORD_FILE ~/Dropbox/wardeg
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx FZF_DEFAULT_OPTS '--height 25% --layout=reverse'
+set -gx PATH "$HOME/.cargo/bin" $PATH;
 
 starship init fish | source
 
