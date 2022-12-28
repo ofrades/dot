@@ -147,11 +147,12 @@
         path: "~/.npm-global"
       with_items:
         - neovim
-        - yarn
         - typescript
         - serverless
         - n
+        - yarn
         - pnpm
+        - '@aws-amplify/cli'
 
     - name: Install with brew
       become: false
