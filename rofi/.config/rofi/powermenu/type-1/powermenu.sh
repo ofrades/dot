@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+## Author : Aditya Shakya (adi1090x)
+## Github : @adi1090x
+#
+## Rofi   : Power Menu
+#
+## Available Styles
+#
+## style-1   style-2   style-3   style-4   style-5
+
+# Current Theme
+dir="$HOME/.config/rofi/powermenu/type-1"
+theme='style-1'
+
 # CMDs
 uptime="`uptime -p | sed -e 's/up //g'`"
 host=`hostname`
@@ -17,7 +30,8 @@ no=' No'
 rofi_cmd() {
 	rofi -dmenu \
 		-p "$host" \
-		-mesg "Uptime: $uptime"
+		-mesg "Uptime: $uptime" \
+		-theme ${dir}/${theme}.rasi
 }
 
 # Confirmation CMD
@@ -29,7 +43,8 @@ confirm_cmd() {
 		-theme-str 'textbox {horizontal-align: 0.5;}' \
 		-dmenu \
 		-p 'Confirmation' \
-		-mesg 'Are you Sure?'
+		-mesg 'Are you Sure?' \
+		-theme ${dir}/${theme}.rasi
 }
 
 # Ask for confirmation

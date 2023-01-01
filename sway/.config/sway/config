@@ -14,6 +14,7 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
+set $scripts ~/.config/sway/scripts/
 set $term kitty
 set $lock swaylock -f
 set $volume $scripts/volume
@@ -21,9 +22,11 @@ set $notify $scripts/notify
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu exec rofi -show drun
+set $menu exec rofi -show run
+set $menu exec ~/.config/rofi/launchers/type-1/launcher.sh
 set $emoji exec rofimoji -a copy
-set $powermenu exec ~/.config/rofi/powermenu.sh
+set $powermenu exec ~/.config/rofi/powermenu/type-1/powermenu.sh
+set $volumemenu exec ~/.config/rofi/applets/bin/volume.sh
 set $clipboard exec clipman pick -t rofi
 exec_always pkill wl-paste
 exec_always wl-paste -p -t text --watch clipman store --max-items 1024
@@ -161,6 +164,7 @@ bindsym $mod+q kill
 # Start your launcher
 bindsym $mod+d exec $menu
 bindsym $mod+x exec $powermenu
+bindsym $mod+v exec $volumemenu
 bindsym $mod+c exec $clipboard
 bindsym $mod+e exec $emoji
 

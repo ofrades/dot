@@ -39,9 +39,6 @@
         - clipman
         - rofi
         - blueman
-        - rofimoji
-        - polkit-gnome
-        - swappy
         # system
         - curl
         - wget
@@ -89,6 +86,7 @@
         - build-essential
         - mako-notifier
         - libtool-bin
+        - polkitd
       when: ansible_distribution == "Ubuntu"
 
 
@@ -99,6 +97,7 @@
       with_items:
         - "@development-tools"
         - mako
+        - polkit-gnome
       when: ansible_distribution == "Fedora"
 
     - name: Remove neovim
@@ -190,6 +189,7 @@
         state: present
       with_items:
         - pynvim
+        - rofimoji
 
     - name: Set fish as default shell for {{ user }}
       user:
