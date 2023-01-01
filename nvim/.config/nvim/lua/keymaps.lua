@@ -7,7 +7,7 @@ vim.keymap.set("t", "<ESC>", "<C-\\><C-n>")
 vim.keymap.set("", "<ESC>", ":noh<cr>")
 
 vim.keymap.set({ "n", "x" }, "<leader>sr", function()
-  require("ssr").open()
+	require("ssr").open()
 end)
 
 -- Move to window using the <ctrl> movement keys
@@ -61,15 +61,14 @@ vim.keymap.set("n", "<leader>o", "<cmd>:Telescope oldfiles hidden=true<cr>")
 vim.keymap.set("n", "<leader>p", "<cmd>:Telescope find_files hidden=true<cr>")
 vim.keymap.set("n", "<leader>f", "<cmd>:Telescope live_grep<cr>")
 vim.keymap.set("n", "<leader><leader>", "<cmd>:Telescope file_browser hidden=true<cr>")
-vim.keymap.set("n", "<leader>q", "<cmd>:q<cr>") -- exit
-vim.keymap.set("n", "<leader>w", "<cmd>:w<cr>") -- save
+vim.keymap.set("n", "<leader>q", "<cmd>:wq!<cr>") -- exit
 vim.keymap.set("n", "<leader>x", "<cmd>:TroubleToggle<cr>") -- project diagnostics
 
 vim.keymap.set("n", "<leader>d", "<cmd>:e ~/.config/nvim/init.lua<cr>")
 vim.keymap.set(
-  "n",
-  "<leader>.",
-  "<cmd>:lua require('telescope.builtin').find_files({cwd = '~/dot', hidden = true})<cr>"
+	"n",
+	"<leader>.",
+	"<cmd>:lua require('telescope.builtin').find_files({cwd = '~/dot', hidden = true})<cr>"
 )
 
 vim.keymap.set("n", "<leader>m", "<cmd>:lua require('telescope.builtin').find_files({cwd = '~/notes'})<cr>")
@@ -113,13 +112,13 @@ vim.keymap.set("n", "<c-n>", "<Plug>(YankyCycleForward)")
 vim.keymap.set("n", "<c-p>", "<Plug>(YankyCycleBackward)")
 
 vim.keymap.set("n", "<leader>gg", function()
-  require("lazy.util").open_cmd({ "lazygit" }, {
-    terminal = true,
-    close_on_exit = true,
-    enter = true,
-    float = {
-      size = { width = 0.9, height = 0.9 },
-      margin = { top = 0, right = 0, bottom = 0, left = 0 },
-    },
-  })
+	require("lazy.util").open_cmd({ "lazygit" }, {
+		terminal = true,
+		close_on_exit = true,
+		enter = true,
+		float = {
+			size = { width = 0.9, height = 0.9 },
+			margin = { top = 0, right = 0, bottom = 0, left = 0 },
+		},
+	})
 end, { desc = "Lazygit" })
