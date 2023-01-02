@@ -14,7 +14,7 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $scripts ~/.config/sway/scripts/
+set $scripts ~/.config/sway/scripts
 set $term kitty
 set $lock swaylock -f
 set $volume $scripts/volume
@@ -24,7 +24,7 @@ set $notify $scripts/notify
 # on the original workspace that the command was run on.
 set $menu exec rofi -show run
 set $menu exec ~/.config/rofi/launchers/type-1/launcher.sh
-set $emoji exec rofimoji -a copy
+set $emoji exec splatmoji copy
 set $powermenu exec ~/.config/rofi/powermenu/type-1/powermenu.sh
 set $volumemenu exec ~/.config/rofi/applets/bin/volume.sh
 set $clipboard exec clipman pick -t rofi
