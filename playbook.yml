@@ -39,6 +39,7 @@
         - clipman
         - rofi
         - blueman
+        - grim
         # system
         - curl
         - wget

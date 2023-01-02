@@ -14,20 +14,17 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $scripts ~/.config/sway/scripts
 set $term kitty
-set $lock swaylock -f
-set $volume $scripts/volume
-set $notify $scripts/notify
+
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu exec rofi -show run
 set $menu exec ~/.config/rofi/launchers/type-1/launcher.sh
 set $emoji exec splatmoji copy
 set $powermenu exec ~/.config/rofi/powermenu/type-1/powermenu.sh
 set $volumemenu exec ~/.config/rofi/applets/bin/volume.sh
 set $clipboard exec clipman pick -t rofi
+
 exec_always pkill wl-paste
 exec_always wl-paste -p -t text --watch clipman store --max-items 1024
 exec_always wl-paste -t text --watch clipman store --max-items 1024
@@ -36,10 +33,8 @@ exec_always clipman restore
 set $slack exec slack
 set $files nautilus
 
-bindsym Print exec grim - | wl-copy && $notify screenshot "Full Screen Captured"
-# set $printscreen exec grim -g "$(slurp -d)" - | wl-copy && $notify screenshot "Screenshot Captured"
-set $printscreen exec grim -g "$(slurp)" - | swappy -f -
-set $recordscreen exec $scripts/cast
+bindsym Print exec grim - | wl-copy && notify-send -i screenshot "Full Screen Captured"
+set $printscreen exec grim -g "$(slurp -d)" - | wl-copy && notify-send -i screenshot "🖼️ Saved to the clipboard"
 
 # Theme
 set $bg_active #393939
@@ -90,20 +85,6 @@ set $ws3 "3:"
 set $ws4 "4:"
 set $ws5 "5:"
 set $ws6 "6:"
-
-
-#################################################################
-## Screen Lock
-#################################################################
-# This will lock your screen after 300 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
-# resumed. It will also lock your screen before your computer goes to sleep.
-exec_always pkill swayidle; swayidle -w \
-         timeout 300 "$lock" \
-         timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
-         before-sleep "$lock"
-bindswitch lid:on exec $lock
-bindsym $mod+Alt+l exec $lock
 
 # workspace to displays
 workspace $ws1 output $output-primary
@@ -247,10 +228,10 @@ bindsym $mod+r layout toggle split
 bindsym $mod+m fullscreen
 
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5% && $volume
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && $volume
-bindsym $mod+i exec pactl set-sink-volume @DEFAULT_SINK@ +5% && $volume
-bindsym $mod+o exec pactl set-sink-volume @DEFAULT_SINK@ -5% && $volume
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -i volume "Volume +5 🔊"
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && notify-send -i volume "Volume -5 🔈️"
+bindsym $mod+i exec pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -i volume "Volume +5 🔊"
+bindsym $mod+o exec pactl set-sink-volume @DEFAULT_SINK@ -5% && notify-send -i volume "Volume -5 🔈️"
 
 bindsym --locked XF86MonBrightnessUp exec light -T 1.4
 bindsym --locked XF86MonBrightnessDown exec light -T 0.72
@@ -287,5 +268,6 @@ bar {
 
 exec --no-startup-id /usr/libexec/polkit-gnome-authentication-agent-1
 exec mako
+exec flameshot
 
 include /etc/sway/config.d/*
