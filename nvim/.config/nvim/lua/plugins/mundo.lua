@@ -1,1 +1,0 @@
-return { "simnalamburt/vim-mundo" }
