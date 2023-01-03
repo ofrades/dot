@@ -14,7 +14,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   pattern = "*",
 })
 
-vim.cmd("autocmd BufWritePre *.lua lua vim.lsp.buf.format({ async = true })")
+vim.cmd("autocmd BufWritePre *.lua lua vim.lsp.buf.format({ async = false })")
 vim.cmd("autocmd BufWritePre *.tsx,*.ts,*.jsx,*.js EslintFixAll")
 
 -- Map esc to exit inside lazygit

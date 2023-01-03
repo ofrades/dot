@@ -19,7 +19,6 @@ return {
 		require("mini.cursorword").setup()
 		require("mini.indentscope").setup()
 		require("mini.animate").setup()
-		require("mini.starter").setup()
 		require("mini.comment").setup({
 			hooks = {
 				pre = function()

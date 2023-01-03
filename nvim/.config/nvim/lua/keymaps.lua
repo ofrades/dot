@@ -61,7 +61,8 @@ vim.keymap.set("n", "<leader>o", "<cmd>:Telescope oldfiles hidden=true<cr>")
 vim.keymap.set("n", "<leader>p", "<cmd>:Telescope find_files hidden=true<cr>")
 vim.keymap.set("n", "<leader>f", "<cmd>:Telescope live_grep<cr>")
 vim.keymap.set("n", "<leader><leader>", "<cmd>:Telescope file_browser hidden=true<cr>")
-vim.keymap.set("n", "<leader>q", "<cmd>:wq!<cr>") -- exit
+vim.keymap.set("n", "<leader>q", "<cmd>:q<cr>") -- exit
+vim.keymap.set("n", "<leader>w", "<cmd>:w<cr>") -- exit
 vim.keymap.set("n", "<leader>x", "<cmd>:TroubleToggle<cr>") -- project diagnostics
 
 vim.keymap.set("n", "<leader>d", "<cmd>:e ~/.config/nvim/init.lua<cr>")
