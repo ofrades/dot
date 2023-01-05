@@ -11,27 +11,13 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
-
--- load plugins from ./lua/plugins
-require("lazy").setup("plugins", {
-	performance = {
-		rtp = {
-			disabled_plugins = {
-				"gzip",
-				"matchit",
-				"matchparen",
-				"netrwPlugin",
-				"tarPlugin",
-				"tohtml",
-				"tutor",
-				"zipPlugin",
-			},
-		},
+require("lazy").setup({
+	spec = {
+		{ "folke/LazyVim", import = "lazyvim.plugins" },
+		{ import = "lazyvim.plugins.extras.lang.typescript" },
+		{ import = "plugins" },
 	},
+	defaults = { lazy = true },
+	install = { missing = true, colorscheme = { "oxocarbon" } },
+	checker = { enabled = true },
 })
-
-require("config.keymaps")
-require("config.commands")
-require("config.options")
