@@ -54,6 +54,8 @@ set -gx ANSIBLE_VAULT_PASSWORD_FILE ~/Dropbox/wardeg
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx FZF_DEFAULT_OPTS '--height 25% --layout=reverse'
 set -gx PATH "$HOME/.cargo/bin" $PATH;
+set -gx AWS_PROFILE default
+
 
 starship init fish | source
 
