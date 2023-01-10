@@ -49,25 +49,6 @@
       when:
         - not homebrew_check.stat.exists
 
-    - name: Sytem packages
-      package:
-        state: latest
-        name: "{{ item }}"
-      with_items:
-        # sway
-        - sway
-        - wl-clipboard
-        - waybar
-        - wf-recorder
-        - clipman
-        - rofi
-        - blueman
-        - grim
-        - "@development-tools"
-        - mako
-        - polkit-gnome
-      when: ansible_distribution == "Fedora"
-
     - name: Download neovim
       git:
         repo: https://github.com/neovim/neovim
@@ -115,7 +96,6 @@
         state: present
       with_items:
         - pynvim
-        - rofimoji
 
     - name: Set fish as default shell for {{ user }}
       user:
