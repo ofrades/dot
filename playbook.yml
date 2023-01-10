@@ -16,6 +16,7 @@
       with_items:
         # tools
         - stow
+        - tmux
         - kitty
         - fish
         - fzf
