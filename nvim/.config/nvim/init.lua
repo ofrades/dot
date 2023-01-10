@@ -18,6 +18,6 @@ require("lazy").setup({
 		{ import = "plugins" },
 	},
 	defaults = { lazy = true },
-	install = { missing = true, colorscheme = { "oxocarbon" } },
+	install = { missing = true },
 	checker = { enabled = true },
 })

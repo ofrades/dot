@@ -239,17 +239,6 @@ return {
 		end,
 	},
 
-	-- colorscheme
-	{
-		"nyoom-engineering/oxocarbon.nvim",
-		lazy = false,
-	},
-
-	{
-		"folke/tokyonight.nvim",
-		lazy = true,
-	},
-
 	-- null-ls
 	{
 		"jose-elias-alvarez/null-ls.nvim",
