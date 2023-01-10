@@ -7,23 +7,6 @@
     user: ofrades
     font: IBMPlexMono
 
-  pre_tasks:
-    - name: Ensuring Homebrew Is Installed
-      stat:
-        path: /home/linuxbrew/.linuxbrew/bin/brew
-      register: homebrew_check
-
-    - name: Fail If Homebrew Is Not Installed and install_homebrew_if_missing Is False
-      fail:
-        msg: Homebrew is missing, install from http://brew.sh
-      when:
-        - not homebrew_check.stat.exists
-
-    - name: Installing Homebrew
-      shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-      when:
-        - not homebrew_check.stat.exists
-
   tasks:
 
     - name: System packages
@@ -31,35 +14,11 @@
         state: latest
         name: "{{ item }}"
       with_items:
-        # sway
-        - sway
-        - wl-clipboard
-        - waybar
-        - wf-recorder
-        - clipman
-        - rofi
-        - blueman
-        - grim
-        # system
-        - curl
-        - wget
-        - gzip
-        - ninja-build
-        - gettext
-        - libtool
-        - autoconf
-        - automake
-        - cmake
-        - g++
-        - pkg-config
-        - unzip
-        - doxygen
         # tools
         - stow
         - kitty
         - fish
         - fzf
-        - git
         - bat
         - exa
         - fd-find
@@ -79,32 +38,35 @@
         - jq
         - gem
 
+    - name: Ensuring Homebrew Is Installed
+      stat:
+        path: /home/linuxbrew/.linuxbrew/bin/brew
+      register: homebrew_check
+
+    - name: Installing Homebrew
+      become: false
+      shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      when:
+        - not homebrew_check.stat.exists
+
     - name: Sytem packages
       package:
         state: latest
         name: "{{ item }}"
       with_items:
-        - build-essential
-        - mako-notifier
-        - libtool-bin
-        - polkitd
-      when: ansible_distribution == "Ubuntu"
-
-
-    - name: Sytem packages
-      package:
-        state: latest
-        name: "{{ item }}"
-      with_items:
+        # sway
+        - sway
+        - wl-clipboard
+        - waybar
+        - wf-recorder
+        - clipman
+        - rofi
+        - blueman
+        - grim
         - "@development-tools"
         - mako
         - polkit-gnome
       when: ansible_distribution == "Fedora"
-
-    - name: Remove neovim
-      file:
-        state: absent
-        path: "{{ lookup('env', 'HOME') }}/neovim"
 
     - name: Download neovim
       git:
@@ -117,44 +79,6 @@
           make -j 20
           make install
         chdir: "{{ lookup('env', 'HOME') }}/neovim"
-
-
-    - name: Remove noisetorch
-      file:
-        state: absent
-        path: "{{ lookup('env', 'HOME') }}/noisetorch"
-
-    - name: Download noisetorch
-      git:
-        repo: https://github.com/noisetorch/NoiseTorch
-        dest: "{{ lookup('env', 'HOME') }}/noisetorch"
-
-    - name: Install noisetorch
-      shell:
-        cmd: |
-          sudo make
-          cp ./bin/noisetorch "{{ lookup('env', 'HOME') }}/.local/bin"
-          cp ./assets/noisetorch.desktop "{{ lookup('env', 'HOME') }}/.local/share/applications"
-          cp ./assets/icon/noisetorch.png "{{ lookup('env', 'HOME') }}/.local/share/icons/hicolor/256x256/apps"
-        chdir: "{{ lookup('env', 'HOME') }}/noisetorch"
-
-    - name: Install with snap
-      community.general.snap:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - slack
-        - starship
-      when: ansible_distribution == "Ubuntu"
-
-    - name: Install with flatpak
-      community.general.flatpak:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - slack
-      when: ansible_distribution == "Fedora"
-
 
     - name: Install with npm
       community.general.npm:
@@ -183,6 +107,7 @@
         - deno
         - tfenv
         - cdktf
+        - starship
 
     - name: Install with pip
       pip:
@@ -222,6 +147,7 @@
         - ~/.config/lazygit
         - ~/.aws
         - ~/.ssh
+        - ~/.local/bin
 
     - name: Stow items
       shell: stow {{ item }}
@@ -237,10 +163,6 @@
         - gitconfig
         - gitignoreglobal
         - gitcommitmessage
-        - sway
-        - waybar
-        - mako
-        - swaylock
         - tmux
         - local
 

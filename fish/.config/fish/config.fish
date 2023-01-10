@@ -56,9 +56,8 @@ set -gx FZF_DEFAULT_OPTS '--height 25% --layout=reverse'
 set -gx PATH "$HOME/.cargo/bin" $PATH;
 set -gx AWS_PROFILE default
 
-
-starship init fish | source
-
 eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 
 alias assume="source /home/linuxbrew/.linuxbrew/bin/assume.fish"
+
+starship init fish | source
