@@ -3,117 +3,220 @@ return {
 	-- drop
 	{
 		"folke/drop.nvim",
-		config = function()
+		opts = function()
 			require("drop").setup({
 				theme = "snow",
 			})
 		end,
 	},
 
-	-- term
+	-- colorizer
 	{
-		"akinsho/toggleterm.nvim",
+		"norcalli/nvim-colorizer.lua",
+		opts = function()
+			require("colorizer").setup()
+		end,
+	},
+
+	-- oil
+	{
+		"stevearc/oil.nvim",
+		lazy = false,
+		opts = function()
+			require("oil").setup()
+		end,
+	},
+
+	-- vim-test
+	{
+		"vim-test/vim-test",
+		dependencies = {
+			"preservim/vimux",
+		},
+		lazy = false,
 		config = function()
-			require("toggleterm").setup({
-				size = function(term)
-					if term.direction == "horizontal" then
-						return 20
-					elseif term.direction == "vertical" then
-						return vim.o.columns * 0.3
-					end
-				end,
-				start_in_insert = false,
-				open_mapping = [[<c-\>]],
-				direction = "float",
+			vim.g.VimuxOrientation = "v"
+			vim.g["test#strategy"] = {
+				nearest = "vimux",
+				file = "vimux",
+				suite = "vimux",
+			}
+			vim.g["test#neovim#term_position"] = "vert"
+		end,
+		keys = {
+			{
+				"<leader>tF",
+				"<cmd>:TestFile<cr>",
+				desc = "Test file with vim-test",
+			},
+			{
+				"<leader>tN",
+				"<cmd>:TestNearest<cr>",
+				desc = "Test nearest with vim-test",
+			},
+			{
+				"<leader>tS",
+				"<cmd>:TestSuite<cr>",
+				desc = "Test suite with vim-test",
+			},
+		},
+	},
+
+	-- Task runner and job management
+	{
+		"stevearc/overseer.nvim",
+		lazy = true,
+		config = {
+			component_aliases = {
+				default_neotest = {
+					"on_output_summarize",
+					"on_exit_set_status",
+					"on_complete_dispose",
+					{ "on_complete_notify", system = "unfocused", on_change = true },
+				},
+			},
+		},
+	},
+
+	-- git
+	{
+		"sindrets/diffview.nvim",
+		opts = function()
+			require("diffview").setup({
+				keymaps = {
+					file_panel = {
+						["q"] = "<Cmd>tabc<CR>",
+					},
+				},
+			})
+		end,
+	},
+	{
+		"ruifm/gitlinker.nvim",
+		config = function()
+			require("gitlinker").setup()
+		end,
+	},
+	{
+		"TimUntersberger/neogit",
+		dependencies = {
+			"sindrets/diffview.nvim",
+		},
+		opts = function()
+			require("neogit").setup({
+				integrations = {
+					diffview = true,
+				},
 			})
 		end,
 	},
 
-	-- test
+	-- neotest
 	{
-		"vim-test/vim-test",
 		"nvim-neotest/neotest",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-treesitter/nvim-treesitter",
 			"antoinemadec/FixCursorHold.nvim",
 			"haydenmeade/neotest-jest",
+			"marilari88/neotest-vitest",
+			"nvim-neotest/neotest-go",
 			"nvim-neotest/neotest-vim-test",
-			"akinsho/toggleterm.nvim",
+			"nvim-neotest/neotest-python",
+			"Issafalcon/neotest-dotnet",
+			"rouge8/neotest-rust",
+			"stevearc/overseer.nvim",
+			{
+				"andythigpen/nvim-coverage",
+				opts = {
+					commands = true,
+					summary = {
+						min_coverage = 80.0,
+					},
+				},
+			},
 		},
+		lazy = false,
 		config = function()
-			local tt = require("toggleterm")
-			local ttt = require("toggleterm.terminal")
-
-			vim.g["test#custom_strategies"] = {
-				tterm = function(cmd)
-					tt.exec(cmd)
-				end,
-
-				tterm_close = function(cmd)
-					local term_id = 0
-					tt.exec(cmd, term_id)
-					ttt.get_or_create_term(term_id):close()
-				end,
-			}
-
-			vim.g["test#strategy"] = {
-				nearest = "tterm",
-				file = "tterm",
-				suite = "tterm",
-			}
 			require("neotest").setup({
-				icons = {
-					passed = "",
-					failed = "",
-					skipped = "ﭡ",
-					unknown = "",
-					running = "",
-					running_animated = { "", "", "", "", "", "", "", "", "" },
-				},
-				output = {
-					enabled = true,
-					open_on_run = true,
-				},
-				run = {
-					enabled = true,
-				},
-				status = {
-					enabled = true,
-					virtual_text = true,
-				},
-				strategies = {
-					integrated = {
-						height = 40,
-						width = 120,
-					},
-				},
-				summary = {
-					enabled = true,
-					expand_errors = true,
-					follow = true,
-					mappings = {
-						attach = "a",
-						expand = { "<CR>", "<2-LeftMouse>" },
-						expand_all = "e",
-						jumpto = "i",
-						output = "o",
-						run = "r",
-						short = "O",
-						stop = "x",
-					},
-				},
 				adapters = {
 					require("neotest-jest")({
-						jestCommand = "npm test --",
+						jestCommand = "npm test -- --coverage",
 						env = { CI = true },
 						cwd = function()
 							return vim.fn.getcwd()
 						end,
 					}),
+					require("neotest-go"),
+					require("neotest-vitest"),
+					-- require("neotest-vim-test"),
+					require("neotest-python"),
+					require("neotest-dotnet"),
+					require("neotest-rust"),
+				},
+				consumers = {
+					overseer = require("neotest.consumers.overseer"),
+				},
+				icons = {
+					expanded = "",
+					child_prefix = "",
+					child_indent = "",
+					final_child_prefix = "",
+					non_collapsible = "",
+					collapsed = "",
+					passed = "",
+					running = "",
+					failed = "",
+					unknown = "",
+					running_animated = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
 				},
 			})
 		end,
+		keys = {
+			{
+				"<leader>tn",
+				function()
+					require("neotest").run.run()
+				end,
+				desc = "Test nearest with neotest",
+			},
+			{
+				"<leader>tf",
+				function()
+					require("neotest").run.run(vim.fn.expand("%"))
+				end,
+				desc = "Test file with neotest",
+			},
+			{
+				"<leader>ts",
+				function()
+					require("neotest").summary.toggle()
+				end,
+				desc = "Open summary with neotest",
+			},
+			{
+				"<leader>tw",
+				"<cmd>lua require('neotest').run.run({ jestCommand = 'jest --watch ' })<cr>",
+				desc = "Test jest in watch mode",
+			},
+			{
+				"<leader>to",
+				function()
+					require("neotest").output_panel.toggle()
+				end,
+				desc = "Open outpup with neotest",
+			},
+			{
+				"<leader>oo",
+				"<cmd>OverseerToggle<CR>",
+				desc = "Open overseer",
+			},
+		},
+	},
+
+	{
+		"ggandor/leap.nvim",
+		enabled = false,
 	},
 
 	-- ssr
@@ -128,7 +231,7 @@ return {
 				desc = "Search and replace in buffer",
 			},
 		},
-		config = function()
+		opts = function()
 			require("ssr").setup({
 				min_width = 50,
 				min_height = 5,
@@ -145,14 +248,6 @@ return {
 		end,
 	},
 
-	-- mini
-	{
-		"echasnovski/mini.animate",
-		config = function()
-			require("mini.animate").setup()
-		end,
-	},
-
 	-- indentscope
 	{
 		"lukas-reineke/indent-blankline.nvim",
@@ -160,27 +255,12 @@ return {
 	},
 	{
 		"echasnovski/mini.indentscope",
-		enabled = true,
-	},
-
-	-- diffview
-	{
-		"sindrets/diffview.nvim",
-		config = function()
-			require("diffview").setup({
-				keymaps = {
-					file_panel = {
-						["q"] = "<Cmd>tabc<CR>",
-					},
-				},
-			})
-		end,
 	},
 
 	-- yanky
 	{
 		"gbprod/yanky.nvim",
-		config = function()
+		opts = function()
 			require("yanky").setup({
 				ring = {
 					history_length = 100,
@@ -206,7 +286,7 @@ return {
 	-- refactoring
 	{
 		"ThePrimeagen/refactoring.nvim",
-		config = function()
+		opts = function()
 			require("refactoring").setup({})
 		end,
 	},
@@ -218,7 +298,7 @@ return {
 			"anuvyklack/middleclass",
 			"anuvyklack/animation.nvim",
 		},
-		config = function()
+		opts = function()
 			vim.o.winwidth = 10
 			vim.o.winminwidth = 10
 			vim.o.equalalways = false
@@ -234,7 +314,7 @@ return {
 	-- scrollbar
 	{
 		"petertriho/nvim-scrollbar",
-		config = function()
+		opts = function()
 			require("scrollbar").setup()
 		end,
 	},
@@ -242,7 +322,7 @@ return {
 	-- null-ls
 	{
 		"jose-elias-alvarez/null-ls.nvim",
-		config = function()
+		opts = function()
 			local null_ls = require("null-ls")
 			null_ls.setup({
 				sources = {
@@ -257,7 +337,7 @@ return {
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.fixjson,
 					null_ls.builtins.formatting.yamlfmt,
-					null_ls.builtins.formatting.markdownlin,
+					null_ls.builtins.formatting.markdownlint,
 					null_ls.builtins.code_actions.refactoring,
 				},
 			})

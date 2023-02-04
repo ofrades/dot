@@ -5,7 +5,6 @@
   vars:
     favcolor: green
     user: ofrades
-    font: IBMPlexMono
 
   tasks:
 
@@ -54,6 +53,7 @@
       git:
         repo: https://github.com/neovim/neovim
         dest: "{{ lookup('env', 'HOME') }}/neovim"
+        update: false
 
 
     - name: Neovim requirements
@@ -122,20 +122,21 @@
         name: "{{ user }}"
         shell: /usr/bin/fish
 
-    - name: Get Font
-      get_url:
-        url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/{{ font }}.zip
-        dest: /etc/{{ font }}.zip
+    - name: Download fonts
+      git:
+        repo: https://git.sainnhe.dev/sainnhe/icursive-nerd-font.git
+        dest: home/{{ user }}/
+        update: false
 
     - name: Create fonts folder
       file:
         path: "/home/{{ user }}/.fonts/"
         state: directory
 
-    - name: Move Font
-      unarchive:
-        src: /etc/{{ font }}.zip
-        dest: "/home/{{ user }}/.fonts/"
+    - name: Copy fonts to dir
+      ansible.builtin.copy:
+        src: /home/{{ user }}/icursive-nerd-font/dist/
+        dest: /home/{{ user }}/.fonts/
 
     - name: Ensure dot folders exist
       file:
@@ -152,17 +153,17 @@
     - name: Stow items
       shell: stow {{ item }}
       with_items:
-        - nvim
-        - fish
         - aws
-        - ssh
-        - lazygit
-        - starship
-        - kitty
-        - gitconfig
+        - fish
         - gitcommitmessage
-        - tmux
+        - gitconfig
+        - kitty
+        - lazygit
         - local
+        - nvim
+        - ssh
+        - starship
+        - tmux
 
     - name: Set ssh permissions
       file:
