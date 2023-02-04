@@ -122,10 +122,15 @@
         name: "{{ user }}"
         shell: /usr/bin/fish
 
+    - name: Create fonts folder
+      file:
+        path: "/home/{{ user }}/icursive/"
+        state: directory
+
     - name: Download fonts
       git:
         repo: https://git.sainnhe.dev/sainnhe/icursive-nerd-font.git
-        dest: home/{{ user }}/
+        dest: /home/{{ user }}/icursive
         update: false
 
     - name: Create fonts folder
@@ -135,7 +140,7 @@
 
     - name: Copy fonts to dir
       ansible.builtin.copy:
-        src: /home/{{ user }}/icursive-nerd-font/dist/
+        src: /home/{{ user }}/icursive/dist/
         dest: /home/{{ user }}/.fonts/
 
     - name: Ensure dot folders exist
