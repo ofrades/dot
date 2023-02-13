@@ -1,4 +1,14 @@
 return {
+	-- theme
+	{ "nyoom-engineering/oxocarbon.nvim" },
+
+	-- change theme
+	-- {
+	-- 	"LazyVim/LazyVim",
+	-- 	opts = {
+	-- 		colorscheme = "oxocarbon",
+	-- 	},
+	-- },
 
 	-- drop
 	{
@@ -10,12 +20,9 @@ return {
 		end,
 	},
 
-	-- colorizer
 	{
-		"norcalli/nvim-colorizer.lua",
-		opts = function()
-			require("colorizer").setup()
-		end,
+		"echasnovski/mini.pairs",
+		enabled = false,
 	},
 
 	-- oil
@@ -27,21 +34,38 @@ return {
 		end,
 	},
 
+	{ "gpanders/editorconfig.nvim" },
+
+	{
+		"uga-rosa/ccc.nvim",
+		opts = function()
+			require("ccc").setup({
+				highlighter = {
+					auto_enable = true,
+				},
+			})
+		end,
+	},
+	{
+		"brenoprata10/nvim-highlight-colors",
+		enabled = false,
+		config = function()
+			require("nvim-highlight-colors").setup({})
+		end,
+	},
+
 	-- vim-test
 	{
 		"vim-test/vim-test",
-		dependencies = {
-			"preservim/vimux",
-		},
 		lazy = false,
 		config = function()
-			vim.g.VimuxOrientation = "v"
+			vim.g["test#neovim#term_position"] = "bo"
+			vim.g["test#neovim#start_normal"] = 1
 			vim.g["test#strategy"] = {
-				nearest = "vimux",
-				file = "vimux",
-				suite = "vimux",
+				nearest = "neovim",
+				file = "neovim",
+				suite = "neovim",
 			}
-			vim.g["test#neovim#term_position"] = "vert"
 		end,
 		keys = {
 			{
@@ -58,6 +82,11 @@ return {
 				"<leader>tS",
 				"<cmd>:TestSuite<cr>",
 				desc = "Test suite with vim-test",
+			},
+			{
+				"<leader>tL",
+				"<cmd>:TestLast<cr>",
+				desc = "Test last with vim-test",
 			},
 		},
 	},
@@ -121,7 +150,6 @@ return {
 			"haydenmeade/neotest-jest",
 			"marilari88/neotest-vitest",
 			"nvim-neotest/neotest-go",
-			"nvim-neotest/neotest-vim-test",
 			"nvim-neotest/neotest-python",
 			"Issafalcon/neotest-dotnet",
 			"rouge8/neotest-rust",
@@ -149,13 +177,22 @@ return {
 					}),
 					require("neotest-go"),
 					require("neotest-vitest"),
-					-- require("neotest-vim-test"),
 					require("neotest-python"),
 					require("neotest-dotnet"),
 					require("neotest-rust"),
 				},
-				consumers = {
-					overseer = require("neotest.consumers.overseer"),
+				status = {
+					virtual_text = true,
+				},
+				output = {
+					enabled = false,
+					open_on_run = false,
+				},
+				quickfix = {
+					enabled = false,
+				},
+				output_panel = {
+					enabled = true,
 				},
 				icons = {
 					expanded = "",
@@ -177,6 +214,7 @@ return {
 				"<leader>tn",
 				function()
 					require("neotest").run.run()
+					require("neotest").output_panel.open()
 				end,
 				desc = "Test nearest with neotest",
 			},
@@ -184,6 +222,7 @@ return {
 				"<leader>tf",
 				function()
 					require("neotest").run.run(vim.fn.expand("%"))
+					require("neotest").output_panel.open()
 				end,
 				desc = "Test file with neotest",
 			},
