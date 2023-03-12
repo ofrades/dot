@@ -1,34 +1,10 @@
 return {
-	-- custom lsp
-	{
-		"neovim/nvim-lspconfig",
-		dependencies = {
-			"jose-elias-alvarez/typescript.nvim",
-		},
-		opts = {
-			setup = {
-				tsserver = function(_, opts)
-					require("lazyvim.util").on_attach(function(client)
-						if client.name == "tsserver" then
-							client.server_capabilities.documentFormattingProvider = false
-						end
-						if client.name == "eslint" then
-							client.server_capabilities.documentFormattingProvider = true
-						end
-					end)
-					require("typescript").setup({ server = opts })
-					return true
-				end,
-			},
-		},
-	},
-
 	-- drop
 	{
 		"folke/drop.nvim",
-		opts = function()
+		config = function()
 			require("drop").setup({
-				theme = "snow",
+				theme = "spring",
 			})
 		end,
 	},
@@ -50,6 +26,7 @@ return {
 		"nvim-neotest/neotest",
 		dependencies = {
 			"haydenmeade/neotest-jest",
+			"marilari88/neotest-vitest",
 			{
 				"andythigpen/nvim-coverage",
 				opts = {
@@ -64,6 +41,7 @@ return {
 		config = function()
 			require("neotest").setup({
 				adapters = {
+					require("neotest-vitest"),
 					require("neotest-jest")({
 						jestCommand = "npm test -- --coverage",
 						env = { CI = true },
