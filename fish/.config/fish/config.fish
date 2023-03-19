@@ -27,9 +27,11 @@ abbr local-changes 'git diff HEAD'
 abbr diff-previous-changes 'git diff HEAD~1'
 abbr rebase 'git rebase'
 abbr continue 'git rebase --continue'
-abbr g 'lazygit'
+abbr g lazygit
 abbr files 'nvim (fzf --preview "cat {}")'
-abbr ch 'checkout'
+abbr ch checkout
+
+alias python="/home/linuxbrew/.linuxbrew/bin/python3.9"
 
 # tmux
 abbr -a -g tls 'tmux list-sessions'
@@ -40,8 +42,8 @@ abbr -a -g tksv 'tmux kill-server'
 abbr -a -g tkss 'tmux kill-session -t'
 
 # neovim
-abbr v 'nvim'
-abbr tree 'broot'
+abbr v nvim
+abbr tree broot
 
 abbr mv 'mv -iv'
 abbr cp 'cp -riv'
@@ -53,7 +55,7 @@ set -Ux EDITOR nvim
 set -gx ANSIBLE_VAULT_PASSWORD_FILE ~/Dropbox/wardeg
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx FZF_DEFAULT_OPTS '--height 25% --layout=reverse'
-set -gx PATH "$HOME/.cargo/bin" $PATH;
+set -gx PATH "$HOME/.cargo/bin" $PATH
 set -gx AWS_PROFILE default
 
 eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)

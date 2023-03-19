@@ -55,7 +55,6 @@ return {
 				},
 				output = {
 					enabled = false,
-					open_on_run = false,
 				},
 				quickfix = {
 					enabled = false,
