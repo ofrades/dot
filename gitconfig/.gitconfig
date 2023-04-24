@@ -43,9 +43,6 @@
   features = decorations
   side-by-side = true
   line-numbers = true
-  ; if diff colorMoved causes problems disable this0 
-  ; inspect-raw-lines = false
-  theme = gruvbox-dark
 
 [delta "interactive"]
     keep-plus-minus-markers = false

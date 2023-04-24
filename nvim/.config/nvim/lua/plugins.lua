@@ -62,18 +62,14 @@ return {
 				output_panel = {
 					enabled = true,
 				},
+				state = {
+					enabled = true,
+				},
 				icons = {
-					expanded = "",
-					child_prefix = "",
-					child_indent = "",
-					final_child_prefix = "",
-					non_collapsible = "",
 					collapsed = "",
 					passed = "",
-					running = "",
+					running = "󰥔",
 					failed = "",
-					unknown = "",
-					running_animated = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
 				},
 			})
 		end,
@@ -118,4 +114,8 @@ return {
 			},
 		},
 	},
+
+	-- disable
+	{ "ggandor/flit.nvim", enabled = false },
+	{ "ggandor/leap.nvim", enabled = false },
 }

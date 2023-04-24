@@ -7,7 +7,6 @@
     user: ofrades
 
   tasks:
-
     - name: System packages
       package:
         state: latest
@@ -23,19 +22,10 @@
         - exa
         - fd-find
         - ripgrep
-        - tmate
-        - python3-neovim
-        - python3-pip
-        - awscli
         - pipenv
-        - gh
         # languages
-        - golang
         - nodejs
         - npm
-        - cargo
-        - luarocks
-        - jq
         - gem
 
     - name: Ensuring Homebrew Is Installed
@@ -48,38 +38,6 @@
       shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       when:
         - not homebrew_check.stat.exists
-
-    - name: Download neovim
-      git:
-        repo: https://github.com/neovim/neovim
-        dest: "{{ lookup('env', 'HOME') }}/neovim"
-        update: false
-
-
-    - name: Neovim requirements
-      package:
-        state: latest
-        name: "{{ item }}"
-      with_items:
-        - ninja-build
-        - gettext
-        - libtool
-        - libtool-bin
-        - autoconf
-        - automake
-        - cmake
-        - g++
-        - pkg-config
-        - unzip
-        - curl
-        - doxygen
-
-    - name: Install neovim
-      shell:
-        cmd: |
-          make -j 20
-          make install
-        chdir: "{{ lookup('env', 'HOME') }}/neovim"
 
     - name: Install with npm
       community.general.npm:
@@ -94,7 +52,6 @@
         - n
         - yarn
         - pnpm
-        - '@aws-amplify/cli'
 
     - name: Install with brew
       become: false
@@ -103,19 +60,13 @@
         state: present
         name: "{{ item }}"
       with_items:
+        - neovim
         - lazygit
         - pyenv
         - deno
         - tfenv
-        - cdktf
+        - git-delta
         - starship
-
-    - name: Install with pip
-      pip:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - pynvim
 
     - name: Set fish as default shell for {{ user }}
       user:
@@ -169,6 +120,7 @@
         - ssh
         - starship
         - tmux
+        - savedesktop
 
     - name: Set ssh permissions
       file:

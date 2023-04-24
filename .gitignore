@@ -9,3 +9,4 @@ ssh/.ssh/known_hosts.old
 fish/.config/fish/completions
 nvim/.config/nvim/sessions
 local/.local/bin
+aws/.aws/sso/cache
