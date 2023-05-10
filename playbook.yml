@@ -1,7 +1,7 @@
 ---
 - name: System
-  hosts: localhost
   become: true
+  hosts: localhost
   vars:
     favcolor: green
     user: ofrades
@@ -9,8 +9,8 @@
   tasks:
     - name: System packages
       package:
-        state: latest
         name: "{{ item }}"
+        state: latest
       with_items:
         # tools
         - stow
@@ -23,15 +23,13 @@
         - fd-find
         - ripgrep
         - pipenv
-        # languages
         - nodejs
-        - npm
         - gem
 
     - name: Ensuring Homebrew Is Installed
+      register: homebrew_check
       stat:
         path: /home/linuxbrew/.linuxbrew/bin/brew
-      register: homebrew_check
 
     - name: Installing Homebrew
       become: false
@@ -41,10 +39,10 @@
 
     - name: Install with npm
       community.general.npm:
-        name: "{{ item }}"
-        state: present
         global: true
+        name: "{{ item }}"
         path: "~/.npm-global"
+        state: present
       with_items:
         - neovim
         - typescript
@@ -56,9 +54,9 @@
     - name: Install with brew
       become: false
       community.general.homebrew:
+        name: "{{ item }}"
         path: /home/linuxbrew/.linuxbrew/bin
         state: present
-        name: "{{ item }}"
       with_items:
         - neovim
         - lazygit
@@ -73,26 +71,22 @@
         name: "{{ user }}"
         shell: /usr/bin/fish
 
-    - name: Create fonts folder
+    - name: Ensure fonts directory
       file:
-        path: "/home/{{ user }}/icursive/"
+        path: "{{ lookup('env', 'HOME') }}/.fonts"
         state: directory
 
-    - name: Download fonts
-      git:
-        repo: https://git.sainnhe.dev/sainnhe/icursive-nerd-font.git
-        dest: /home/{{ user }}/icursive
-        update: false
+    - name: Font exists
+      ignore_errors: yes
+      register: font_exists
+      shell: "ls {{ lookup('env', 'HOME') }}/.fonts/Fantas*Nerd*Font*Complete*"
 
-    - name: Create fonts folder
-      file:
-        path: "/home/{{ user }}/.fonts/"
-        state: directory
-
-    - name: Copy fonts to dir
-      ansible.builtin.copy:
-        src: /home/{{ user }}/icursive/dist/
-        dest: /home/{{ user }}/.fonts/
+    - name: Download Hack
+      when: font_exists is failed
+      ansible.builtin.unarchive:
+        dest: "{{ lookup('env', 'HOME') }}/.fonts/"
+        remote_src: yes
+        src: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FantasqueSansMono.zip
 
     - name: Ensure dot folders exist
       file:
@@ -109,9 +103,7 @@
     - name: Stow items
       shell: stow {{ item }}
       with_items:
-        - aws
         - fish
-        - gitcommitmessage
         - gitconfig
         - kitty
         - lazygit
@@ -120,26 +112,25 @@
         - ssh
         - starship
         - tmux
-        - savedesktop
 
     - name: Set ssh permissions
       file:
+        mode: 0700
         path: ~/.ssh
         state: directory
-        mode: 0700
 
     - name: Set ssh permissions
       file:
+        mode: 0700
         path: ~/.ssh
         state: directory
-        mode: 0700
 
     - name: Set ssh pub permissions
       file:
-        path: "/home/{{ user }}/.ssh/id_ed25519.pub"
         mode: 0644
+        path: "/home/{{ user }}/.ssh/id_ed25519.pub"
 
     - name: Set ssh private permissions
       file:
-        path: "/home/{{ user }}/.ssh/id_ed25519"
         mode: 0600
+        path: "/home/{{ user }}/.ssh/id_ed25519"

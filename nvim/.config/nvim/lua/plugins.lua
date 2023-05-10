@@ -114,6 +114,21 @@ return {
 			},
 		},
 	},
+	{
+		"epwalsh/obsidian.nvim",
+		event = { "BufReadPre " .. vim.fn.expand("~") .. "/pCloudDrive/obsidian/**.md" },
+		opts = {
+			dir = "~/pCloudDrive/obsidian", -- no need to call 'vim.fn.expand' here
+
+			-- Optional, if you keep notes in a specific subdirectory of your vault.
+			notes_subdir = "notes",
+
+			-- Optional, if you keep daily notes in a separate directory.
+			daily_notes = {
+				folder = "notes/dailies",
+			},
+		},
+	},
 
 	-- disable
 	{ "ggandor/flit.nvim", enabled = false },
