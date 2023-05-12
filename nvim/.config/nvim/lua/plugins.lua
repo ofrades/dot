@@ -1,10 +1,20 @@
 return {
 	-- drop
+	{ "ellisonleao/gruvbox.nvim", priority = 1000 },
+
+	{ "shaunsingh/solarized.nvim", priority = 1000 },
+	{
+		"LazyVim/LazyVim",
+		opts = {
+			colorscheme = "gruvbox",
+		},
+	},
+
 	{
 		"folke/drop.nvim",
 		config = function()
 			require("drop").setup({
-				theme = "spring",
+				theme = "summer",
 			})
 		end,
 	},

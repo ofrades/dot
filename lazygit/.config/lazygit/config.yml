@@ -1,4 +1,24 @@
 gui:
+  # theme:
+  #   activeBorderColor:
+  #     - green
+  #     - bold
+  #   inactiveBorderColor:
+  #     - black
+  #   optionsTextColor:
+  #     - blue
+  #   selectedLineBgColor:
+  #     - blue
+  #   selectedRangeBgColor:
+  #     - blue
+  #   cherryPickedCommitBgColor:
+  #     - cyan
+  #   cherryPickedCommitFgColor:
+  #     - blue
+  #   unstagedChangesColor:
+  #     - red
+  #   defaultFgColor:
+  #     - black
   scrollHeight: 2
   scrollPastBottom: true
   mouseEvents: true
@@ -22,8 +42,8 @@ gui:
   splitDiff: auto
 git:
   paging:
-    colorArg: always
-    pager: delta --dark --paging=never
+    colorArg: never
+    pager: delta --light --paging=never
     useConfig: false
   commit:
     signOff: false

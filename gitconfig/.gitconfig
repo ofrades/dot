@@ -18,10 +18,6 @@
   keepBackup = false
   trustexitcode = true
 
-[user]
-  email = ofrades@pm.me
-	name = ofrades
-
 [push]
   default = current
 
@@ -40,23 +36,19 @@
   diffFilter = delta --color-only --features=interactive
 
 [delta]
-  features = decorations
   side-by-side = true
   line-numbers = true
+  minus-style = "#fdf4c1" "#cc241d"
+  plus-style = "#fdf4c1" "#689d6a"
 
-[delta "interactive"]
-    keep-plus-minus-markers = false
-
-[delta "decorations"]
-    commit-decoration-style = blue ol
-    commit-style = raw
-    file-style = omit
-    hunk-header-decoration-style = blue box
-    hunk-header-file-style = red
-    hunk-header-line-number-style = "#067a00"
-    hunk-header-style = file line-number syntax
 [credential "https://github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
+
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+
+[include]
+    path = ~/.gitconfig.local
+[includeIf "gitdir:~/dev/neuraspace/"]
+    path = ~/.gitconfig.work
