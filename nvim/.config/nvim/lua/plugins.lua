@@ -1,8 +1,33 @@
 return {
-	-- drop
+	-- harpoon
+	{
+		"ThePrimeagen/harpoon",
+	},
+
+	{
+		"numToStr/Navigator.nvim",
+		lazy = true,
+		config = function()
+			require("Navigator").setup({
+				auto_save = "current",
+			})
+		end,
+		keys = {
+			{ "<C-h>", "<CMD>NavigatorLeft<CR>" },
+			{ "<C-l>", "<CMD>NavigatorRight<CR>" },
+			{ "<C-k>", "<CMD>NavigatorUp<CR>" },
+			{ "<C-j>", "<CMD>NavigatorDown<CR>" },
+		},
+	},
+	-- search and replace
+	{
+		"AckslD/muren.nvim",
+		config = true,
+	},
+
+	-- theme
 	{ "ellisonleao/gruvbox.nvim", priority = 1000 },
 
-	{ "shaunsingh/solarized.nvim", priority = 1000 },
 	{
 		"LazyVim/LazyVim",
 		opts = {
@@ -10,6 +35,7 @@ return {
 		},
 	},
 
+	-- drop
 	{
 		"folke/drop.nvim",
 		config = function()
@@ -35,30 +61,13 @@ return {
 	{
 		"nvim-neotest/neotest",
 		dependencies = {
-			"haydenmeade/neotest-jest",
 			"marilari88/neotest-vitest",
-			{
-				"andythigpen/nvim-coverage",
-				opts = {
-					commands = true,
-					summary = {
-						min_coverage = 80.0,
-					},
-				},
-			},
 		},
 		lazy = false,
 		config = function()
 			require("neotest").setup({
 				adapters = {
 					require("neotest-vitest"),
-					require("neotest-jest")({
-						jestCommand = "npm test -- --coverage",
-						env = { CI = true },
-						cwd = function()
-							return vim.fn.getcwd()
-						end,
-					}),
 				},
 				status = {
 					virtual_text = true,
@@ -70,9 +79,6 @@ return {
 					enabled = false,
 				},
 				output_panel = {
-					enabled = true,
-				},
-				state = {
 					enabled = true,
 				},
 				icons = {
@@ -121,21 +127,6 @@ return {
 					require("neotest").output_panel.toggle()
 				end,
 				desc = "Open outpup",
-			},
-		},
-	},
-	{
-		"epwalsh/obsidian.nvim",
-		event = { "BufReadPre " .. vim.fn.expand("~") .. "/pCloudDrive/obsidian/**.md" },
-		opts = {
-			dir = "~/pCloudDrive/obsidian", -- no need to call 'vim.fn.expand' here
-
-			-- Optional, if you keep notes in a specific subdirectory of your vault.
-			notes_subdir = "notes",
-
-			-- Optional, if you keep daily notes in a separate directory.
-			daily_notes = {
-				folder = "notes/dailies",
 			},
 		},
 	},

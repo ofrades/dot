@@ -1,70 +1,7 @@
-gui:
-  # theme:
-  #   activeBorderColor:
-  #     - green
-  #     - bold
-  #   inactiveBorderColor:
-  #     - black
-  #   optionsTextColor:
-  #     - blue
-  #   selectedLineBgColor:
-  #     - blue
-  #   selectedRangeBgColor:
-  #     - blue
-  #   cherryPickedCommitBgColor:
-  #     - cyan
-  #   cherryPickedCommitFgColor:
-  #     - blue
-  #   unstagedChangesColor:
-  #     - red
-  #   defaultFgColor:
-  #     - black
-  scrollHeight: 2
-  scrollPastBottom: true
-  mouseEvents: true
-  skipUnstageLineWarning: false
-  skipStashWarning: false
-  sidePanelWidth: 0.3333
-  expandFocusedSidePanel: false
-  mainPanelSplitMode: flexible
-  language: auto
-  timeFormat: 02 Jan 06 15:04 MST
-  commitLength:
-    show: true
-  skipNoStagedFilesWarning: false
-  showListFooter: true
-  showFileTree: true
-  showRandomTip: true
-  showCommandLog: true
-  showBottomLine: true
-  showIcons: true
-  commandLogSize: 8
-  splitDiff: auto
 git:
-  paging:
-    colorArg: never
-    pager: delta --light --paging=never
-    useConfig: false
-  commit:
-    signOff: false
-  merging:
-    manualCommit: false
-    args: ""
-  skipHookPrefix: WIP
   autoFetch: true
   autoRefresh: true
-  branchLogCmd:
-    git log --graph --color=always --abbrev-commit --decorate --date=relative
-    --pretty=medium {{branchName}} --
-  allBranchesLogCmd:
-    git log --graph --all --color=always --abbrev-commit --decorate
-    --date=relative  --pretty=medium
-  overrideGpg: false
-  disableForcePushing: false
-  commitPrefixes: {}
-  parseEmoji: false
-  log:
-    order: topo-order
-    showGraph: when-maximised
-    showWholeGraph: false
-  diffContextSize: 3
+gui:
+  showFileTree: true
+  showIcons: true
+  splitDiff: auto
