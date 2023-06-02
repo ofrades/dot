@@ -12,10 +12,9 @@
         name: "{{ item }}"
         state: latest
       with_items:
-        # tools
+        - wezterm
         - stow
         - tmux
-        - kitty
         - fish
         - fzf
         - bat
@@ -105,13 +104,13 @@
       with_items:
         - fish
         - gitconfig
-        - kitty
         - lazygit
         - local
         - nvim
         - ssh
         - starship
         - tmux
+        - wezterm
 
     - name: Set ssh permissions
       file:
