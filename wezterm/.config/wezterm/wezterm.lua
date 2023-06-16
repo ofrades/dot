@@ -2,6 +2,7 @@ local wezterm = require("wezterm")
 local mux = wezterm.mux
 
 wezterm.font_with_fallback({
+	"Monospace Regular",
 	"FantasqueSansMono Nerd Font",
 	"Ubuntu Mono",
 	"Noto Mono",
@@ -81,7 +82,7 @@ return {
 			}),
 		},
 	},
-	font_size = 10,
+	font_size = 8,
 	tab_bar_at_bottom = true,
 	hide_tab_bar_if_only_one_tab = true,
 	scrollback_lines = 10000,

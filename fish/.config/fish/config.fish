@@ -28,28 +28,22 @@ abbr diff-previous-changes 'git diff HEAD~1'
 abbr rebase 'git rebase'
 abbr continue 'git rebase --continue'
 abbr g lazygit
-abbr files 'nvim (fzf --preview "cat {}")'
+abbr f 'nvim (fzf --preview "cat {}")'
 abbr ch checkout
 
 alias python="/home/linuxbrew/.linuxbrew/bin/python3.9"
 
 # tmux
-abbr -a -g tls 'tmux list-sessions'
-abbr -a -g td 'tmux detach'
 abbr -a -g ta 'tmux attach-session -t'
-abbr -a -g tn 'tmux new-session -s'
 abbr -a -g tksv 'tmux kill-server'
 abbr -a -g tkss 'tmux kill-session -t'
 
 # neovim
-abbr v nvim
-abbr tree broot
+abbr vi nvim
 
 abbr mv 'mv -iv'
 abbr cp 'cp -riv'
 abbr mkdir 'mkdir -vp'
-
-abbr weather "curl -s wttr.in/Oliveira+de+Frades | grep -v Follow"
 
 set -Ux EDITOR nvim
 set -gx ANSIBLE_VAULT_PASSWORD_FILE ~/Dropbox/wardeg

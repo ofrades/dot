@@ -1,40 +1,35 @@
 return {
-	-- tree
+	{ "ggandor/leap.nvim", enabled = false },
+	{ "ggandor/flit.nvim", enabled = false },
 	{
-		"nvim-neo-tree/neo-tree.nvim",
-		keys = {
-			{ "<leader>e", false },
-			{ "<leader>o", false },
-			{
-				"-",
-				function()
-					if vim.bo.filetype ~= "neo-tree" then
-						vim.cmd.Neotree({ "position=current", "top", "reveal" })
-					end
-				end,
-				desc = "Tree",
-			},
-		},
+		"folke/edgy.nvim",
 		opts = {
-			filesystem = {
-				hijack_netrw_behavior = "open_current",
-				-- window = {
-				-- 	mappings = {
-				-- 		["-"] = function(state)
-				-- 			require("neo-tree.ui.renderer").focus_node(state, state.tree:get_node():get_parent_id())
-				-- 		end,
-				-- 	},
-				-- },
+			top = {
+				{
+					title = "Neo-Tree",
+					ft = "neo-tree",
+					size = { height = 0.3 },
+				},
 			},
 		},
 	},
-	-- glance
-	-- {
-	-- 	"dnlhc/glance.nvim",
-	-- 	keys = {
-	-- 		{ "<leader>gr", "<CMD>Glance references<CR>", desc = "Glance references" },
-	-- 	},
-	-- },
+
+	{
+		"nvim-neo-tree/neo-tree.nvim",
+		keys = {
+			{ "-", "<Cmd>Neotree position=current top reveal<cr>" },
+		},
+		opts = {
+			event_handlers = {
+				{
+					event = "file_opened",
+					handler = function(file_path)
+						require("neo-tree").close_all()
+					end,
+				},
+			},
+		},
+	},
 
 	-- harpoon
 	{
@@ -69,35 +64,11 @@ return {
 				scroll_preview_up = "<C-u>",
 				scroll_preview_down = "<C-d>",
 				do_replace = "<CR>",
-				-- NOTE these are not guaranteed to work, what they do is just apply `:normal! u` vs :normal! <C-r>`
-				-- on the last affected buffers so if you do some edit in these buffers in the meantime it won't do the correct thing
-				do_undo = "<localleader>u",
-				do_redo = "<localleader>r",
 			},
 		},
 		keys = {
 			{ "<leader>sp", "<CMD>MurenToggle<CR>", desc = "Muren" },
 		},
-	},
-
-	-- -- theme
-	-- { "ellisonleao/gruvbox.nvim", priority = 1000 },
-	--
-	-- {
-	-- 	"LazyVim/LazyVim",
-	-- 	opts = {
-	-- 		colorscheme = "gruvbox",
-	-- 	},
-	-- },
-
-	-- drop
-	{
-		"folke/drop.nvim",
-		config = function()
-			require("drop").setup({
-				theme = "summer",
-			})
-		end,
 	},
 
 	-- color
@@ -118,75 +89,40 @@ return {
 		dependencies = {
 			"marilari88/neotest-vitest",
 		},
-		lazy = false,
-		config = function()
-			require("neotest").setup({
-				adapters = {
-					require("neotest-vitest"),
-				},
-				status = {
-					virtual_text = true,
-				},
-				output = {
-					enabled = false,
-				},
-				quickfix = {
-					enabled = false,
-				},
-				output_panel = {
-					enabled = true,
-				},
-				icons = {
-					collapsed = "",
-					passed = "",
-					running = "󰥔",
-					failed = "",
-				},
-			})
-		end,
-		keys = {
-			{
-				"<leader>tn",
-				function()
-					require("neotest").run.run()
-					require("neotest").output_panel.open()
-				end,
-				desc = "Test nearest",
+		opts = {
+			adapters = { "neotest-vitest" },
+			output = {
+				enabled = false,
 			},
-			{
-				"<leader>tf",
-				function()
-					require("neotest").run.run(vim.fn.expand("%"))
-					require("neotest").output_panel.open()
-				end,
-				desc = "Test file",
+			quickfix = {
+				enabled = false,
 			},
-			{
-				"<leader>tS",
-				function()
-					require("neotest").run.run({ suite = true })
-					require("neotest").output_panel.open()
+			consumers = {
+				custom = function(client)
+					-- Custom hook to open the output panel
+					-- after test results that fail,
+					-- and auto-focus the panel and jump to its bottom
+					client.listeners.results = function(_, results)
+						local any_failed = false
+						for _, result in pairs(results) do
+							if result.status == "failed" then
+								any_failed = true
+								break
+							end
+						end
+
+						if any_failed then
+							local win = vim.fn.bufwinid("Neotest OutputPanel")
+							if win > -1 then
+								vim.api.nvim_set_current_win(win)
+								vim.cmd("$") -- Jump to end
+							else
+								require("neotest").output_panel.open()
+							end
+						end
+					end
 				end,
-				desc = "Test suite",
-			},
-			{
-				"<leader>ts",
-				function()
-					require("neotest").summary.toggle()
-				end,
-				desc = "Open summary",
-			},
-			{
-				"<leader>to",
-				function()
-					require("neotest").output_panel.toggle()
-				end,
-				desc = "Open outpup",
 			},
 		},
 	},
-
-	-- disable
-	{ "ggandor/flit.nvim", enabled = false },
-	{ "ggandor/leap.nvim", enabled = false },
 }

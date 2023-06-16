@@ -6,11 +6,9 @@
   colorMoved = default
 
 [merge]
-  tool = vimdiff
-  conflictstyle = diff3
-
-[mergetool "vimdiff"]
-  cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+    tool = meld
+[mergetool "meld"]
+    cmd = meld "$REMOTE" "$MERGED" "$LOCAL" --output "$MERGED"
 
 [mergetool]
   path = nvim
