@@ -2,19 +2,16 @@
   rebase = true
 
 [diff]
-  tool = vimdiff
-  colorMoved = default
+    tool = meld
+[difftool]
+    prompt = false
+[difftool "meld"]
+    cmd = meld "$REMOTE" "$LOCAL"
 
 [merge]
     tool = meld
 [mergetool "meld"]
-    cmd = meld "$REMOTE" "$MERGED" "$LOCAL" --output "$MERGED"
-
-[mergetool]
-  path = nvim
-  prompt = false
-  keepBackup = false
-  trustexitcode = true
+    cmd = meld "$REMOTE" "$BASE" "$LOCAL" --output "$MERGED"
 
 [push]
   default = current
