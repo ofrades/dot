@@ -10,6 +10,7 @@
 
 [merge]
     tool = meld
+
 [mergetool "meld"]
     cmd = meld "$REMOTE" "$BASE" "$LOCAL" --output "$MERGED"
 
