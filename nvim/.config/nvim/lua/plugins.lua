@@ -1,4 +1,25 @@
 return {
+	{
+		"dyng/ctrlsf.vim",
+		keys = {
+			{
+				"<leader>sf",
+				":CtrlSF ",
+				desc = "search in files",
+			},
+			{
+				"<leader>sp",
+				":CtrlSF<CR>",
+				desc = "Search in cursor",
+			},
+		},
+		config = function()
+			vim.g.ctrlsf_position = "bottom"
+			vim.g.ctrlsf_populate_qflist = 1
+			vim.g.ctrlsf_ackprg = "rg"
+			vim.g.ctrlsf_default_view_mode = "conpact"
+		end,
+	},
 	{ "ggandor/leap.nvim", enabled = false },
 	{ "ggandor/flit.nvim", enabled = false },
 	{
