@@ -51,6 +51,7 @@ set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx FZF_DEFAULT_OPTS '--height 25% --layout=reverse'
 set -gx PATH "$HOME/.cargo/bin" $PATH
 set -gx AWS_PROFILE default
+source "$HOME/.config/fish/env.fish"
 
 eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 
