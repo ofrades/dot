@@ -1,24 +1,39 @@
 return {
 	{
-		"dyng/ctrlsf.vim",
+		"nvim-pack/nvim-spectre",
 		keys = {
 			{
-				"<leader>sf",
-				":CtrlSF ",
-				desc = "search in files",
+				"<leader>sp",
+				"<cmd>lua require('spectre').open_visual({select_word=true})<CR>",
+				desc = "Search current word",
+				mode = "n",
 			},
 			{
 				"<leader>sp",
-				":CtrlSF<CR>",
-				desc = "Search in cursor",
+				"<esc><cmd>lua require('spectre').open_visual()<CR>",
+				desc = "Search current word",
+				mode = "v",
 			},
 		},
-		config = function()
-			vim.g.ctrlsf_position = "bottom"
-			vim.g.ctrlsf_populate_qflist = 1
-			vim.g.ctrlsf_ackprg = "rg"
-			vim.g.ctrlsf_default_view_mode = "conpact"
-		end,
+	},
+	{
+		"jackMort/ChatGPT.nvim",
+		cmd = { "ChatGPTActAs", "ChatGPT" },
+		opts = {},
+	},
+	{
+		"gbprod/yanky.nvim",
+		opts = {
+			highlight = { timer = 200 },
+		},
+		keys = {
+			{ "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" } },
+			{ "P", "<Plug>(YankyPutBefore)", mode = { "n", "x" } },
+			{ "<c-n>", "<Plug>(YankyCycleForward)" },
+			{ "<c-p>", "<Plug>(YankyCycleBackward)" },
+			{ "]p", "<Plug>(YankyPutIndentAfterLinewise)" },
+			{ "[p", "<Plug>(YankyPutIndentBeforeLinewise)" },
+		},
 	},
 	{ "ggandor/leap.nvim", enabled = false },
 	{ "ggandor/flit.nvim", enabled = false },
@@ -70,25 +85,6 @@ return {
 			{ "<C-l>", "<CMD>NavigatorRight<CR>" },
 			{ "<C-k>", "<CMD>NavigatorUp<CR>" },
 			{ "<C-j>", "<CMD>NavigatorDown<CR>" },
-		},
-	},
-
-	-- search and replace
-	{
-		"AckslD/muren.nvim",
-		opts = {
-			keys = {
-				close = "q",
-				toggle_side = "<Tab>",
-				toggle_options_focus = "<S-Tab>",
-				toggle_option_under_cursor = "<CR>",
-				scroll_preview_up = "<C-u>",
-				scroll_preview_down = "<C-d>",
-				do_replace = "<CR>",
-			},
-		},
-		keys = {
-			{ "<leader>sp", "<CMD>MurenToggle<CR>", desc = "Muren" },
 		},
 	},
 
