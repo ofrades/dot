@@ -31,7 +31,6 @@ return {
 	window_close_confirmation = "NeverPrompt",
 	window_decorations = "NONE",
 	check_for_updates = false,
-	leader = { mods = "CTRL", key = "a" },
 	keys = {
 		-- This will create a new split and run your default program inside it
 		{

@@ -31,8 +31,3 @@ vim.keymap.set(
 	{ desc = "Find notes" }
 )
 vim.keymap.set("n", "<leader>M", "<cmd>:e ~/notes/<cr>", { desc = "Create note" })
-
-vim.keymap.set("n", "<leader>ma", ":lua require('harpoon.mark').add_file()<cr>", { desc = "Mark file" })
-vim.keymap.set("n", "<leader>mm", ":lua require('harpoon.ui').toggle_quick_menu()<cr>", { desc = "View project marks" })
-vim.keymap.set("n", "<leader>mi", ":lua require('harpoon.ui').nav_next()<cr>", { desc = "Next mark" })
-vim.keymap.set("n", "<leader>mo", ":lua require('harpoon.ui').nav_prev()<cr>", { desc = "Previous mark" })

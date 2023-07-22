@@ -1,7 +1,34 @@
 git:
   autoFetch: true
   autoRefresh: true
+  paging:
+    colorArg: never
+    pager: delta --light --paging=never
+    useConfig: false
 gui:
   showFileTree: true
   showIcons: true
   splitDiff: auto
+  experimentalShowBranchHeads: true
+customCommands:
+  # - key: 'c'
+  #   command: "BRANCH=`git branch -a | grep -v HEAD |  sed 's/remotes\/origin\///' |string trim`; git checkout -b $BRANCH"
+  #   command: "git fetch {{index .PromptResponses 0}} {{index .PromptResponses 1}} && git checkout FETCH_HEAD"
+  #   context: 'localBranches'
+  #
+  # abbr checkout 'git branch -a | grep -v HEAD |  sed "s/remotes\/origin\///" |string trim | fzf | read -l result; and git checkout "$result"'
+  #
+  - key: "c"
+    description: "Checkout a remote branch as FETCH_HEAD"
+    command: "git checkout {{.Form.Branch}}"
+    context: "localBranches"
+    prompts:
+      - type: "menuFromCommand"
+        title: "Which branch?"
+        key: "Branch"
+        # command: "git branch  -r --list {{.SelectedRemote.Name }}/*"
+        command: "rit branch -a | grep -v HEAD |  sed 's#remotes/origin/##' | string trim"
+        # filter: ".*{{.SelectedRemote.Name }}/(?P<branch>.*)"
+        # valueFormat: "{{ .branch }}"
+        # labelFormat: "{{ .branch | green }}"
+        # command: "git branch --format='%(refname:short)'"
