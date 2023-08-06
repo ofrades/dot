@@ -1,12 +1,4 @@
 local wezterm = require("wezterm")
-local mux = wezterm.mux
-
-wezterm.font_with_fallback({
-	"Monospace Regular",
-	"FantasqueSansMono Nerd Font",
-	"Ubuntu Mono",
-	"Noto Mono",
-})
 
 local scheme_for_appearance = function(appearance)
 	if appearance:find("Dark") then

@@ -1,4 +1,16 @@
 -- options
+vim.o.updatetime = 250
+
+-- reload when files change outside buffer
+vim.o.autoread = true
+
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+vim.opt.grepprg = "rg --vimgrep"
+
 vim.opt.relativenumber = true -- Relative line numbers
 vim.opt.scrolloff = 5 -- Lines of context
 vim.opt.shell = "fish"

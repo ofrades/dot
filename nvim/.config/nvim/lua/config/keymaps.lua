@@ -31,3 +31,5 @@ vim.keymap.set(
 	{ desc = "Find notes" }
 )
 vim.keymap.set("n", "<leader>M", "<cmd>:e ~/notes/<cr>", { desc = "Create note" })
+
+vim.keymap.set("n", "<tab>", ":b#<cr>", { desc = "Switch between last two files" })

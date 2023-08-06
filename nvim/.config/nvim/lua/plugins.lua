@@ -1,30 +1,78 @@
 return {
 	{ "akinsho/bufferline.nvim", enabled = false },
+	{ "folke/flash.nvim", enabled = false },
 	{
-		"TimUntersberger/neogit",
-		dependencies = {
-			"sindrets/diffview.nvim",
-		},
-		cmd = "Neogit",
-		keys = { { "<leader>gn", "<cmd>Neogit<cr>", desc = "Neogit" } },
+		"echasnovski/mini.pairs",
+		enabled = true,
+	},
+	{
+		"nvim-telescope/telescope.nvim",
+		opts = {},
+	},
+	{
+		"gabrielpoca/replacer.nvim",
+		keys = { { "<leader>i", ":lua require('replacer').run()<cr>', { silent = true }", desc = "Replacer" } },
+	},
+	{ "mg979/vim-visual-multi", lazy = false },
+	{
+		"folke/edgy.nvim",
 		opts = {
-			integrations = {
-				diffview = true,
+			top = {
+				{
+					title = "Neo-Tree",
+					ft = "neo-tree",
+					size = { height = 0.3 },
+				},
 			},
 		},
 	},
 	{
-		"sindrets/diffview.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		cmd = {
-			"DiffviewOpen",
-			"DiffviewClose",
-			"DiffviewToggleFiles",
-			"DiffviewFocusFiles",
-			"DiffviewRefresh",
-			"DiffviewFileHistory",
+		"folke/drop.nvim",
+		config = function()
+			require("drop").setup({
+				theme = "summer",
+			})
+		end,
+	},
+	{ "simnalamburt/vim-mundo" },
+	{
+		"ThePrimeagen/refactoring.nvim",
+		config = function()
+			require("refactoring").setup({})
+		end,
+	},
+	{
+		"gbprod/yanky.nvim",
+		opts = {
+			highlight = { timer = 200 },
 		},
-		keys = { { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview Open" } },
+		keys = {
+			{ "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" } },
+			{ "P", "<Plug>(YankyPutBefore)", mode = { "n", "x" } },
+			{ "<c-n>", "<Plug>(YankyCycleForward)" },
+			{ "<c-p>", "<Plug>(YankyCycleBackward)" },
+		},
+	},
+	{
+		"vim-test/vim-test",
+	},
+	{
+		"cshuaimin/ssr.nvim",
+		config = function()
+			require("ssr").setup({
+				min_width = 50,
+				min_height = 5,
+				max_width = 120,
+				max_height = 25,
+				keymaps = {
+					close = "q",
+					next_match = "n",
+					prev_match = "N",
+					replace_confirm = "<cr>",
+					replace_all = "<leader><cr>",
+				},
+			})
+		end,
 	},
 	{
 		"toppair/peek.nvim",
@@ -50,6 +98,11 @@ return {
 		opts = {
 			windows = {
 				preview = true,
+				width_focus = 50,
+				-- Width of non-focused window
+				width_nofocus = 50,
+				-- Width of preview window
+				width_preview = 100,
 			},
 			options = {
 				use_as_default_explorer = true,
@@ -70,10 +123,6 @@ return {
 		},
 	},
 	{
-		"echasnovski/mini.pairs",
-		enabled = false,
-	},
-	{
 		"nvim-pack/nvim-spectre",
 		keys = {
 			{
@@ -90,20 +139,40 @@ return {
 			},
 		},
 	},
-
-	-- harpoon
 	{
-		"ThePrimeagen/harpoon",
-		keys = {
-			{ "n", "<leader>ma", ":lua require('harpoon.mark').add_file()<cr>", { desc = "Mark file" } },
-			{
-				"n",
-				"<leader>mm",
-				":lua require('harpoon.ui').toggle_quick_menu()<cr>",
-				{ desc = "View project marks" },
+		{
+			"ThePrimeagen/harpoon",
+			requires = { "nvim-lua/plenary.nvim" },
+			keys = {
+				{
+					"<leader>a",
+					function()
+						require("harpoon.mark").add_file()
+					end,
+					desc = "Create harpoon mark",
+				},
+				{
+					"<leader>h",
+					function()
+						require("harpoon.ui").toggle_quick_menu()
+					end,
+					desc = "Harpoon quickfix toggle",
+				},
+				{
+					"<leader>o",
+					function()
+						require("harpoon.ui").nav_next()
+					end,
+					desc = "Navigate to next harpoon mark",
+				},
+				{
+					"<leader>i",
+					function()
+						require("harpoon.ui").nav_prev()
+					end,
+					desc = "Navigate to prev harpoon mark",
+				},
 			},
-			{ "n", "<leader>mi", ":lua require('harpoon.ui').nav_next()<cr>", { desc = "Next mark" } },
-			{ "n", "<leader>mo", ":lua require('harpoon.ui').nav_prev()<cr>", { desc = "Previous mark" } },
 		},
 	},
 	{
@@ -121,7 +190,6 @@ return {
 			{ "<C-j>", "<CMD>NavigatorDown<CR>" },
 		},
 	},
-	-- color
 	{
 		"uga-rosa/ccc.nvim",
 		opts = function()
@@ -132,8 +200,6 @@ return {
 			})
 		end,
 	},
-
-	-- test
 	{
 		"nvim-neotest/neotest",
 		dependencies = {
@@ -149,9 +215,7 @@ return {
 			},
 			consumers = {
 				custom = function(client)
-					-- Custom hook to open the output panel
-					-- after test results that fail,
-					-- and auto-focus the panel and jump to its bottom
+					-- Custom hook to open the output panel after test results that fail, and auto-focus the panel and jump to its bottom
 					client.listeners.results = function(_, results)
 						local any_failed = false
 						for _, result in pairs(results) do
