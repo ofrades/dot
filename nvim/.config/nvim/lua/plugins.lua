@@ -7,11 +7,13 @@ return {
 	},
 	{
 		"nvim-telescope/telescope.nvim",
-		opts = {},
+		keys = {
+			{ "<leader>k", "<cmd>:lua require'telescope.builtin'.grep_string()<CR>", mode = { "n", "x" } },
+		},
 	},
 	{
 		"gabrielpoca/replacer.nvim",
-		keys = { { "<leader>i", ":lua require('replacer').run()<cr>', { silent = true }", desc = "Replacer" } },
+		keys = { { "<leader>r", ":lua require('replacer').run()<cr>', { silent = true }", desc = "Replacer" } },
 	},
 	{ "mg979/vim-visual-multi", lazy = false },
 	{
@@ -200,6 +202,7 @@ return {
 			})
 		end,
 	},
+	{ "kevinhwang91/nvim-bqf" },
 	{
 		"nvim-neotest/neotest",
 		dependencies = {
