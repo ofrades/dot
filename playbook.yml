@@ -13,18 +13,6 @@
         state: latest
       with_items:
         - wezterm
-        - meld
-        - stow
-        - tmux
-        - fish
-        - fzf
-        - bat
-        - exa
-        - fd-find
-        - ripgrep
-        - pipenv
-        - nodejs
-        - gem
 
     - name: Ensuring Homebrew Is Installed
       register: homebrew_check
@@ -37,20 +25,6 @@
       when:
         - not homebrew_check.stat.exists
 
-    - name: Install with npm
-      community.general.npm:
-        global: true
-        name: "{{ item }}"
-        path: "~/.npm-global"
-        state: present
-      with_items:
-        - neovim
-        - typescript
-        - serverless
-        - n
-        - yarn
-        - pnpm
-
     - name: Install with brew
       become: false
       community.general.homebrew:
@@ -59,17 +33,26 @@
         state: present
       with_items:
         - neovim
+        - node
+        - typescript
+        - ripgrep
         - lazygit
         - pyenv
         - deno
+        - volta
+        - serverless
         - tfenv
         - git-delta
-        - starship
-
-    - name: Set fish as default shell for {{ user }}
-      user:
-        name: "{{ user }}"
-        shell: /usr/bin/fish
+        - oh-my-posh
+        - fish
+        - brew-gem
+        - pipenv
+        - fd
+        - exa
+        - bat
+        - tmux
+        - fzf
+        - stow
 
     - name: Ensure fonts directory
       file:
@@ -77,11 +60,11 @@
         state: directory
 
     - name: Font exists
-      ignore_errors: yes
+      ignore_errors: true
       register: font_exists
       shell: "ls {{ lookup('env', 'HOME') }}/.fonts/Fantas*Nerd*Font*Complete*"
 
-    - name: Download Hack
+    - name: Download font
       when: font_exists is failed
       ansible.builtin.unarchive:
         dest: "{{ lookup('env', 'HOME') }}/.fonts/"
@@ -95,6 +78,8 @@
       loop:
         - ~/.config/nvim
         - ~/.config/fish
+        - ~/.config/wezterm
+        - ~/.config/i3
         - ~/.config/lazygit
         - ~/.aws
         - ~/.ssh
@@ -104,6 +89,8 @@
       shell: stow {{ item }}
       with_items:
         - fish
+        - i3
+        - i3status
         - gitconfig
         - lazygit
         - local

@@ -1,19 +1,21 @@
 return {
+	{
+		"LazyVim/LazyVim",
+		opts = {
+			colorscheme = "catppuccin",
+		},
+	},
 	{ "akinsho/bufferline.nvim", enabled = false },
 	{ "folke/flash.nvim", enabled = false },
+	{ "echasnovski/mini.pairs", enabled = false },
 	{
-		"echasnovski/mini.pairs",
-		enabled = true,
+		"nyoom-engineering/oxocarbon.nvim",
 	},
 	{
 		"nvim-telescope/telescope.nvim",
 		keys = {
 			{ "<leader>k", "<cmd>:lua require'telescope.builtin'.grep_string()<CR>", mode = { "n", "x" } },
 		},
-	},
-	{
-		"gabrielpoca/replacer.nvim",
-		keys = { { "<leader>r", ":lua require('replacer').run()<cr>', { silent = true }", desc = "Replacer" } },
 	},
 	{ "mg979/vim-visual-multi", lazy = false },
 	{
@@ -44,70 +46,13 @@ return {
 		end,
 	},
 	{
-		"gbprod/yanky.nvim",
-		opts = {
-			highlight = { timer = 200 },
-		},
-		keys = {
-			{ "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" } },
-			{ "P", "<Plug>(YankyPutBefore)", mode = { "n", "x" } },
-			{ "<c-n>", "<Plug>(YankyCycleForward)" },
-			{ "<c-p>", "<Plug>(YankyCycleBackward)" },
-		},
-	},
-	{
-		"vim-test/vim-test",
-	},
-	{
-		"cshuaimin/ssr.nvim",
-		config = function()
-			require("ssr").setup({
-				min_width = 50,
-				min_height = 5,
-				max_width = 120,
-				max_height = 25,
-				keymaps = {
-					close = "q",
-					next_match = "n",
-					prev_match = "N",
-					replace_confirm = "<cr>",
-					replace_all = "<leader><cr>",
-				},
-			})
-		end,
-	},
-	{
-		"toppair/peek.nvim",
-		build = "deno task --quiet build:fast",
-		keys = {
-			{
-				"<leader>op",
-				function()
-					local peek = require("peek")
-					if peek.is_open() then
-						peek.close()
-					else
-						peek.open()
-					end
-				end,
-				desc = "Peek (Markdown Preview)",
-			},
-		},
-		opts = { theme = "light" },
-	},
-	{
 		"echasnovski/mini.files",
 		opts = {
 			windows = {
-				preview = true,
-				width_focus = 50,
-				-- Width of non-focused window
-				width_nofocus = 50,
-				-- Width of preview window
-				width_preview = 100,
-			},
-			options = {
-				use_as_default_explorer = true,
+				-- preview = false,
+				-- width_focus = 100,
+				-- width_nofocus = 50,
+				-- width_preview = 100,
 			},
 			mappings = {
 				go_in = "L",
@@ -142,42 +87,6 @@ return {
 		},
 	},
 	{
-		{
-			"ThePrimeagen/harpoon",
-			requires = { "nvim-lua/plenary.nvim" },
-			keys = {
-				{
-					"<leader>a",
-					function()
-						require("harpoon.mark").add_file()
-					end,
-					desc = "Create harpoon mark",
-				},
-				{
-					"<leader>h",
-					function()
-						require("harpoon.ui").toggle_quick_menu()
-					end,
-					desc = "Harpoon quickfix toggle",
-				},
-				{
-					"<leader>o",
-					function()
-						require("harpoon.ui").nav_next()
-					end,
-					desc = "Navigate to next harpoon mark",
-				},
-				{
-					"<leader>i",
-					function()
-						require("harpoon.ui").nav_prev()
-					end,
-					desc = "Navigate to prev harpoon mark",
-				},
-			},
-		},
-	},
-	{
 		"numToStr/Navigator.nvim",
 		lazy = true,
 		config = function()
@@ -203,6 +112,7 @@ return {
 		end,
 	},
 	{ "kevinhwang91/nvim-bqf" },
+	{ "vim-test/vim-test" },
 	{
 		"nvim-neotest/neotest",
 		dependencies = {

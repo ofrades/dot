@@ -55,7 +55,9 @@ source "$HOME/.config/fish/env.fish"
 
 eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 
-starship init fish | source
+
+oh-my-posh init fish | source
+# starship init fish | source
 set -gx VOLTA_HOME "$HOME/.volta"
 set -gx PATH "$VOLTA_HOME/bin" $PATH
 

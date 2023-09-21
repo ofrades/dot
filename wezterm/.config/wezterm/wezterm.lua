@@ -2,9 +2,9 @@ local wezterm = require("wezterm")
 
 local scheme_for_appearance = function(appearance)
 	if appearance:find("Dark") then
-		return "tokyonight_storm"
+		return "catppuccin-mocha"
 	else
-		return "tokyonight_day"
+		return "catppuccin-latte"
 	end
 end
 
@@ -22,6 +22,7 @@ return {
 	warn_about_missing_glyphs = false,
 	window_close_confirmation = "NeverPrompt",
 	window_decorations = "NONE",
+	default_prog = { "/home/linuxbrew/.linuxbrew/bin/fish", "-l" },
 	check_for_updates = false,
 	keys = {
 		-- This will create a new split and run your default program inside it
