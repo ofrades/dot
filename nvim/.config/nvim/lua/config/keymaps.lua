@@ -22,8 +22,5 @@ vim.keymap.set(
 	{ desc = "Dot files" }
 )
 
-vim.keymap.set("n", "<leader>1", "'1", { desc = "go to mark 1" })
-
-vim.keymap.set("n", "<leader>2", "'2", { desc = "go to mark 2" })
-
-vim.keymap.set("n", "<leader>3", "'3", { desc = "go to mark 3" })
+vim.keymap.set("n", "<leader>tx", "<cmd>:vsplit | term yarn test %<cr>", { desc = "Run test in split" })
+vim.keymap.set("n", "<leader>tX", "<cmd>:vsplit | term yarn test:watch %<cr>", { desc = "Run test watch in split" })

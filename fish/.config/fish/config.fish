@@ -39,7 +39,7 @@ abbr -a -g tksv 'tmux kill-server'
 abbr -a -g tkss 'tmux kill-session -t'
 
 # neovim
-abbr vi nvim
+abbr v nvim
 
 abbr mv 'mv -iv'
 abbr cp 'cp -riv'

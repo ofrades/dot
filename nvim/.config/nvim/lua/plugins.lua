@@ -1,40 +1,110 @@
 return {
 	{
-		"LazyVim/LazyVim",
-		opts = {
-			colorscheme = "catppuccin",
-		},
+		"catppuccin/nvim",
+		lazy = false,
+		priority = 150,
+		name = "catppuccin",
+		config = function()
+			require("catppuccin").setup({
+				background = {
+					light = "latte",
+					dark = "mocha",
+				},
+				color_overrides = {
+					mocha = {
+						rosewater = "#ffc6be",
+						flamingo = "#fb4934",
+						pink = "#ff75a0",
+						mauve = "#f2594b",
+						red = "#C42C2C",
+						maroon = "#fe8019",
+						peach = "#FFAD7D",
+						yellow = "#fabd2f",
+						green = "#98971a",
+						teal = "#7bba7f",
+						sky = "#7daea3",
+						sapphire = "#689d6a",
+						blue = "#80aa9e",
+						lavender = "#FF9941",
+						text = "#d2cca9",
+						subtext1 = "#c2cca9",
+						subtext0 = "#b2cca9",
+						overlay2 = "#8C7A58",
+						overlay1 = "#735F3F",
+						overlay0 = "#606234",
+						surface2 = "#686868",
+						surface1 = "#585858",
+						surface0 = "#484848",
+						base = "#352828",
+						mantle = "#231C1E",
+						crust = "#231C1E",
+					},
+				},
+			})
+			vim.api.nvim_command("colorscheme catppuccin")
+		end,
 	},
 	{ "akinsho/bufferline.nvim", enabled = false },
 	{ "folke/flash.nvim", enabled = false },
 	{ "echasnovski/mini.pairs", enabled = false },
 	{
-		"nyoom-engineering/oxocarbon.nvim",
-	},
-	{
-		"nvim-telescope/telescope.nvim",
+		"ThePrimeagen/harpoon",
+		requires = { "nvim-lua/plenary.nvim" },
 		keys = {
-			{ "<leader>k", "<cmd>:lua require'telescope.builtin'.grep_string()<CR>", mode = { "n", "x" } },
-		},
-	},
-	{ "mg979/vim-visual-multi", lazy = false },
-	{
-		"folke/edgy.nvim",
-		opts = {
-			top = {
-				{
-					title = "Neo-Tree",
-					ft = "neo-tree",
-					size = { height = 0.3 },
-				},
+			{
+				"<leader>a",
+				function()
+					require("harpoon.mark").add_file()
+				end,
+				desc = "Create harpoon mark",
+			},
+			{
+				"<leader>m",
+				function()
+					require("harpoon.ui").toggle_quick_menu()
+				end,
+				desc = "Harpoon quickfix toggle",
+			},
+			{
+				"<leader>o",
+				function()
+					require("harpoon.ui").nav_next()
+				end,
+				desc = "Navigate to next harpoon mark",
+			},
+			{
+				"<leader>i",
+				function()
+					require("harpoon.ui").nav_prev()
+				end,
+				desc = "Navigate to prev harpoon mark",
 			},
 		},
 	},
 	{
+		"nvim-telescope/telescope.nvim",
+		dependencies = {
+			"nvim-telescope/telescope-file-browser.nvim",
+		},
+		keys = {
+			{ "<leader>k", "<cmd>:lua require'telescope.builtin'.grep_string()<CR>", mode = { "n", "x" } },
+			{
+				"-",
+				":Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal<CR>",
+				mode = { "n", "x" },
+			},
+		},
+		opts = {
+			defaults = require("telescope.themes").get_ivy(),
+			insert_mode = "normal",
+		},
+	},
+	{ "mg979/vim-visual-multi", lazy = false },
+	{
 		"folke/drop.nvim",
 		config = function()
 			require("drop").setup({
-				theme = "summer",
+				theme = "leaves",
 			})
 		end,
 	},
@@ -44,30 +114,6 @@ return {
 		config = function()
 			require("refactoring").setup({})
 		end,
-	},
-	{
-		"echasnovski/mini.files",
-		opts = {
-			windows = {
-				-- preview = false,
-				-- width_focus = 100,
-				-- width_nofocus = 50,
-				-- width_preview = 100,
-			},
-			mappings = {
-				go_in = "L",
-				go_in_plus = "l",
-			},
-		},
-		keys = {
-			{
-				"-",
-				function()
-					require("mini.files").open(vim.api.nvim_buf_get_name(0), true)
-				end,
-				desc = "Open mini.files (directory of current file)",
-			},
-		},
 	},
 	{
 		"nvim-pack/nvim-spectre",

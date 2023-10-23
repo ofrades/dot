@@ -12,7 +12,11 @@
         name: "{{ item }}"
         state: latest
       with_items:
-        - wezterm
+        - git
+        - curl
+        - vim
+        - i3
+        - stow
 
     - name: Ensuring Homebrew Is Installed
       register: homebrew_check
@@ -38,7 +42,6 @@
         - ripgrep
         - lazygit
         - pyenv
-        - deno
         - volta
         - serverless
         - tfenv
@@ -52,7 +55,6 @@
         - bat
         - tmux
         - fzf
-        - stow
 
     - name: Ensure fonts directory
       file:
@@ -62,14 +64,14 @@
     - name: Font exists
       ignore_errors: true
       register: font_exists
-      shell: "ls {{ lookup('env', 'HOME') }}/.fonts/Fantas*Nerd*Font*Complete*"
+      shell: "ls {{ lookup('env', 'HOME') }}/.fonts/FiraCode*Nerd*Font*Complete*"
 
     - name: Download font
       when: font_exists is failed
       ansible.builtin.unarchive:
         dest: "{{ lookup('env', 'HOME') }}/.fonts/"
         remote_src: yes
-        src: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FantasqueSansMono.zip
+        src: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/FiraCode.zip
 
     - name: Ensure dot folders exist
       file:
@@ -96,7 +98,6 @@
         - local
         - nvim
         - ssh
-        - starship
         - tmux
         - wezterm
 

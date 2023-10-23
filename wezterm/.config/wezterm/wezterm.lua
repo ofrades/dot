@@ -1,31 +1,55 @@
 local wezterm = require("wezterm")
 
-local scheme_for_appearance = function(appearance)
-	if appearance:find("Dark") then
-		return "catppuccin-mocha"
-	else
-		return "catppuccin-latte"
-	end
+local function font(opts)
+	return wezterm.font_with_fallback({
+		opts,
+		"Symbols Nerd Font Mono",
+	})
 end
 
-wezterm.on("window-config-reloaded", function(window)
-	local overrides = window:get_config_overrides() or {}
-	local appearance = window:get_appearance()
-	local scheme = scheme_for_appearance(appearance)
-	if overrides.color_scheme ~= scheme then
-		overrides.color_scheme = scheme
-		window:set_config_overrides(overrides)
-	end
-end)
-
 return {
+	font_size = 10,
+	font = font("FiraCode Nerd Font"),
+	font_rules = {
+		{
+			italic = true,
+			intensity = "Normal",
+			font = font({
+				family = "Maple Mono",
+				style = "Italic",
+			}),
+		},
+		{
+			italic = true,
+			intensity = "Half",
+			font = font({
+				family = "Maple Mono",
+				weight = "DemiBold",
+				style = "Italic",
+			}),
+		},
+		{
+			italic = true,
+			intensity = "Bold",
+			font = font({
+				family = "Maple Mono",
+				weight = "Bold",
+				style = "Italic",
+			}),
+		},
+	},
+	window_padding = {
+		left = 0,
+		right = 0,
+		top = 0,
+		bottom = 0,
+	},
 	warn_about_missing_glyphs = false,
 	window_close_confirmation = "NeverPrompt",
 	window_decorations = "NONE",
 	default_prog = { "/home/linuxbrew/.linuxbrew/bin/fish", "-l" },
 	check_for_updates = false,
 	keys = {
-		-- This will create a new split and run your default program inside it
 		{
 			key = "_",
 			mods = "CTRL|SHIFT",
@@ -74,7 +98,6 @@ return {
 			}),
 		},
 	},
-	font_size = 8,
 	tab_bar_at_bottom = true,
 	hide_tab_bar_if_only_one_tab = true,
 	scrollback_lines = 10000,

@@ -49,7 +49,7 @@ bindsym $mod+t exec i3-sensible-terminal
 bindsym $mod+b exec vivaldi
 bindsym $mod+c exec copyq toggle
 
-bindsym $mod+Control+l exec i3lock
+bindysm $mod+Control+l exec i3lock -c 000000 -n
 bindsym $mod+Control+s exec --no-startup-id systemctl suspend
 bindsym $mod+Control+Return exec shutdown now
 
@@ -91,7 +91,7 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+z split h
+bindsym $mod+Shift+v split h
 
 # split in vertical orientation
 bindsym $mod+v split v
@@ -200,29 +200,35 @@ for_window [class="^.*"] border pixel 3
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
+set $focus #7daea3
+set $inactive #FFAD7D
+set $dark #352828
+set $urgent #C42C2C
+set $color #fabd2f
+#
 bar {
         status_command i3status
+        position top
         colors {
-            background #f5e0dc
-            statusline #1e1e2e
+            background $dark
+            statusline $focus
 
-            focused_workspace  #1e1e2e #b4befe #1e1e2e
-            active_workspace   #1e1e2e #9399b2 #1e1e2e
-            inactive_workspace #1e1e2e #9399b2 #1e1e2e
-            urgent_workspace   #1e1e2e #f38ba8 #1e1e2e
+            focused_workspace  $color $color $dark
+            active_workspace   $focus $focus $dark
+            inactive_workspace $focus $focus $dark
+            urgent_workspace   $urgent $urgent $dark
         }
 }
 
 # Theme colors
-# class                   border  backgr. text    indic.   child_border
-client.focused          #b4befe #b4befe #b4befe #f5e0dc
-client.focused_inactive #1e1e2e #1e1e2e #a6e3a1 #9399b2
-client.unfocused        #1e1e2e #1e1e2e #a6e3a1 #9399b2
-client.urgent           #f38ba8 #f5e0dc #a6e3a1 #89dceb
-client.placeholder      #1e1e2e #1e1e2e #f5e0dc #1e1e2e 
+# class                 border  backgr. text    indic.   child_border
+client.focused          $focus $dark $focus $focus $focus
+client.focused_inactive $dark $dark $inactive $inactive
+client.unfocused        $dark $dark $inactive $inactive
+client.urgent           $urgent $dark $urgent $inactive
+client.placeholder      $dark $dark $inactive $dark
 
-
-exec --no-startup-id xsetroot -solid "#9399b2"
+exec --no-startup-id xsetroot -solid $dark
 
 exec xset r rate 200 50
 exec setxkbmap us,pt -option grp:win_space_toggle,caps:escape
