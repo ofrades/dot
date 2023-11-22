@@ -8,6 +8,7 @@ local function font(opts)
 end
 
 return {
+	color_scheme = "Gruvbox dark, hard (base16)",
 	font_size = 10,
 	font = font("FiraCode Nerd Font"),
 	font_rules = {
