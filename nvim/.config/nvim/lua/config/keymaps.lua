@@ -24,3 +24,8 @@ vim.keymap.set(
 
 vim.keymap.set("n", "<leader>tx", "<cmd>:vsplit | term yarn test %<cr>", { desc = "Run test in split" })
 vim.keymap.set("n", "<leader>tX", "<cmd>:vsplit | term yarn test:watch %<cr>", { desc = "Run test watch in split" })
+
+vim.keymap.set("n", "qq", "<cmd>:q!<cr>", { desc = "Close" })
+
+vim.keymap.set("n", "tt", "<cmd>:vsplit | term<cr>", { desc = "Terminal" })
+vim.keymap.set("n", "tb", "<cmd>:split | term<cr>", { desc = "Terminal bottom" })

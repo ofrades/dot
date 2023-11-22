@@ -1,47 +1,9 @@
 return {
 	{
-		"catppuccin/nvim",
-		lazy = false,
-		priority = 150,
-		name = "catppuccin",
-		config = function()
-			require("catppuccin").setup({
-				background = {
-					light = "latte",
-					dark = "mocha",
-				},
-				color_overrides = {
-					mocha = {
-						rosewater = "#ffc6be",
-						flamingo = "#fb4934",
-						pink = "#ff75a0",
-						mauve = "#f2594b",
-						red = "#C42C2C",
-						maroon = "#fe8019",
-						peach = "#FFAD7D",
-						yellow = "#fabd2f",
-						green = "#98971a",
-						teal = "#7bba7f",
-						sky = "#7daea3",
-						sapphire = "#689d6a",
-						blue = "#80aa9e",
-						lavender = "#FF9941",
-						text = "#d2cca9",
-						subtext1 = "#c2cca9",
-						subtext0 = "#b2cca9",
-						overlay2 = "#8C7A58",
-						overlay1 = "#735F3F",
-						overlay0 = "#606234",
-						surface2 = "#686868",
-						surface1 = "#585858",
-						surface0 = "#484848",
-						base = "#352828",
-						mantle = "#231C1E",
-						crust = "#231C1E",
-					},
-				},
-			})
-			vim.api.nvim_command("colorscheme catppuccin")
+		"ellisonleao/gruvbox.nvim",
+		priority = 1000,
+		opts = function()
+			vim.api.nvim_command("colorscheme gruvbox")
 		end,
 	},
 	{ "akinsho/bufferline.nvim", enabled = false },
@@ -50,6 +12,11 @@ return {
 	{
 		"ThePrimeagen/harpoon",
 		requires = { "nvim-lua/plenary.nvim" },
+		opts = {
+			global_settings = {
+				mark_branch = false,
+			},
+		},
 		keys = {
 			{
 				"<leader>a",
@@ -82,6 +49,12 @@ return {
 		},
 	},
 	{
+		"nvim-telescope/telescope-frecency.nvim",
+		config = function()
+			require("telescope").load_extension("frecency")
+		end,
+	},
+	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
 			"nvim-telescope/telescope-file-browser.nvim",
@@ -93,11 +66,57 @@ return {
 				":Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal<CR>",
 				mode = { "n", "x" },
 			},
+			{
+				"n",
+				"<leader><leader>",
+				"<Cmd>Telescope frecency<CR>",
+				{ desc = "Find files by frecency" },
+			},
 		},
-		opts = {
-			defaults = require("telescope.themes").get_ivy(),
-			insert_mode = "normal",
-		},
+		config = function(plugin, opts)
+			local fb_actions = require("telescope._extensions.file_browser.actions")
+
+			require("telescope").setup({
+				defaults = require("telescope.themes").get_ivy({
+					wrap_results = true,
+					winblend = 30,
+					width = 1,
+					prompt = "scope=> ",
+					show_line = true,
+					previewer = true,
+					results_title = "results ",
+					preview_title = "content ",
+					layout_config = {
+						prompt_position = "top",
+						preview_width = 0.3,
+					},
+				}),
+				insert_mode = "normal",
+				extensions = {
+					file_browser = {
+						-- disables netrw and use telescope-file-browser in its place
+						hijack_netrw = true,
+						mappings = {
+							["n"] = {
+								["c"] = fb_actions.create,
+								["r"] = fb_actions.rename,
+								["m"] = fb_actions.move,
+								["y"] = fb_actions.copy,
+								["d"] = fb_actions.remove,
+								["o"] = fb_actions.open,
+								["-"] = fb_actions.goto_parent_dir,
+								["e"] = fb_actions.goto_home_dir,
+								["w"] = fb_actions.goto_cwd,
+								["t"] = fb_actions.change_cwd,
+								["f"] = fb_actions.toggle_browser,
+								["."] = fb_actions.toggle_hidden,
+								["s"] = fb_actions.toggle_all,
+							},
+						},
+					},
+				},
+			})
+		end,
 	},
 	{ "mg979/vim-visual-multi", lazy = false },
 	{
