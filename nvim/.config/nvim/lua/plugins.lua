@@ -1,58 +1,43 @@
 return {
-	{
-		"ellisonleao/gruvbox.nvim",
-		priority = 1000,
-		opts = function()
-			vim.api.nvim_command("colorscheme gruvbox")
-		end,
-	},
 	{ "akinsho/bufferline.nvim", enabled = false },
 	{ "folke/flash.nvim", enabled = false },
 	{ "echasnovski/mini.pairs", enabled = false },
 	{
 		"ThePrimeagen/harpoon",
-		requires = { "nvim-lua/plenary.nvim" },
-		opts = {
-			global_settings = {
-				mark_branch = false,
-			},
-		},
+		branch = "harpoon2",
+		config = function(_, opts)
+			require("harpoon"):setup(opts)
+		end,
 		keys = {
 			{
 				"<leader>a",
 				function()
-					require("harpoon.mark").add_file()
+					require("harpoon"):list():append()
 				end,
 				desc = "Create harpoon mark",
 			},
 			{
 				"<leader>m",
 				function()
-					require("harpoon.ui").toggle_quick_menu()
+					require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
 				end,
 				desc = "Harpoon quickfix toggle",
 			},
 			{
 				"<leader>o",
 				function()
-					require("harpoon.ui").nav_next()
+					require("harpoon"):list():next()
 				end,
 				desc = "Navigate to next harpoon mark",
 			},
 			{
 				"<leader>i",
 				function()
-					require("harpoon.ui").nav_prev()
+					require("harpoon"):list():prev()
 				end,
 				desc = "Navigate to prev harpoon mark",
 			},
 		},
-	},
-	{
-		"nvim-telescope/telescope-frecency.nvim",
-		config = function()
-			require("telescope").load_extension("frecency")
-		end,
 	},
 	{
 		"nvim-telescope/telescope.nvim",
@@ -66,12 +51,6 @@ return {
 				":Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal<CR>",
 				mode = { "n", "x" },
 			},
-			{
-				"n",
-				"<leader><leader>",
-				"<Cmd>Telescope frecency<CR>",
-				{ desc = "Find files by frecency" },
-			},
 		},
 		config = function(plugin, opts)
 			local fb_actions = require("telescope._extensions.file_browser.actions")
@@ -79,16 +58,14 @@ return {
 			require("telescope").setup({
 				defaults = require("telescope.themes").get_ivy({
 					wrap_results = true,
-					winblend = 30,
+					winblend = 10,
 					width = 1,
-					prompt = "scope=> ",
 					show_line = true,
 					previewer = true,
-					results_title = "results ",
-					preview_title = "content ",
+					sorting_strategy = "descending",
 					layout_config = {
-						prompt_position = "top",
-						preview_width = 0.3,
+						prompt_position = "bottom",
+						preview_width = 0.4,
 					},
 				}),
 				insert_mode = "normal",
@@ -104,6 +81,8 @@ return {
 								["y"] = fb_actions.copy,
 								["d"] = fb_actions.remove,
 								["o"] = fb_actions.open,
+								["l"] = require("telescope.actions").select_default,
+								["h"] = fb_actions.goto_parent_dir,
 								["-"] = fb_actions.goto_parent_dir,
 								["e"] = fb_actions.goto_home_dir,
 								["w"] = fb_actions.goto_cwd,
