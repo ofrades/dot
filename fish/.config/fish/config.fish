@@ -31,8 +31,6 @@ abbr g lazygit
 abbr f 'nvim (fzf --preview "cat {}")'
 abbr ch checkout
 
-alias python="/home/linuxbrew/.linuxbrew/bin/python3.9"
-
 # tmux
 abbr -a -g ta 'tmux attach-session -t'
 abbr -a -g tksv 'tmux kill-server'
@@ -54,7 +52,6 @@ set -gx AWS_PROFILE default
 source "$HOME/.config/fish/env.fish"
 
 eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-
 
 oh-my-posh init fish | source
 # starship init fish | source

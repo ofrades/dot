@@ -99,6 +99,18 @@ bindsym $mod+v split v
 # enter fullscreen mode for the focused container
 bindsym $mod+m fullscreen toggle
 
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+#
+# # Sreen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
+
+# bindsym XF86MonBrightnessUp exec light -T 1.4
+# bindsym XF86MonBrightnessDown exec light -T 0.72
+bindsym $mod+Space exec pactl set-source-mute 0 toggle
+
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
@@ -197,13 +209,12 @@ for_window [class="^.*"] border pixel 3
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-# #1c1c1c #cc241d #98971a #d79921 #458588 #b16286 #689d6a #a89984 #928374 #fb4934 #b8bb26 #fabd2f #83a598 #d3869b #8ec07c #ebdbb2
 
-set $focus #83a598
-set $inactive #ebdbb2
-set $dark #32302f
-set $urgent #cc241d
-set $color #b8bb26
+set $focus #7aa2f7
+set $inactive #e0af68
+set $dark #24283b
+set $urgent #f7768e
+set $color #9ece6a
 
 
 bar {

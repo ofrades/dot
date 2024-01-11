@@ -17,6 +17,7 @@
         - vim
         - i3
         - stow
+        - flameshot
 
     - name: Ensuring Homebrew Is Installed
       register: homebrew_check

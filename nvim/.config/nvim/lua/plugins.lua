@@ -2,12 +2,54 @@ return {
 	{ "akinsho/bufferline.nvim", enabled = false },
 	{ "folke/flash.nvim", enabled = false },
 	{ "echasnovski/mini.pairs", enabled = false },
+	{ "nvim-neo-tree/neo-tree.nvim", enabled = false },
+	{
+		{
+			"rose-pine/neovim",
+			name = "rose-pine",
+			config = function()
+				require("rose-pine").setup({
+					variant = "dawn",
+					dark_variant = "dawn",
+				})
+			end,
+		},
+		{
+			"LazyVim/LazyVim",
+			opts = {
+				colorscheme = "rose-pine",
+			},
+		},
+	},
 	{
 		"ThePrimeagen/harpoon",
 		branch = "harpoon2",
-		config = function(_, opts)
-			require("harpoon"):setup(opts)
-		end,
+		opts = {
+			global_settings = {
+				-- sets the marks upon calling `toggle` on the ui, instead of require `:w`.
+				save_on_toggle = true,
+
+				-- saves the harpoon file upon every change. disabling is unrecommended.
+				save_on_change = true,
+
+				-- sets harpoon to run the command immediately as it's passed to the terminal when calling `sendCommand`.
+				enter_on_sendcmd = false,
+
+				-- closes any tmux windows harpoon that harpoon creates when you close Neovim.
+				tmux_autoclose_windows = false,
+
+				-- filetypes that you want to prevent from adding to the harpoon list menu.
+				excluded_filetypes = { "harpoon" },
+
+				-- set marks specific to each git branch inside git repository
+				mark_branch = true,
+
+				-- enable tabline with harpoon marks
+				tabline = false,
+				tabline_prefix = "   ",
+				tabline_suffix = "   ",
+			},
+		},
 		keys = {
 			{
 				"<leader>a",
@@ -46,11 +88,11 @@ return {
 		},
 		keys = {
 			{ "<leader>k", "<cmd>:lua require'telescope.builtin'.grep_string()<CR>", mode = { "n", "x" } },
-			{
-				"-",
-				":Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal<CR>",
-				mode = { "n", "x" },
-			},
+			-- {
+			-- 	"-",
+			-- 	":Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal<CR>",
+			-- 	mode = { "n", "x" },
+			-- },
 		},
 		config = function(plugin, opts)
 			local fb_actions = require("telescope._extensions.file_browser.actions")
@@ -62,17 +104,14 @@ return {
 					width = 1,
 					show_line = true,
 					previewer = true,
-					sorting_strategy = "descending",
-					layout_config = {
-						prompt_position = "bottom",
-						preview_width = 0.4,
-					},
+					-- sorting_strategy = "descending",
+					-- layout_config = {
+					-- 	prompt_position = "bottom",
+					-- },
 				}),
 				insert_mode = "normal",
 				extensions = {
 					file_browser = {
-						-- disables netrw and use telescope-file-browser in its place
-						hijack_netrw = true,
 						mappings = {
 							["n"] = {
 								["c"] = fb_actions.create,
@@ -97,38 +136,12 @@ return {
 			})
 		end,
 	},
-	{ "mg979/vim-visual-multi", lazy = false },
-	{
-		"folke/drop.nvim",
-		config = function()
-			require("drop").setup({
-				theme = "leaves",
-			})
-		end,
-	},
 	{ "simnalamburt/vim-mundo" },
 	{
 		"ThePrimeagen/refactoring.nvim",
 		config = function()
 			require("refactoring").setup({})
 		end,
-	},
-	{
-		"nvim-pack/nvim-spectre",
-		keys = {
-			{
-				"<leader>sp",
-				"<cmd>lua require('spectre').open_visual({select_word=true})<CR>",
-				desc = "Search current word",
-				mode = "n",
-			},
-			{
-				"<leader>sp",
-				"<esc><cmd>lua require('spectre').open_visual()<CR>",
-				desc = "Search current word",
-				mode = "v",
-			},
-		},
 	},
 	{
 		"numToStr/Navigator.nvim",
@@ -155,46 +168,24 @@ return {
 			})
 		end,
 	},
-	{ "kevinhwang91/nvim-bqf" },
-	{ "vim-test/vim-test" },
 	{
 		"nvim-neotest/neotest",
 		dependencies = {
 			"marilari88/neotest-vitest",
+			"nvim-neotest/neotest-vim-test",
 		},
 		opts = {
-			adapters = { "neotest-vitest" },
+			adapters = {
+				["neotest-vitest"] = {},
+				-- ["neotest-vim-test"] = {
+				-- 	ignore_file_types = { "typescriptreact", "typescript" },
+				-- },
+			},
 			output = {
 				enabled = false,
 			},
 			quickfix = {
 				enabled = false,
-			},
-			consumers = {
-				custom = function(client)
-					-- Custom hook to open the output panel after test results that fail, and auto-focus the panel and jump to its bottom
-					client.listeners.results = function(_, results)
-						local any_failed = false
-						for _, result in pairs(results) do
-							if result.status == "failed" then
-								any_failed = true
-								break
-							end
-						end
-
-						if any_failed then
-							local win = vim.fn.bufwinid("Neotest OutputPanel")
-							if win > -1 then
-								vim.api.nvim_set_current_win(win)
-								vim.cmd("$") -- Jump to end
-							else
-								require("neotest").output_panel.open()
-							end
-						else
-							require("neotest").output_panel.close()
-						end
-					end
-				end,
 			},
 		},
 	},

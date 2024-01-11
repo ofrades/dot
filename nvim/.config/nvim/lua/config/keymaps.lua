@@ -15,6 +15,9 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "<C-o>", "<C-o>zz")
 vim.keymap.set("n", "<C-i>", "<C-i>zz")
 
+vim.keymap.set("n", "-", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>e", vim.cmd.Rex)
+
 vim.keymap.set(
 	"n",
 	"<leader>.",

@@ -24,4 +24,8 @@ vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
 vim.o.foldcolumn = "0"
+
+vim.g.netrw_banner = 0
+vim.g.netrw_keepdir = 0
+vim.g.netrw_liststyle = 1
 -- vim.opt.statusline = "  %f %m %r %w %= Ln %l, Col %c  %{&fileencoding?&fileencoding:&encoding}  "
