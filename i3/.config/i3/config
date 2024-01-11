@@ -241,4 +241,5 @@ client.placeholder      $dark $dark $inactive $dark
 exec --no-startup-id xsetroot -solid $dark
 
 exec xset r rate 200 50
-exec setxkbmap us,pt -option grp:win_space_toggle,caps:escape
+exec setxkbmap -option caps:escape
+exec_always "setxkbmap -model pc104 -layout us,pt -variant ,, -option grp:win_space_toggle"
