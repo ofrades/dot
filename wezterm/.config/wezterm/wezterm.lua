@@ -8,7 +8,7 @@ local function font(opts)
 end
 
 return {
-	color_scheme = "rose-pine-dawn",
+	color_scheme = "rose-pine-moon",
 	font_size = 13,
 	font = font("FiraCode Nerd Font"),
 	font_rules = {

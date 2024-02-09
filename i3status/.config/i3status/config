@@ -8,7 +8,7 @@
 
 general {
         output_format = "i3bar"
-        separator = " | "
+        separator = "|"
         interval = 1
         colors = false
         interval = 5
@@ -16,7 +16,7 @@ general {
 
 # order += "ipv6"
 order += "volume master"
-order += "volume mic" 
+order += "volume mic"
 order += "wireless _first_"
 # order += "ethernet _first_"
 # order += "battery all"
@@ -27,26 +27,21 @@ order += "memory"
 order += "tztime local"
 
 volume mic {
-  format = " %volume" 
-  format_muted = " (%volume)" 
+  format = "  %volume "
+  format_muted = " (%volume)"
   device = "pulse"
   mixer = "Master"
   mixer_idx = 0
-} 
-
-# wireless _first_ {
-#         format_up = "(%quality at %essid)"
-#         format_down = "down"
-# }
+}
 
 wireless _first_ {
-        format_up = "  %essid  "
-        format_down = "  Down  "
+        format_up = "  %essid"
+        format_down = "  Down"
 }
 
 volume master {
-        format = "  %volume  "
-        format_muted = "  %volume  "
+        format = "   %volume "
+        format_muted = "  %volume"
         device = "default"
 }
 
@@ -56,17 +51,17 @@ ethernet _first_ {
 }
 
 battery all {
-        format = "%status %percentage"
+        format = " %status %percentage "
 }
 
 battery 0 {
-        format = "%status %percentage"
+        format = " %status %percentage "
         hide_seconds = true
         integer_battery_capacity = true
         last_full_capacity = true
-        status_chr = " + "
-        status_bat = "  "
-        status_full = "  "
+        status_chr = " +"
+        status_bat = " "
+        status_full = " "
 }
 
 disk "/" {
@@ -75,15 +70,15 @@ disk "/" {
 }
 
 load {
-        format = "CPU: %1min"
+        format = " CPU: %1min "
 }
 
 memory {
-        format = "   %used "
+        format = "  %used "
         threshold_degraded = "1G"
         format_degraded = "MEMORY < %available"
 }
 
 tztime local {
-        format = "   %A %d-%m-%Y     %H:%M  "
+        format = "  %A %d-%m-%Y |   %H:%M |"
 }

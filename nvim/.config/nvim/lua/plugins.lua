@@ -9,8 +9,8 @@ return {
 			name = "rose-pine",
 			config = function()
 				require("rose-pine").setup({
-					variant = "dawn",
-					dark_variant = "dawn",
+					variant = "moon",
+					dark_variant = "moon",
 				})
 			end,
 		},
@@ -21,6 +21,39 @@ return {
 			},
 		},
 	},
+	{ "mg979/vim-visual-multi" },
+	{
+		"stevearc/oil.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		opts = {
+			default_file_explorer = true,
+			columns = {
+				"icon",
+				"size",
+			},
+		},
+		keys = {
+			{ "-", "<cmd>Oil<cr>", desc = "Open parent directory with Oil" },
+		},
+	},
+	{
+		"stevearc/conform.nvim",
+		opts = {
+			formatters_by_ft = {
+				["mdx"] = { { "prettier" } },
+			},
+		},
+	},
+	-- {
+	-- 	"mfussenegger/nvim-lint",
+	-- 	optional = true,
+	-- 	opts = {
+	-- 		linters_by_ft = {
+	-- 			["mdx"] = { "mdx-analyzer", "eslint" },
+	-- 			["markdown.mdx"] = { "mdx-analyzer", "eslint" },
+	-- 		},
+	-- 	},
+	-- },
 	{
 		"ThePrimeagen/harpoon",
 		branch = "harpoon2",
@@ -88,6 +121,7 @@ return {
 		},
 		keys = {
 			{ "<leader>k", "<cmd>:lua require'telescope.builtin'.grep_string()<CR>", mode = { "n", "x" } },
+			{ "<leader>gc", "<cmd>:lua require'telescope.builtin'.git_bcommits()<CR>", mode = { "n", "x" } },
 			-- {
 			-- 	"-",
 			-- 	":Telescope file_browser path=%:p:h select_buffer=true initial_mode=normal<CR>",
@@ -176,10 +210,11 @@ return {
 		},
 		opts = {
 			adapters = {
-				["neotest-vitest"] = {},
+				-- ["neotest-vitest"] = {},
 				-- ["neotest-vim-test"] = {
 				-- 	ignore_file_types = { "typescriptreact", "typescript" },
 				-- },
+				["neotest-vim-test"] = {},
 			},
 			output = {
 				enabled = false,
