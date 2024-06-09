@@ -19,3 +19,8 @@ Subsquent runs:
 
 - `ansible-playbook playbook.yml --ask-become-pass`
 
+Use omakub with ubuntu:
+
+```bash
+wget -qO- https://omakub.org/install | bash
+```
