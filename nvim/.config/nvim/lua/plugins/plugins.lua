@@ -1,19 +1,6 @@
 return {
 	{ "echasnovski/mini.pairs", enabled = false },
 	{ "nvim-neo-tree/neo-tree.nvim", enabled = false },
-	{
-		"ellisonleao/gruvbox.nvim",
-		priority = 1000,
-		config = function()
-			vim.o.background = "light"
-		end,
-	},
-	{
-		"LazyVim/LazyVim",
-		opts = {
-			colorscheme = "gruvbox",
-		},
-	},
 	{ "mg979/vim-visual-multi" },
 	{
 		"stevearc/oil.nvim",
