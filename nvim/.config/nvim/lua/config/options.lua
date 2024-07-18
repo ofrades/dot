@@ -13,7 +13,6 @@ vim.opt.grepprg = "rg --vimgrep"
 
 vim.opt.relativenumber = true -- Relative line numbers
 vim.opt.scrolloff = 5 -- Lines of context
-vim.opt.shell = "fish"
 vim.opt.swapfile = false
 
 vim.opt.backup = true
@@ -28,11 +27,3 @@ vim.o.foldcolumn = "0"
 vim.g.netrw_banner = 0
 vim.g.netrw_keepdir = 0
 vim.g.netrw_liststyle = 1
-
-vim.filetype.add({
-	extension = {
-		mdx = "mdx",
-	},
-})
-
-vim.treesitter.language.register("markdown", "mdx") -- the mdx filetype will use the markdown parser and queries.

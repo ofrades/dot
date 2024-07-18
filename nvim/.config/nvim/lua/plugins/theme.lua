@@ -1,11 +1,8 @@
 return {
-	{ "neanias/everforest-nvim" },
 	{
-		"lazyvim/lazyvim",
+		"LazyVim/LazyVim",
 		opts = {
-			colorscheme = "everforest",
-			background = "soft",
+			colorscheme = "tokyonight",
 		},
-		config = require('plugins.commons').set_transparent_bg()
 	},
 }
