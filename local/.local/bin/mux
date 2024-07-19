@@ -1,61 +1,80 @@
 #!/bin/bash
 
-not_in_tmux() {
-	[ -z "$TMUX" ]
+# Check if inside a tmux session
+is_not_in_tmux() {
+  [ -z "$TMUX" ]
 }
 
-ARG="$1"
-
-DIR=$HOME/$ARG/
-
-# If no arguments are passed in try to immediately attach or start without further input
-echo "$DIR"
-tmpfile=$(mktemp)
-if [ -z "$ARG" ]; then
-	DIR=$HOME/dev/
-
-	find -L $DIR -maxdepth 4 -type d |
-		fzf --reverse --header="Select project from $(basename $DIR)" \
-			>"$tmpfile"
-
-	dest_dir=$(cat "$tmpfile")
-	rm -f "$tmpfile"
-else
-	dest_dir=$DIR
-fi
-
-session_name=$(basename "$dest_dir")
-
-if [ -z "$session_name" ]; then
-	# operation cancelled by user
-	mkdir -vp "$dest_dir"
-fi
-
+# Check if a tmux session exists
 session_exists() {
-	tmux has-session -t "=$session_name"
+  tmux has-session -t "=$1" 2>/dev/null
 }
 
+# Create a detached tmux session
 create_detached_session() {
-	(
-		TMUX=''
-		tmux new-session -Ad -s "$session_name" -c "$dest_dir"
-	)
+  TMUX='' tmux new-session -Ad -s "$1" -c "$2"
 }
 
-create_if_needed_and_attach() {
-	if not_in_tmux; then
-		tmux new-session -As "$session_name" -c "$dest_dir"
-	else
-		if ! session_exists; then
-			create_detached_session
-		fi
-		tmux switch-client -t "$session_name"
-	fi
+# Attach to an existing or new tmux session
+create_and_attach_session() {
+  local session_name="$1"
+  local session_dir="$2"
+
+  if is_not_in_tmux; then
+    tmux new-session -As "$session_name" -c "$session_dir"
+  else
+    if ! session_exists "$session_name"; then
+      create_detached_session "$session_name" "$session_dir"
+    fi
+    tmux switch-client -t "$session_name"
+  fi
 }
 
-attatch_to_first_session() {
-	tmux attach -t "$(tmux list-sessions -F "${session_name}" | head -n 1)"
-	tmux choose-tree -Za
+# Attach to the first available tmux session
+attach_to_first_session() {
+  tmux attach -t "$(tmux list-sessions -F "#{session_name}" | head -n 1)"
+  tmux choose-tree -Za
 }
 
-create_if_needed_and_attach || attatch_to_first_session
+# Main script logic
+main() {
+  local arg="$1"
+  local dir="$HOME/$arg/"
+  local tmpfile=$(mktemp)
+  local dest_dir
+
+  # Ensure necessary tools are installed
+  if ! command -v fzf &>/dev/null; then
+    echo "fzf is not installed. Please install fzf to use this script."
+    exit 1
+  fi
+
+  if ! command -v tmux &>/dev/null; then
+    echo "tmux is not installed. Please install tmux to use this script."
+    exit 1
+  fi
+
+  # If no arguments are passed, prompt the user to select a project directory
+  if [ -z "$arg" ]; then
+    dir="$HOME/"
+    find -L "$dir" -maxdepth 4 -type d |
+      fzf --reverse --header="Select project from $(basename "$dir")" \
+        >"$tmpfile"
+    dest_dir=$(cat "$tmpfile")
+    rm -f "$tmpfile"
+  else
+    dest_dir="$dir"
+  fi
+
+  local session_name=$(basename "$dest_dir")
+
+  if [ -z "$session_name" ]; then
+    echo "Operation cancelled by user."
+    mkdir -vp "$dest_dir"
+  fi
+
+  create_and_attach_session "$session_name" "$dest_dir" || attach_to_first_session
+}
+
+# Run the main function with arguments
+main "$@"

@@ -1,12 +1,9 @@
 import = [
   "~/.config/alacritty/theme.toml",
   "~/.config/alacritty/font.toml",
+  "~/.config/alacritty/font-size.toml",
   "~/.local/share/omakub/defaults/alacritty.toml",
 ]
 
-[font]
-size = 10
-
 [shell]
-args = ["-l", "-c", "zellij attach --index 0 || zellij"]
-program = "/usr/bin/fish"
+program = "bash"
