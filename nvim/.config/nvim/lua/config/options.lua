@@ -27,3 +27,5 @@ vim.o.foldcolumn = "0"
 vim.g.netrw_banner = 0
 vim.g.netrw_keepdir = 0
 vim.g.netrw_liststyle = 1
+vim.o.spelllang = "en,pt,la"
+vim.o.spell = true
