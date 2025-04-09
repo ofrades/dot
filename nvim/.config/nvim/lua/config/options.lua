@@ -14,6 +14,7 @@ vim.opt.grepprg = "rg --vimgrep"
 vim.opt.relativenumber = true -- Relative line numbers
 vim.opt.scrolloff = 5 -- Lines of context
 vim.opt.swapfile = false
+vim.g.show_inlay_hints = false
 
 vim.opt.backup = true
 vim.opt.cmdheight = 0
