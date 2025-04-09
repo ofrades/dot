@@ -15,8 +15,17 @@
     lazydocker
     python3
     jdk
+    fzf
+    rofi
   ];
-  programs.neovim.enable = true;
+  home.file = { ".config/nvim".source = ../../nvim/.config/nvim; };
+  programs.neovim = {
+    enable = true;
+    vimAlias = true;
+    withPython3 = true;
+    withNodeJs = true;
+    defaultEditor = true;
+  };
   programs.git = {
     enable = true;
     userName = "ofrades";
