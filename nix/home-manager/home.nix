@@ -15,8 +15,16 @@
     jdk
     fzf
     rofi
-
-    # Add i3-related packages
+    flameshot
+    xorg.setxkbmap
+    clipmenu
+    clipnotify
+    xclip
+    ollama
+    jetbrains-mono
+    noto-fonts
+    noto-fonts-emoji
+    font-awesome
     i3
     i3status
     i3lock
@@ -25,8 +33,22 @@
     polkit_gnome # For authentication dialogs
   ];
 
+  fonts.fontconfig.enable = true;
   home.file = {
     ".config/nvim".source = ../../nvim/.config/nvim;
+
+    ".local/bin/power-menu" = {
+      text = ''
+        #!/bin/bash
+        choice=$(echo -e "Logout\nShutdown\nRestart" | rofi -dmenu -p "Power")
+        case $choice in
+          Logout) i3-msg exit ;;
+          Shutdown) systemctl poweroff ;;
+          Restart) systemctl reboot ;;
+        esac
+      '';
+      executable = true;
+    };
 
     # Create the gnome-i3 session file
     ".local/share/xsessions/gnome-i3.desktop".text = ''
@@ -55,45 +77,15 @@
       RequiredComponents=org.gnome.SettingsDaemon.A11ySettings;org.gnome.SettingsDaemon.Color;org.gnome.SettingsDaemon.Datetime;org.gnome.SettingsDaemon.Housekeeping;org.gnome.SettingsDaemon.Keyboard;org.gnome.SettingsDaemon.MediaKeys;org.gnome.SettingsDaemon.Power;org.gnome.SettingsDaemon.PrintNotifications;org.gnome.SettingsDaemon.Rfkill;org.gnome.SettingsDaemon.ScreensaverProxy;org.gnome.SettingsDaemon.Sharing;org.gnome.SettingsDaemon.Smartcard;org.gnome.SettingsDaemon.Sound;org.gnome.SettingsDaemon.Wacom;org.gnome.SettingsDaemon.XSettings;i3-gnome
     '';
 
-    # Create theme switching script
-    ".local/bin/toggle-theme" = {
-      text = ''
-        #!/bin/bash
+  };
 
-        # Check current theme
-        current_theme=$(gsettings get org.gnome.desktop.interface color-scheme)
-
-        # Toggle between dark and light
-        if [[ $current_theme == *"prefer-dark"* ]]; then
-          # Switch to light theme
-          gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
-          gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
-          # Update your terminal theme if applicable (for ghostty)
-          if [ -f ~/.config/ghostty/config ]; then
-            sed -i 's/^theme = dark:.*/theme = light:catppuccin-latte/' ~/.config/ghostty/config
-          fi
-          # Notify user
-          notify-send "Theme Switched" "Light theme activated"
-        else
-          # Switch to dark theme
-          gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-          gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
-          # Update your terminal theme if applicable (for ghostty)
-          if [ -f ~/.config/ghostty/config ]; then
-            sed -i 's/^theme = light:.*/theme = dark:catppuccin-frappe/' ~/.config/ghostty/config
-          fi
-          # Notify user
-          notify-send "Theme Switched" "Dark theme activated"
-        fi
-
-        # Restart i3 to apply changes to bar (optional, remove if it causes issues)
-        i3-msg restart
-      '';
-      executable = true;
-    };
+  home.keyboard = {
+    layout = "us,pt";
+    options = [ "grp:win_space_toggle" "caps:escape" ];
   };
 
   # Configure i3
+  xsession.enable = true;
   xsession.windowManager.i3 = {
     enable = true;
     package = pkgs.i3;
@@ -116,10 +108,6 @@
           "${modifier}+Return" = "exec ghostty";
           "${modifier}+Shift+q" = "kill";
           "${modifier}+d" = "exec rofi -show drun";
-
-          # Theme toggle hotkey (Mod+Shift+t)
-          "${modifier}+Shift+t" =
-            "exec ${config.home.homeDirectory}/.local/bin/toggle-theme";
 
           # Focus
           "${modifier}+h" = "focus left";
@@ -185,6 +173,15 @@
           # Screenshot (GNOME)
           "Print" = "exec gnome-screenshot";
           "${modifier}+Print" = "exec gnome-screenshot -a";
+
+          # Added clipboard manager hotkey (Mod+Shift+c)
+          "${modifier}+c" = "exec clipmenu";
+
+          # Added Flameshot hotkey (Mod+Shift+s)
+          "${modifier}+Shift+s" = "exec flameshot gui";
+
+          "${modifier}+Shift+p" =
+            "exec ${config.home.homeDirectory}/.local/bin/power-menu";
 
           # Volume controls
           "XF86AudioRaiseVolume" =
@@ -276,6 +273,11 @@
         {
           command =
             "gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'";
+          notification = false;
+        }
+        {
+          command = "clipmenud";
+          always = false;
           notification = false;
         }
       ];
@@ -404,12 +406,16 @@
       };
     }];
   };
+
   programs.carapace.enable = true;
   programs.nushell = {
     enable = true;
     shellAliases = {
       g = "lazygit";
       n = "nvim";
+      r = "exec systemctl reboot";
+      s = "exec systemctl poweroff";
+      l = "exec i3-msg exit";
     };
     configFile = {
       text = ''
@@ -430,7 +436,8 @@
       "cursor-style" = "block";
       "font-size" = 10;
       "background-opacity" = 0.9;
-      "theme" = "dark:catppuccin-frappe,light:catppuccin-latte";
+      # "theme" = "dark:catppuccin-frappe,light:catppuccin-latte";
+      "theme" = "catppuccin-frappe";
       keybind = [
         "ctrl+a>c=new_tab"
         "ctrl+a>n=next_tab"
