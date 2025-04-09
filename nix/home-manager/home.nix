@@ -54,6 +54,43 @@
       Name=Ubuntu-i3
       RequiredComponents=org.gnome.SettingsDaemon.A11ySettings;org.gnome.SettingsDaemon.Color;org.gnome.SettingsDaemon.Datetime;org.gnome.SettingsDaemon.Housekeeping;org.gnome.SettingsDaemon.Keyboard;org.gnome.SettingsDaemon.MediaKeys;org.gnome.SettingsDaemon.Power;org.gnome.SettingsDaemon.PrintNotifications;org.gnome.SettingsDaemon.Rfkill;org.gnome.SettingsDaemon.ScreensaverProxy;org.gnome.SettingsDaemon.Sharing;org.gnome.SettingsDaemon.Smartcard;org.gnome.SettingsDaemon.Sound;org.gnome.SettingsDaemon.Wacom;org.gnome.SettingsDaemon.XSettings;i3-gnome
     '';
+
+    # Create theme switching script
+    ".local/bin/toggle-theme" = {
+      text = ''
+        #!/bin/bash
+
+        # Check current theme
+        current_theme=$(gsettings get org.gnome.desktop.interface color-scheme)
+
+        # Toggle between dark and light
+        if [[ $current_theme == *"prefer-dark"* ]]; then
+          # Switch to light theme
+          gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
+          gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
+          # Update your terminal theme if applicable (for ghostty)
+          if [ -f ~/.config/ghostty/config ]; then
+            sed -i 's/^theme = dark:.*/theme = light:catppuccin-latte/' ~/.config/ghostty/config
+          fi
+          # Notify user
+          notify-send "Theme Switched" "Light theme activated"
+        else
+          # Switch to dark theme
+          gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+          gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+          # Update your terminal theme if applicable (for ghostty)
+          if [ -f ~/.config/ghostty/config ]; then
+            sed -i 's/^theme = light:.*/theme = dark:catppuccin-frappe/' ~/.config/ghostty/config
+          fi
+          # Notify user
+          notify-send "Theme Switched" "Dark theme activated"
+        fi
+
+        # Restart i3 to apply changes to bar (optional, remove if it causes issues)
+        i3-msg restart
+      '';
+      executable = true;
+    };
   };
 
   # Configure i3
@@ -79,6 +116,10 @@
           "${modifier}+Return" = "exec ghostty";
           "${modifier}+Shift+q" = "kill";
           "${modifier}+d" = "exec rofi -show drun";
+
+          # Theme toggle hotkey (Mod+Shift+t)
+          "${modifier}+Shift+t" =
+            "exec ${config.home.homeDirectory}/.local/bin/toggle-theme";
 
           # Focus
           "${modifier}+h" = "focus left";
@@ -177,6 +218,7 @@
         position = "bottom";
         statusCommand = "i3status";
         colors = {
+          # These colors work well with both light/dark themes
           background = "#282a36";
           statusline = "#f8f8f2";
           separator = "#44475a";
@@ -223,6 +265,17 @@
         }
         {
           command = "nm-applet";
+          notification = false;
+        }
+        # Set dark theme by default at startup (comment this line if you prefer light theme by default)
+        {
+          command =
+            "gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'";
+          notification = false;
+        }
+        {
+          command =
+            "gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'";
           notification = false;
         }
       ];
