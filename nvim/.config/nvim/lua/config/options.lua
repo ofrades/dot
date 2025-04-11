@@ -3,6 +3,7 @@ vim.o.updatetime = 250
 
 -- reload when files change outside buffer
 vim.o.autoread = true
+vim.o.shell = "/usr/bin/nu"
 
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
