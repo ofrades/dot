@@ -3,18 +3,19 @@
 {
   home.username = "ofrades";
   home.homeDirectory = "/home/ofrades";
-  home.stateVersion = "23.05";
+  home.stateVersion = "24.11";
 
   home.packages = with pkgs; [
     neofetch
     lazygit
-    nodejs
     ripgrep
-    docker
+    jq
+    tree
+    watch
     fd
+    htop
     bat
     lazydocker
-    python3
     jdk
     fzf
     rofi
@@ -43,33 +44,57 @@
   fonts.fontconfig.enable = true;
 
   home.file = {
-    ".config/nvim".source = ../../nvim/.config/nvim;
-
-    ".local/share/xsessions/i3-nix.desktop" = {
-      text = ''
-        [Desktop Entry]
-        Name=i3 (Nix)
-        Comment=Improved tiling window manager installed via Nix
-        Exec=${pkgs.i3}/bin/i3
-        TryExec=${pkgs.i3}/bin/i3
-        Type=Application
-        DesktopNames=i3
-      '';
-      executable = true;
-    };
+    ".config/nvim".source = ./../nvim/.config/nvim;
 
     ".local/bin/power-menu" = {
       text = ''
         #!/bin/bash
-        choice=$(echo -e "Logout\nShutdown\nRestart" | rofi -dmenu -p "Power")
-        case $choice in
-          Logout) i3-msg exit ;;
-          Shutdown) systemctl poweroff ;;
-          Restart) systemctl reboot ;;
+
+        # Enhanced power menu with icons and confirmation
+        # Supports logout, lock, shutdown, reboot, and suspend
+
+        # Define icons for menu items (using FontAwesome icons)
+        logout_icon=""
+        lock_icon=""
+        shutdown_icon=""
+        reboot_icon=""
+        suspend_icon=""
+
+        # Create the menu with icons
+        choice=$(echo -e "$logout_icon Logout\n$lock_icon Lock\n$suspend_icon Suspend\n$reboot_icon Reboot\n$shutdown_icon Shutdown" | \
+                rofi -dmenu -i -p "Power Menu" -theme-str 'window {width: 400px;}')
+
+        # Handle the selection with confirmations
+        case "$choice" in
+            "$logout_icon Logout")
+                i3-msg exit
+                ;;
+            "$lock_icon Lock")
+                i3lock -c 000000
+                ;;
+            "$suspend_icon Suspend")
+                confirm=$(echo -e "Yes\nNo" | rofi -dmenu -i -p "Confirm suspend?")
+                if [ "$confirm" = "Yes" ]; then
+                    systemctl suspend
+                fi
+                ;;
+            "$reboot_icon Reboot")
+                confirm=$(echo -e "Yes\nNo" | rofi -dmenu -i -p "Confirm reboot?")
+                if [ "$confirm" = "Yes" ]; then
+                    systemctl reboot
+                fi
+                ;;
+            "$shutdown_icon Shutdown")
+                confirm=$(echo -e "Yes\nNo" | rofi -dmenu -i -p "Confirm shutdown?")
+                if [ "$confirm" = "Yes" ]; then
+                    systemctl poweroff
+                fi
+                ;;
         esac
       '';
       executable = true;
     };
+
     ".config/picom/picom.conf" = {
       text = ''
         # Basic picom configuration
@@ -94,6 +119,8 @@
 
   xsession = {
     enable = true;
+    scriptPath = ".xsession";
+    profilePath = ".xprofile";
     initExtra = ''
       ${pkgs.xorg.setxkbmap}/bin/setxkbmap -layout "us,pt" -option "grp:win_space_toggle,caps:escape"
     '';
@@ -368,23 +395,6 @@
       };
     }];
   };
-  programs.carapace.enable = true;
-  programs.nushell = {
-    enable = true;
-    shellAliases = {
-      g = "lazygit";
-      n = "nvim";
-      r = "exec systemctl reboot";
-      s = "exec systemctl poweroff";
-      l = "exec i3-msg exit";
-    };
-    configFile.text = ''
-      $env.config.buffer_editor = "nvim";
-      $env.config.show_banner = false;
-      $env.config.completions.external.enable = true
-      $env.PATH = ($env.PATH | prepend "/nix/var/nix/profiles/default/bin" | prepend "/home/ofrades/.nix-profile/bin")
-    '';
-  };
   programs.ghostty = {
     enable = true;
     enableZshIntegration = true;
@@ -423,6 +433,17 @@
       "gtk-tabs-location" = "bottom";
       "copy-on-select" = "clipboard";
       "confirm-close-surface" = false;
+    };
+  };
+  programs.carapace.enable = true;
+  programs.nushell = {
+    enable = true;
+    shellAliases = {
+      g = "lazygit";
+      n = "nvim";
+      r = "exec systemctl reboot";
+      s = "exec systemctl poweroff";
+      l = "exec i3-msg exit";
     };
   };
   programs.starship.enable = true;

@@ -31,3 +31,7 @@ vim.g.netrw_keepdir = 0
 vim.g.netrw_liststyle = 1
 vim.o.spelllang = "en,pt,la"
 vim.o.spell = true
+
+-- macros
+local esc = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
+vim.fn.setreg("l", "yoconsole.log('" .. esc .. "pa:', " .. esc .. "pa);" .. esc .. "s") -- with sav
