@@ -8,7 +8,10 @@
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-  };  
+
+    hyprpanel.url = "github:jas-singhfsu/hyprpanel";
+    hyprpanel.inputs.nixpkgs.follows = "nixpkgs";
+  };
 
   outputs = { self, nixpkgs, home-manager, ... }:
     let

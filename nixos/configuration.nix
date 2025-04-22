@@ -4,6 +4,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.luks.devices."luks-c939a0f2-eeaf-4e5b-933b-b45a5ae5e5ec".device =
     "/dev/disk/by-uuid/c939a0f2-eeaf-4e5b-933b-b45a5ae5e5ec";
+  boot.kernelParams =
+    [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" "nvidia-drm.modeset=1" ];
   networking.hostName = "ofrades";
   networking.networkmanager.enable = true;
   time.timeZone = "Europe/Lisbon";
@@ -21,7 +23,12 @@
   };
   services.xserver.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
   services.xserver.windowManager.i3.enable = true;
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
   services.xserver.xkb = {
     layout = "us,pt";
     variant = "";
@@ -36,6 +43,7 @@
     powerManagement.finegrained = false;
     open = false;
     nvidiaSettings = true;
+    forceFullCompositionPipeline = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
   hardware.pulseaudio.enable = false;
@@ -64,6 +72,11 @@
     zig
     pavucontrol
   ];
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
+    config.common.default = "*";
+  };
   system.stateVersion = "24.11";
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 }

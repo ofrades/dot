@@ -1,11 +1,13 @@
-{ config, pkgs, ... }:
+{ config, inputs, pkgs, ... }:
 
 {
+  imports = [ ./../modules/hyprland.nix ];
   home.username = "ofrades";
   home.homeDirectory = "/home/ofrades";
   home.stateVersion = "24.11";
 
   home.packages = with pkgs; [
+    # Your existing packages
     neofetch
     lazygit
     ripgrep
@@ -18,7 +20,6 @@
     lazydocker
     jdk
     fzf
-    rofi
     flameshot
     xorg.setxkbmap
     xorg.xkbcomp
@@ -39,6 +40,7 @@
     nodePackages.pnpm
     feh
     picom
+    rofi
   ];
 
   fonts.fontconfig.enable = true;
@@ -46,6 +48,7 @@
   home.file = {
     ".config/nvim".source = ./../nvim/.config/nvim;
 
+    # Keep your existing power-menu script
     ".local/bin/power-menu" = {
       text = ''
         #!/bin/bash
@@ -95,6 +98,7 @@
       executable = true;
     };
 
+    # Keep your existing picom configuration
     ".config/picom/picom.conf" = {
       text = ''
         # Basic picom configuration
@@ -117,6 +121,7 @@
     };
   };
 
+  # Keep your existing X11/i3 configuration
   xsession = {
     enable = true;
     scriptPath = ".xsession";
@@ -267,11 +272,6 @@
             always = true;
           }
           {
-            command = "${pkgs.picom}/bin/picom --daemon";
-            notification = false;
-            always = true;
-          }
-          {
             command = "clipmenud";
             notification = false;
           }
@@ -311,6 +311,8 @@
       };
     };
   };
+
+  programs.kitty.enable = true;
 
   programs.i3status = {
     enable = true;
@@ -360,6 +362,7 @@
     };
   };
 
+  # Keep your existing program configurations
   programs.neovim = {
     enable = true;
     vimAlias = true;
@@ -367,6 +370,7 @@
     withNodeJs = true;
     defaultEditor = true;
   };
+
   programs.git = {
     enable = true;
     userName = "ofrades";
@@ -395,6 +399,7 @@
       };
     }];
   };
+
   programs.ghostty = {
     enable = true;
     enableZshIntegration = true;
@@ -435,6 +440,7 @@
       "confirm-close-surface" = false;
     };
   };
+
   programs.carapace.enable = true;
   programs.nushell = {
     enable = true;
@@ -444,8 +450,10 @@
       r = "exec systemctl reboot";
       s = "exec systemctl poweroff";
       l = "exec i3-msg exit";
+      hl = "exec hyprctl dispatch exit"; # Added Hyprland logout shortcut
     };
   };
+
   programs.starship.enable = true;
   programs.starship.enableNushellIntegration = true;
   programs.zoxide.enable = true;
