@@ -1,4 +1,4 @@
-{ config, inputs, pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [ ./../modules/hyprland.nix ];
@@ -31,6 +31,7 @@
     noto-fonts
     noto-fonts-emoji
     font-awesome
+    nerdfonts
     i3-gaps
     i3status
     i3lock
@@ -41,6 +42,7 @@
     feh
     picom
     rofi
+    easyeffects
   ];
 
   fonts.fontconfig.enable = true;

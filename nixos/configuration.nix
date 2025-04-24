@@ -21,21 +21,29 @@
     LC_TELEPHONE = "pt_PT.UTF-8";
     LC_TIME = "pt_PT.UTF-8";
   };
-  services.xserver.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.windowManager.i3.enable = true;
+  services.xserver = {
+    enable = true;
+    xkb = {
+      layout = "us,pt";
+      variant = "";
+    };
+    desktopManager.gnome.enable = true;
+    windowManager.i3.enable = true;
+    displayManager = {
+      defaultSession = "hyprland";
+      gdm = {
+        enable = true;
+        wayland = true;
+      };
+    };
+    videoDrivers = [ "nvidia" ];
+  };
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
   };
-  services.xserver.xkb = {
-    layout = "us,pt";
-    variant = "";
-  };
   services.printing.enable = true;
   hardware.graphics.enable = true;
-  services.xserver.videoDrivers = [ "nvidia" ];
   services.flatpak.enable = true;
   hardware.nvidia = {
     modesetting.enable = true;
