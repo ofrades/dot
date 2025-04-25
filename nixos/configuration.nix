@@ -27,8 +27,6 @@
       layout = "us,pt";
       variant = "";
     };
-    desktopManager.gnome.enable = true;
-    windowManager.i3.enable = true;
     displayManager = {
       defaultSession = "hyprland";
       gdm = {
@@ -45,6 +43,8 @@
   services.printing.enable = true;
   hardware.graphics.enable = true;
   services.flatpak.enable = true;
+  services.gnome.gnome-keyring.enable = true;
+  security.polkit.enable = true;
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
@@ -56,6 +56,7 @@
   };
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
+
   services.pipewire = {
     enable = true;
     alsa.enable = true;
