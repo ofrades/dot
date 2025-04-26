@@ -21,21 +21,7 @@
     LC_TELEPHONE = "pt_PT.UTF-8";
     LC_TIME = "pt_PT.UTF-8";
   };
-  services.xserver = {
-    enable = true;
-    xkb = {
-      layout = "us,pt";
-      variant = "";
-    };
-    displayManager = {
-      defaultSession = "hyprland";
-      gdm = {
-        enable = true;
-        wayland = true;
-      };
-    };
-    videoDrivers = [ "nvidia" ];
-  };
+
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -45,6 +31,17 @@
   services.flatpak.enable = true;
   services.gnome.gnome-keyring.enable = true;
   security.polkit.enable = true;
+  services.greetd = {
+    enable = true;
+    settings = rec {
+      initial_session = {
+        command = "Hyprland";
+        user = "ofrades";
+      };
+      default_session = initial_session;
+    };
+  };
+  security.pam.services.greetd.enableGnomeKeyring = true;
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
@@ -80,6 +77,8 @@
     ghostty
     zig
     pavucontrol
+    gnome.gnome-control-center
+    gnome.gnome-settings-daemon
   ];
   xdg.portal = {
     enable = true;

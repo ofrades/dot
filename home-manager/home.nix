@@ -1,14 +1,13 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./../modules/hyprland.nix ];
+  imports = [ ./../modules/hyprland.nix ./../modules/nvim.nix ];
   home.username = "ofrades";
   home.homeDirectory = "/home/ofrades";
   home.stateVersion = "24.11";
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
-    # Your existing packages
     neofetch
     lazygit
     ripgrep
@@ -21,23 +20,16 @@
     lazydocker
     jdk
     fzf
-    flameshot
-    xorg.setxkbmap
-    xorg.xkbcomp
-    clipmenu
-    clipnotify
-    xclip
     ollama
     jetbrains-mono
     noto-fonts
     noto-fonts-emoji
     font-awesome
+    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
     brightnessctl
     polkit_gnome
     networkmanagerapplet
     nodePackages.pnpm
-    feh
-    picom
     easyeffects
     telegram-desktop
     slack
@@ -46,17 +38,7 @@
 
   fonts.fontconfig.enable = true;
 
-  home.file = { ".config/nvim".source = ./../nvim/.config/nvim; };
-
   programs.kitty.enable = true;
-
-  programs.neovim = {
-    enable = true;
-    vimAlias = true;
-    withPython3 = true;
-    withNodeJs = true;
-    defaultEditor = true;
-  };
 
   programs.git = {
     enable = true;

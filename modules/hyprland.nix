@@ -32,8 +32,8 @@
     # Wallpaper configuration
     ".config/hypr/hyprpaper.conf" = {
       text = ''
-        preload = ${config.home.homeDirectory}/dot/wall.jpg
-        wallpaper = ,${config.home.homeDirectory}/dot/wall.jpg
+        preload = ${config.home.homeDirectory}/dot/wallpaper_dark.png
+        wallpaper = ,${config.home.homeDirectory}/dot/wallpaper_dark.png
       '';
     };
   };
@@ -246,7 +246,7 @@
       };
 
       background = [{
-        path = "~/Pictures/wall.jpg";
+        path = "~/Pictures/wallpaper_dark.png";
         blur_passes = 3;
         blur_size = 8;
       }];
@@ -298,6 +298,7 @@
       theme = {
         name = "tokyo_night";
         font.size = "1rem";
+        bar.opacity = 0;
       };
       layout = {
         "bar.layouts" = {
@@ -311,6 +312,7 @@
               "volume"
               "network"
               "netstat"
+              "kbinput"
               "power"
               "notifications"
             ];
