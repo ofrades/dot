@@ -30,10 +30,13 @@
     polkit_gnome
     networkmanagerapplet
     nodePackages.pnpm
+    (flameshot.override { enableWlrSupport = true; })
+    obs-studio
     easyeffects
     telegram-desktop
     slack
     whatsapp-for-linux
+    nautilus
   ];
 
   fonts.fontconfig.enable = true;

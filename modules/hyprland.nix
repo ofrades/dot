@@ -196,8 +196,8 @@
         "$mainMod, b, exec, brave"
 
         # System Controls
-        "alt, L, exec, hyprlock"
-        "$mainMod SHIFT, s, exec, hyprshot -m region --freeze"
+        "alt, L, exec, hyprctl dispatch dpms off"
+        "$mainMod SHIFT, s, exec, flameshot gui"
         "$mainMod SHIFT, c, exec, hyprctl reload"
 
         # Workspaces
@@ -251,6 +251,8 @@
         blur_size = 8;
       }];
 
+      label = [{ text = "Hi there, $USER"; }];
+
       input-field = [{
         size = "200, 50";
         position = "0, -80";
@@ -258,7 +260,7 @@
         dots_center = true;
         fade_on_empty = false;
         outline_thickness = 5;
-        placeholder_text = "Matrix control center password...";
+        placeholder_text = "Password...";
         shadow_passes = 2;
         rounding = 0;
       }];
@@ -270,19 +272,23 @@
     settings = {
       general = {
         after_sleep_cmd = "hyprctl dispatch dpms on";
-        ignore_dbus_inhibit = false;
-        lock_cmd = "hyprlock";
+        before_sleep_cmd = "loginctl lock-session";
+        lock_cmd = "pidof hyprlock || hyprlock";
       };
 
       listener = [
         {
-          timeout = 900;
-          on-timeout = "hyprlock";
+          timeout = 300;
+          on-timeout = "loginctl lock-session";
         }
         {
-          timeout = 1200;
+          timeout = 420;
           on-timeout = "hyprctl dispatch dpms off";
           on-resume = "hyprctl dispatch dpms on";
+        }
+        {
+          timeout = 600;
+          on-timeout = "systemctl suspend";
         }
       ];
     };
@@ -291,6 +297,7 @@
   # Panel configuration
   programs.hyprpanel = {
     enable = true;
+    systemd.enable = true;
     overwrite.enable = true;
     overlay.enable = true;
 
