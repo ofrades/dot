@@ -1,6 +1,14 @@
 { config, pkgs, ... }:
-
-{
+let
+  # Create a custom derivation for Nushell with renamed binary
+  nush = pkgs.runCommand "nush" { nativeBuildInputs = [ pkgs.makeWrapper ]; } ''
+    mkdir -p $out/bin
+    ln -s ${pkgs.nushell}/bin/nu $out/bin/nush
+    wrapProgram $out/bin/nush --prefix PATH : ${
+      pkgs.lib.makeBinPath [ pkgs.nushell ]
+    }
+  '';
+in {
   imports = [ ./../modules/hyprland.nix ./../modules/nvim.nix ];
   home.username = "ofrades";
   home.homeDirectory = "/home/ofrades";
@@ -31,6 +39,7 @@
     networkmanagerapplet
     nodePackages.pnpm
     (flameshot.override { enableWlrSupport = true; })
+    nodePackages."@antfu/ni"
     obs-studio
     easyeffects
     telegram-desktop
@@ -114,12 +123,25 @@
   };
 
   programs.carapace.enable = true;
+
   programs.nushell = {
     enable = true;
+    package = nush;
     shellAliases = {
       g = "lazygit";
       n = "nvim";
     };
+    configFile.text = ''
+      $env.config = {
+        show_banner: false
+        completions: {
+          external: {
+            enable: true
+            max_results: 100
+          }
+        }
+      }
+    '';
   };
 
   programs.starship.enable = true;

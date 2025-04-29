@@ -22,6 +22,12 @@
     LC_TIME = "pt_PT.UTF-8";
   };
 
+  services.xserver = {
+    enable = true;
+    displayManager = { defaultSession = "hyprland"; };
+    videoDrivers = [ "nvidia" ];
+  };
+
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -42,6 +48,7 @@
     };
   };
   security.pam.services.greetd.enableGnomeKeyring = true;
+  security.pam.services.login.enableGnomeKeyring = true;
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
@@ -51,15 +58,24 @@
     forceFullCompositionPipeline = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
 
+  # Ensure sound support
+  hardware.pulseaudio.enable = false;
   services.pipewire = {
     enable = true;
+    audio.enable = true;
     alsa.enable = true;
-    alsa.support32Bit = true;
     pulse.enable = true;
+    jack.enable = true;
+    wireplumber.enable = true;
+    extraConfig.pipewire."context.properties" = {
+      "default.clock.rate" = 48000;
+      "default.clock.quantum" = 1024;
+      "default.clock.min-quantum" = 1024;
+    };
   };
+
   users.users.ofrades = {
     isNormalUser = true;
     description = "Miguel Bastos";
@@ -76,10 +92,17 @@
     python3
     ghostty
     zig
+    alsa-utils
     pavucontrol
+    wireplumber
+    vlc
     gnome.gnome-control-center
     gnome.gnome-settings-daemon
+    pkgs.xdg-desktop-portal-gtk
   ];
+
+  powerManagement.cpuFreqGovernor = "performance";
+
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];

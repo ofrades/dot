@@ -23,7 +23,6 @@
     brightnessctl
     grimblast
     xdg-desktop-portal-hyprland
-    xdg-desktop-portal-gtk
     polkit_gnome
   ];
 
@@ -32,8 +31,8 @@
     # Wallpaper configuration
     ".config/hypr/hyprpaper.conf" = {
       text = ''
-        preload = ${config.home.homeDirectory}/dot/wallpaper_dark.png
-        wallpaper = ,${config.home.homeDirectory}/dot/wallpaper_dark.png
+        preload = ${config.home.homeDirectory}/dot/wallpaper_day.png
+        wallpaper = ,${config.home.homeDirectory}/dot/wallpaper_day.png
       '';
     };
   };
@@ -66,6 +65,7 @@
         "GTK_USE_PORTAL,1"
         "QT_QPA_PLATFORM,wayland;xcb"
         "QT_QPA_PLATFORMTHEME,qt5ct"
+        "QT_SCREEN_SCALE_FACTORS,1"
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
         "SDL_VIDEODRIVER,wayland"
       ];
@@ -246,7 +246,7 @@
       };
 
       background = [{
-        path = "~/Pictures/wallpaper_dark.png";
+        path = "~/Pictures/wallpaper_day.png";
         blur_passes = 3;
         blur_size = 8;
       }];
