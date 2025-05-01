@@ -7,7 +7,10 @@
   boot.kernelParams =
     [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" "nvidia-drm.modeset=1" ];
   networking.hostName = "ofrades";
-  networking.networkmanager.enable = true;
+  networking.networkmanager = {
+    enable = true;
+    wifi.backend = "iwd"; # Modern WiFi backend
+  };
   time.timeZone = "Europe/Lisbon";
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
@@ -22,31 +25,91 @@
     LC_TIME = "pt_PT.UTF-8";
   };
 
-  services.xserver = {
-    enable = true;
-    displayManager = { defaultSession = "hyprland"; };
-    videoDrivers = [ "nvidia" ];
-  };
-
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
   };
-  services.printing.enable = true;
-  hardware.graphics.enable = true;
-  services.flatpak.enable = true;
-  services.gnome.gnome-keyring.enable = true;
-  security.polkit.enable = true;
-  services.greetd = {
-    enable = true;
-    settings = rec {
-      initial_session = {
-        command = "Hyprland";
-        user = "ofrades";
+
+  services = {
+    # Basic GNOME system services
+    gvfs.enable = true; # File system support for applications
+    flatpak.enable = true;
+
+    xserver = {
+      enable = true;
+      displayManager = { defaultSession = "hyprland"; };
+      videoDrivers = [ "nvidia" ];
+    };
+    greetd = {
+      enable = true;
+      settings = rec {
+        initial_session = {
+          command = "Hyprland";
+          user = "ofrades";
+        };
+        default_session = initial_session;
       };
-      default_session = initial_session;
+    };
+    gnome = {
+      evolution-data-server.enable = true; # Calendar, contacts, tasks
+      gnome-keyring.enable = true; # Secure credential storage
+      gnome-online-accounts.enable = true; # Online account integration
+      sushi.enable = true; # File previewer for Nautilus
+    };
+
+    # Printer support
+    printing = {
+      enable = true;
+      drivers = with pkgs; [
+        gutenprint
+        gutenprintBin
+        hplip
+        brlaser
+        brgenml1lpr
+        brgenml1cupswrapper
+      ];
+    };
+    avahi = {
+      enable = true;
+      nssmdns = true;
+      openFirewall = true;
+    };
+
+    pipewire = {
+      enable = true;
+      audio.enable = true;
+      alsa.enable = true;
+      pulse.enable = true;
+      jack.enable = true;
+      wireplumber.enable = true;
+      extraConfig.pipewire."context.properties" = {
+        "default.clock.rate" = 48000;
+        "default.clock.quantum" = 1024;
+        "default.clock.min-quantum" = 1024;
+      };
     };
   };
+
+  systemd = {
+    user.services.polkit-gnome-authentication-agent-1 = {
+      description = "polkit-gnome-authentication-agent-1";
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart =
+          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+    };
+  };
+
+  hardware.graphics.enable = true;
+
+  security.polkit.enable = true;
   security.pam.services.greetd.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
   hardware.nvidia = {
@@ -62,19 +125,6 @@
 
   # Ensure sound support
   hardware.pulseaudio.enable = false;
-  services.pipewire = {
-    enable = true;
-    audio.enable = true;
-    alsa.enable = true;
-    pulse.enable = true;
-    jack.enable = true;
-    wireplumber.enable = true;
-    extraConfig.pipewire."context.properties" = {
-      "default.clock.rate" = 48000;
-      "default.clock.quantum" = 1024;
-      "default.clock.min-quantum" = 1024;
-    };
-  };
 
   users.users.ofrades = {
     isNormalUser = true;
@@ -86,7 +136,6 @@
     vim
     wget
     git
-    brave
     docker
     nodejs
     python3

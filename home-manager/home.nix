@@ -9,7 +9,8 @@ let
     }
   '';
 in {
-  imports = [ ./../modules/hyprland.nix ./../modules/nvim.nix ];
+  imports =
+    [ ./../modules/hyprland.nix ./../modules/nvim.nix ./../modules/gnome.nix ];
   home.username = "ofrades";
   home.homeDirectory = "/home/ofrades";
   home.stateVersion = "24.11";
@@ -34,8 +35,6 @@ in {
     noto-fonts-emoji
     font-awesome
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-    brightnessctl
-    polkit_gnome
     networkmanagerapplet
     nodePackages.pnpm
     (flameshot.override { enableWlrSupport = true; })
@@ -45,7 +44,8 @@ in {
     telegram-desktop
     slack
     whatsapp-for-linux
-    nautilus
+    obsidian
+    planify
   ];
 
   fonts.fontconfig.enable = true;

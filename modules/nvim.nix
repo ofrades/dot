@@ -132,7 +132,7 @@
 
         -- reload when files change outside buffer
         vim.o.autoread = true
-        vim.o.shell = "nu"
+        vim.o.shell = "nush"
 
         vim.opt.foldmethod = "expr"
         vim.opt.foldexpr = "nvim_treesitter#foldexpr()"

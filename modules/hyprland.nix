@@ -9,21 +9,18 @@
     hyprshot
     hyprlock
     hyprshade
-    hyprcursor
     hyprpicker
     hyprsunset
 
     # Wayland utilities
-    swww
     walker
-    libnotify
     wl-clipboard
+    wl-clip-persist
     cliphist
     wf-recorder
-    brightnessctl
+    glib
     grimblast
     xdg-desktop-portal-hyprland
-    polkit_gnome
   ];
 
   # === CONFIG FILES ===
@@ -57,32 +54,41 @@
         "XDG_SESSION_DESKTOP,Hyprland"
         "GBM_BACKEND,nvidia-drm"
         "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-        "WLR_NO_HARDWARE_CURSORS,1"
-        "XCURSOR_THEME,Adwaita"
-        "XCURSOR_SIZE,24"
-        "HYPRCURSOR_THEME,Adwaita"
-        "HYPRCURSOR_SIZE,24"
         "GTK_USE_PORTAL,1"
         "QT_QPA_PLATFORM,wayland;xcb"
-        "QT_QPA_PLATFORMTHEME,qt5ct"
+        "QT_QPA_PLATFORMTHEME,gtk2"
         "QT_SCREEN_SCALE_FACTORS,1"
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
         "SDL_VIDEODRIVER,wayland"
       ];
 
       # === STARTUP APPLICATIONS ===
+      exec = [
+        "gsettings set org.gnome.desktop.interface gtk-theme Yaru"
+        "gsettings set org.gnome.desktop.interface cursor-theme Adwaita"
+        "gsettings set org.gnome.desktop.interface icon-theme Papirus"
+        "gsettings set org.gnome.desktop.interface cursor-size 24"
+        "gsettings set org.gnome.desktop.interface text-scaling-factor 1"
+      ];
+
       exec-once = [
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "hyprpaper" # Wallpaper
-        "wl-paste --watch cliphist store" # Clipboard history
-        # "nm-applet --indicator"        # Removed to fix duplicate network icons
-        "walker --gapplication-service" # App launcher
-        "gnome-keyring-daemon --start" # Keyring
         "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
-        "easyeffects --gapplication-service" # Audio effects
+        "gnome-keyring-daemon --start --components=pkcs11,secrets,ssh"
+        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-xsettings"
+        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-power"
+        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-media-keys"
+        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-sound"
+        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-printer"
+        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-rfkill"
+        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-smartcard"
         "hyprpanel" # Status bar
+        "easyeffects --gapplication-service" # Audio effects
+        "hyprpaper" # Wallpaper
         "hypridle" # Screen lock/sleep
-        "hyprlock" # Lock screen
+        "wl-clip-persist --clipboard regular"
+        "wl-paste --watch cliphist store" # Clipboard history
+        "walker --gapplication-service" # App launcher
       ];
 
       # === WINDOW MANAGEMENT ===
@@ -91,7 +97,7 @@
         preserve_split = true;
       };
 
-      master = { new_status = "master"; };
+      cursor = { enable_hyprcursor = false; };
 
       # === APPEARANCE ===
       general = {
@@ -100,6 +106,7 @@
         gaps_out = 10;
         border_size = 3;
         layout = "dwindle";
+        "col.active_border" = "rgba(1ABC9Cbb) rgba(DAA856ee)";
       };
 
       decoration = {
@@ -109,40 +116,17 @@
           size = 3;
           passes = 2;
         };
-        shadow = {
-          enabled = true;
-          ignore_window = true;
-          offset = "2 2";
-          range = 8;
-          render_power = 2;
-        };
+        shadow.enabled = false;
       };
 
       # === ANIMATIONS ===
-      animations = {
-        enabled = true;
-        bezier = [
-          "overshot, 0.05, 0.9, 0.1, 1.05"
-          "smoothOut, 0.36, 0, 0.66, -0.56"
-          "smoothIn, 0.25, 1, 0.5, 1"
-        ];
-        animation = [
-          "windows, 1, 1, overshot, slide"
-          "windowsOut, 1, 1, smoothOut, slide"
-          "windowsMove, 1, 1, default"
-          "border, 1, 10, default"
-          "fade, 1, 2, smoothIn"
-          "workspaces, 1, 6, default"
-          "fadeDim, 1, 2, smoothIn"
-          "specialWorkspace, 1, 4, default, slidevert"
-        ];
-      };
+      animations.enabled = false;
 
       # === INPUT CONFIGURATION ===
       input = {
         kb_layout = "us,pt";
         kb_options = "grp:win_space_toggle,caps:escape";
-        follow_mouse = 2;
+        follow_mouse = 1;
         sensitivity = 0.5;
         repeat_rate = 25;
         repeat_delay = 200;
@@ -151,15 +135,23 @@
       # === MONITORS ===
       monitor = [ ",preferred,auto,1" ];
 
-      # === MISCELLANEOUS ===
-      misc = {
-        disable_hyprland_logo = true;
-        disable_splash_rendering = true;
-        mouse_move_enables_dpms = true;
-      };
-
       # === WINDOW RULES ===
-      windowrulev2 = [ "opacity 0.9 0.9,class:^(ghostty)$" ];
+      windowrulev2 = [
+        "opacity 0.9 0.9,class:^(ghostty)$"
+        "float,class:^(org.gnome.Nautilus)$"
+        "float,class:^(gnome-control-center)$"
+        "float,class:^(gnome-disks)$"
+        "float,class:^(gnome-system-monitor)$"
+        "float,class:^(org.gnome.Calculator)$"
+        "float,class:^(org.gnome.Calendar)$"
+        "float,class:^(org.gnome.font-viewer)$"
+        "float,class:^(file-roller)$"
+        "float,class:^(eog)$"
+        "float,class:^(simple-scan)$"
+        "float,title:^(Picture-in-Picture)$"
+        "float,title:^(Save As)$"
+        "float,title:^(Open File)$"
+      ];
 
       # === MOUSE BINDINGS ===
       bindm = [
@@ -170,10 +162,10 @@
       # === KEY BINDINGS ===
       bind = [
         # Terminal
-        "$mainMod, Return, exec, ghostty"
+        "$mainMod, t, exec, ghostty"
 
         # Window Management
-        "$mainMod SHIFT, q, killactive,"
+        "$mainMod, q, killactive,"
         "$mainMod, f, fullscreen,"
         "$mainMod SHIFT, space, togglefloating,"
 
@@ -186,19 +178,17 @@
         "$mainMod SHIFT, l, movewindow, r"
         "$mainMod SHIFT, k, movewindow, u"
         "$mainMod SHIFT, j, movewindow, d"
-        "$mainMod, b, splitratio, -0.05"
-        "$mainMod, v, splitratio, +0.05"
 
         # Applications
         "$mainMod, d, exec, walker"
         "$mainMod, e, exec, walker -m emojis"
         "$mainMod, c, exec, walker -m clipboard"
-        "$mainMod, b, exec, brave"
+        "$mainMod, b, exec, zen-browser"
 
         # System Controls
-        "alt, L, exec, hyprctl dispatch dpms off"
-        "$mainMod SHIFT, s, exec, flameshot gui"
-        "$mainMod SHIFT, c, exec, hyprctl reload"
+        "alt, l, exec, hyprlock"
+        "$mainMod, p, exec, flameshot gui"
+        "$mainMod SHIFT, r, exec, hyprctl reload"
 
         # Workspaces
         "$mainMod, 1, workspace, 1"
@@ -223,16 +213,22 @@
         "$mainMod SHIFT, 8, movetoworkspace, 8"
         "$mainMod SHIFT, 9, movetoworkspace, 9"
         "$mainMod SHIFT, 0, movetoworkspace, 10"
-
-        # Media Controls
-        ", Print, exec, grimblast copy output"
-        ", XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%"
-        ", XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%"
-        ", XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
-        ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
-        ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
       ];
     };
+  };
+
+  programs.brave = {
+    enable = true;
+    commandLineArgs = [
+      "--disable-features=Vulkan"
+      "--disable-gpu-memory-buffer-video-frames"
+      "--disable-features=UseChromeOSDirectVideoDecoder"
+      "--enable-gpu-rasterization"
+      "--enable-zero-copy"
+      "--ignore-gpu-blocklist"
+      "--enable-features=UseOzonePlatform"
+      "--ozone-platform=wayland"
+    ];
   };
 
   programs.hyprlock = {
@@ -240,18 +236,25 @@
     settings = {
       general = {
         disable_loading_bar = true;
-        grace = 300;
+        grace = 5;
         hide_cursor = true;
         ignore_empty_input = true;
       };
 
       background = [{
-        path = "~/Pictures/wallpaper_day.png";
+        path = "${config.home.homeDirectory}/dot/wallpaper_day.png";
         blur_passes = 3;
         blur_size = 8;
       }];
 
-      label = [{ text = "Hi there, $USER"; }];
+      label = [{
+        text = "Hi there, $USER";
+        color = "rgb(255, 255, 255)";
+        font_size = 24;
+        position = "0, -40";
+        halign = "center";
+        valign = "center";
+      }];
 
       input-field = [{
         size = "200, 50";
@@ -260,9 +263,9 @@
         dots_center = true;
         fade_on_empty = false;
         outline_thickness = 5;
-        placeholder_text = "Password...";
+        placeholder_text = "<i>Password...</i>";
         shadow_passes = 2;
-        rounding = 0;
+        rounding = 10;
       }];
     };
   };
@@ -271,11 +274,11 @@
     enable = true;
     settings = {
       general = {
-        after_sleep_cmd = "hyprctl dispatch dpms on";
-        before_sleep_cmd = "loginctl lock-session";
-        lock_cmd = "pidof hyprlock || hyprlock";
+        lock_cmd = "hyprlock"; # avoid starting multiple hyprlock instances.
+        before_sleep_cmd = "loginctl lock-session"; # lock before suspend.
+        after_sleep_cmd =
+          "hyprctl dispatch dpms on"; # to avoid having to press a key twice to turn on the display.
       };
-
       listener = [
         {
           timeout = 300;
@@ -304,8 +307,8 @@
     settings = {
       theme = {
         name = "tokyo_night";
-        font.size = "1rem";
-        bar.opacity = 0;
+        font.size = "0.8rem";
+        bar.opacity = 50;
       };
       layout = {
         "bar.layouts" = {
