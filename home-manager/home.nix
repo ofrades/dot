@@ -165,6 +165,15 @@ in {
     '';
   };
 
+  programs.atuin = {
+    enable = true;
+    enableNushellIntegration = true;
+    settings = {
+      show_tabs = false;
+      style = "compact";
+    };
+  };
+
   programs.starship.enable = true;
   programs.starship.enableNushellIntegration = true;
   programs.zoxide.enable = true;

@@ -1,13 +1,37 @@
 { config, inputs, pkgs, ... }: {
 
+  # Simplified package list - removed redundant i3-gaps package since it's specified in the xsession
   home.packages = with pkgs; [
-    i3-gaps
     i3status
     i3lock
     networkmanagerapplet
     feh
     picom
+    clipmenu
     xclip
+    (writeScriptBin "rofi-power" ''
+      #!${pkgs.bash}/bin/bash
+      OPTIONS="Lock\nLogout\nReboot\nShutdown\nSuspend"
+      LAUNCHER="rofi -dmenu -i -p Power"
+      POWER=$(echo -e $OPTIONS | $LAUNCHER | awk '{print $1}')
+      case $POWER in
+        Logout)
+          i3-msg exit
+          ;;
+        Suspend)
+          systemctl suspend
+          ;;
+        Reboot)
+          systemctl reboot
+          ;;
+        Shutdown)
+          systemctl poweroff
+          ;;
+        Lock)
+          i3lock -c 000000
+          ;;
+      esac
+    '')
   ];
 
   xsession = {
@@ -34,14 +58,21 @@
         keybindings =
           let modifier = config.xsession.windowManager.i3.config.modifier;
           in {
+            # Common commands
             "${modifier}+t" = "exec ghostty";
             "${modifier}+q" = "kill";
+            "${modifier}+f" = "fullscreen toggle";
+            "${modifier}+Shift+space" = "floating toggle";
+
+            # Application launchers
             "${modifier}+d" = "exec rofi -show drun";
             "${modifier}+e" = "exec rofi -show emoji";
-            "${modifier}+c" = "exec env CM_LAUNCHER=rofi clipmenu";
-            "${modifier}+x" =
-              "exec rofi -modi rofi-power-menu -show rofi-power-menu";
             "${modifier}+b" = "exec brave";
+
+            # Fixed lock command - using a consistent approach
+            "${modifier}+Escape" = "exec i3lock -c 000000";
+
+            # Navigation
             "${modifier}+h" = "focus left";
             "${modifier}+j" = "focus down";
             "${modifier}+k" = "focus up";
@@ -50,10 +81,9 @@
             "${modifier}+Shift+j" = "move down";
             "${modifier}+Shift+k" = "move up";
             "${modifier}+Shift+l" = "move right";
-            "Alt+l" = "exec i3lock --ignore-empty-password";
-            "${modifier}+f" = "fullscreen toggle";
-            "${modifier}+Shift+space" = "floating toggle";
             "${modifier}+a" = "focus parent";
+
+            # Workspace management
             "${modifier}+1" = "workspace number 1";
             "${modifier}+2" = "workspace number 2";
             "${modifier}+3" = "workspace number 3";
@@ -74,15 +104,22 @@
             "${modifier}+Shift+8" = "move container to workspace number 8";
             "${modifier}+Shift+9" = "move container to workspace number 9";
             "${modifier}+Shift+0" = "move container to workspace number 10";
+
+            # System controls
             "${modifier}+Shift+c" = "reload";
             "${modifier}+Shift+r" = "restart";
             "${modifier}+Shift+e" =
               "exec i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'";
+            "${modifier}+Shift+q" = "exec rofi-power";
+
+            # Clipboard management
+            "${modifier}+c" = "exec env CM_LAUNCHER=rofi clipmenu";
+
+            # Screenshot tools
             "Print" = "exec gnome-screenshot";
-            "${modifier}+Print" = "exec gnome-screenshot -a";
             "${modifier}+p" = "exec flameshot gui";
-            "${modifier}+Shift+p" =
-              "exec ${config.home.homeDirectory}/.local/bin/power-menu";
+
+            # Media controls
             "XF86AudioRaiseVolume" =
               "exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%";
             "XF86AudioLowerVolume" =
@@ -93,6 +130,8 @@
               "exec --no-startup-id brightnessctl set +5%";
             "XF86MonBrightnessDown" =
               "exec --no-startup-id brightnessctl set 5%-";
+
+            # Resize mode
             "${modifier}+r" = "mode resize";
           };
         modes = {
@@ -116,6 +155,7 @@
             command =
               "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
             notification = false;
+            always = false;
           }
           {
             command = "${pkgs.networkmanagerapplet}/bin/nm-applet";
@@ -127,12 +167,9 @@
             always = true;
           }
           {
-            command = "clipmenud";
+            command = "${pkgs.clipmenu}/bin/clipmenud";
             notification = false;
-          }
-          {
-            command = "easyeffects --gapplication-service";
-            notification = false;
+            always = false;
           }
           {
             command =
@@ -140,40 +177,27 @@
             notification = false;
             always = true;
           }
+          # Using xss-lock for automatic screen locking
           {
             command = "exec --no-startup-id xss-lock -- i3lock -c 000000";
-            notification = true;
+            notification = false;
           }
         ];
         window.commands = [
+          # Grouped floating window rules for cleaner configuration
           {
             command = "floating enable";
-            criteria = { window_role = "pop-up"; };
-          }
-          {
-            command = "floating enable";
-            criteria = { window_role = "bubble"; };
-          }
-          {
-            command = "floating enable";
-            criteria = { window_role = "task_dialog"; };
-          }
-          {
-            command = "floating enable";
-            criteria = { window_role = "Preferences"; };
-          }
-          {
-            command = "floating enable";
-            criteria = { window_type = "dialog"; };
-          }
-          {
-            command = "floating enable";
-            criteria = { window_type = "menu"; };
+            criteria = {
+              window_role = "pop-up|bubble|task_dialog|Preferences";
+              window_type = "dialog|menu";
+            };
           }
         ];
       };
     };
   };
+
+  # i3status configuration
   programs.i3status = {
     enable = true;
     general = {
@@ -181,44 +205,21 @@
       interval = 5;
     };
     modules = {
-      "disk /" = {
-        position = 4;
-        settings = { format = "%avail"; };
-      };
-      "load" = {
-        position = 5;
-        settings = { format = "%1min"; };
-      };
-      "memory" = {
-        position = 6;
-        settings = {
-          format = "%used | %available";
-          threshold_degraded = "1G";
-          format_degraded = "MEMORY < %available";
-        };
-      };
-      "tztime local" = {
-        position = 7;
-        settings = { format = "%Y-%m-%d %H:%M"; };
-      };
+      ipv6.enable = false;
+      "wireless _first_".enable = false;
+      "battery all".enable = false;
     };
   };
-  services.clipmenu.enable = true;
+
+  # Remaining program configurations
+  services.clipmenu = {
+    enable = true;
+    launcher = "${pkgs.rofi}/bin/rofi";
+  };
   programs.rofi = {
     enable = true;
     theme = "gruvbox-dark-hard";
-    plugins = with pkgs; [
-      networkmanager_dmenu
-      rofi-top
-      rofi-calc
-      rofi-emoji
-      rofi-systemd
-      rofi-menugen
-      rofi-bluetooth
-      rofi-power-menu
-      rofi-pulse-select
-      rofi-file-browser
-    ];
+    plugins = with pkgs; [ rofi-emoji rofi-calc rofi-bluetooth ];
     terminal = "ghostty";
     location = "center";
   };

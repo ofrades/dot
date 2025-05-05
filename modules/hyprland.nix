@@ -87,7 +87,6 @@
       exec-once = [
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "hyprpanel" # Status bar
-        "easyeffects --gapplication-service" # Audio effects
         "hyprpaper" # Wallpaper
         "hypridle" # Screen lock/sleep
         "wl-clip-persist --clipboard regular"
