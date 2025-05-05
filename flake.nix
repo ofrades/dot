@@ -23,7 +23,12 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       nixosConfigurations = {
-        ofrades = lib.nixosSystem {
+        nvidia = lib.nixosSystem {
+          inherit system;
+          modules = [ ./nixos/configuration-nvidia.nix ];
+        };
+
+        normal = lib.nixosSystem {
           inherit system;
           modules = [ ./nixos/configuration.nix ];
         };

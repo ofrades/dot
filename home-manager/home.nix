@@ -40,7 +40,6 @@ in {
     (flameshot.override { enableWlrSupport = true; })
     nodePackages."@antfu/ni"
     obs-studio
-    easyeffects
     telegram-desktop
     slack
     whatsapp-for-linux
@@ -122,7 +121,11 @@ in {
     };
   };
 
-  programs.carapace.enable = true;
+  programs.carapace = {
+    enable = true;
+    enableNushellIntegration = true;
+    enableBashIntegration = true;
+  };
 
   programs.nushell = {
     enable = true;

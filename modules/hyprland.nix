@@ -20,7 +20,6 @@
     wf-recorder
     glib
     grimblast
-    xdg-desktop-portal-hyprland
   ];
 
   # === CONFIG FILES ===
@@ -46,20 +45,32 @@
 
       # === ENVIRONMENT ===
       env = [
+        # NVIDIA-specific
         "LIBVA_DRIVER_NAME,nvidia"
-        "CLUTTER_BACKEND,wayland"
-        "GDK_BACKEND,wayland,x11,*"
+        "GBM_BACKEND,nvidia-drm"
+        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+        "WLR_NO_HARDWARE_CURSORS,1"
+        "__GL_GSYNC_ALLOWED,0"
+
+        # Wayland/Display server
         "XDG_SESSION_TYPE,wayland"
         "XDG_CURRENT_DESKTOP,Hyprland"
         "XDG_SESSION_DESKTOP,Hyprland"
-        "GBM_BACKEND,nvidia-drm"
-        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-        "GTK_USE_PORTAL,1"
+        "NIXOS_OZONE_WL,1"
+
+        # Use OpenGL renderer for better stability with NVIDIA
+        "WLR_RENDERER,gles2"
+
+        # Toolkit backends
+        "CLUTTER_BACKEND,wayland"
+        "GDK_BACKEND,wayland,x11"
         "QT_QPA_PLATFORM,wayland;xcb"
-        "QT_QPA_PLATFORMTHEME,gtk2"
-        "QT_SCREEN_SCALE_FACTORS,1"
-        "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
         "SDL_VIDEODRIVER,wayland"
+
+        # Toolkit theming
+        "GTK_USE_PORTAL,1"
+        "QT_QPA_PLATFORMTHEME,gtk2"
+        "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
       ];
 
       # === STARTUP APPLICATIONS ===
@@ -73,15 +84,6 @@
 
       exec-once = [
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
-        "gnome-keyring-daemon --start --components=pkcs11,secrets,ssh"
-        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-xsettings"
-        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-power"
-        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-media-keys"
-        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-sound"
-        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-printer"
-        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-rfkill"
-        "${pkgs.gnome.gnome-settings-daemon}/libexec/gsd-smartcard"
         "hyprpanel" # Status bar
         "easyeffects --gapplication-service" # Audio effects
         "hyprpaper" # Wallpaper
@@ -101,7 +103,7 @@
 
       # === APPEARANCE ===
       general = {
-        allow_tearing = true;
+        allow_tearing = false;
         gaps_in = 10;
         gaps_out = 10;
         border_size = 3;
@@ -183,7 +185,7 @@
         "$mainMod, d, exec, walker"
         "$mainMod, e, exec, walker -m emojis"
         "$mainMod, c, exec, walker -m clipboard"
-        "$mainMod, b, exec, zen-browser"
+        "$mainMod, b, exec, brave"
 
         # System Controls
         "alt, l, exec, hyprlock"
@@ -220,14 +222,9 @@
   programs.brave = {
     enable = true;
     commandLineArgs = [
-      "--disable-features=Vulkan"
-      "--disable-gpu-memory-buffer-video-frames"
-      "--disable-features=UseChromeOSDirectVideoDecoder"
-      "--enable-gpu-rasterization"
-      "--enable-zero-copy"
-      "--ignore-gpu-blocklist"
-      "--enable-features=UseOzonePlatform"
+      "--enable-features=VaapiVideoDecoder"
       "--ozone-platform=wayland"
+      "--disable-gpu-vsync"
     ];
   };
 
@@ -289,10 +286,6 @@
           on-timeout = "hyprctl dispatch dpms off";
           on-resume = "hyprctl dispatch dpms on";
         }
-        {
-          timeout = 600;
-          on-timeout = "systemctl suspend";
-        }
       ];
     };
   };
@@ -300,7 +293,6 @@
   # Panel configuration
   programs.hyprpanel = {
     enable = true;
-    systemd.enable = true;
     overwrite.enable = true;
     overlay.enable = true;
 

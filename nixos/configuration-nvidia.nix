@@ -1,7 +1,12 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+let
+  lts = pkgs.linuxPackages_5_15;
+  nvidiaDrv = lts.nvidiaPackages.beta;
+in {
   imports = [ ./hardware-configuration.nix ];
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.nvidia.acceptLicense = true;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.luks.devices."luks-c939a0f2-eeaf-4e5b-933b-b45a5ae5e5ec".device =
@@ -70,9 +75,28 @@
     };
   };
 
+  hardware.nvidia = {
+    open = false;
+    package = nvidiaDrv;
+    modesetting.enable = true;
+    powerManagement.enable = false; # Keep this disabled as in your config
+    nvidiaSettings = true; # Add this for NVIDIA settings utility
+    forceFullCompositionPipeline = true;
+  };
+
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
+  };
+
+  environment.sessionVariables = {
+    # Only keep the essential NVIDIA-related ones here
+    LIBVA_DRIVER_NAME = "nvidia";
+    GBM_BACKEND = "nvidia-drm";
+    NVD_BACKEND = "direct";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    WLR_NO_HARDWARE_CURSORS = "1";
+    NIXOS_OZONE_WL = "1";
   };
 
   systemd = {
@@ -92,7 +116,15 @@
     };
   };
 
-  hardware.graphics.enable = true;
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+    # install the VA‑API wrapper for NVIDIA so chromium/Brave can do hw decode
+    extraPackages = with pkgs;
+      [ nvidia-vaapi-driver ]; # :contentReference[oaicite:1]{index=1}
+  };
+
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   security.polkit.enable = true;
   security.pam.services.greetd.enableGnomeKeyring = true;

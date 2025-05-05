@@ -10,6 +10,15 @@
               inlay_hints = { enabled = false },
             },
           },
+          {
+            "NvChad/nvim-colorizer.lua",
+            opts = {
+              user_default_options = {
+                mode = "background",
+                names = false,
+              },
+            },
+          },
           { "echasnovski/mini.pairs", enabled = false },
           { "akinsho/bufferline.nvim", enabled = false },
           { "mg979/vim-visual-multi" },
