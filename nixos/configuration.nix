@@ -29,14 +29,12 @@
     gvfs.enable = true; # File system support for applications
     flatpak.enable = true;
 
-    greetd = {
+    xserver = {
       enable = true;
-      settings = rec {
-        initial_session = {
-          command = "Hyprland";
-          user = "ofrades";
-        };
-        default_session = initial_session;
+      desktopManager = { xterm.enable = false; };
+      displayManager = {
+        defaultSession = "none+i3";
+        gdm.enable = true;
       };
     };
 

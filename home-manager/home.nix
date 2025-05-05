@@ -9,8 +9,12 @@ let
     }
   '';
 in {
-  imports =
-    [ ./../modules/hyprland.nix ./../modules/nvim.nix ./../modules/gnome.nix ];
+  imports = [
+    ./../modules/gnome.nix
+    ./../modules/hyprland.nix
+    ./../modules/i3.nix
+    ./../modules/nvim.nix
+  ];
   home.username = "ofrades";
   home.homeDirectory = "/home/ofrades";
   home.stateVersion = "24.11";
@@ -48,8 +52,6 @@ in {
   ];
 
   fonts.fontconfig.enable = true;
-
-  programs.kitty.enable = true;
 
   programs.git = {
     enable = true;

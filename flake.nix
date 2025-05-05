@@ -23,14 +23,13 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       nixosConfigurations = {
-        gtx970 = lib.nixosSystem {
-          inherit system;
-          modules = [ ./nixos/gtx970.nix ];
-        };
-
         normal = lib.nixosSystem {
           inherit system;
           modules = [ ./nixos/configuration.nix ];
+        };
+        gtx970 = lib.nixosSystem {
+          inherit system;
+          modules = [ ./nixos/gtx970.nix ];
         };
       };
       homeConfigurations = {

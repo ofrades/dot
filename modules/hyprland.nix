@@ -33,6 +33,9 @@
     };
   };
 
+  # needed
+  programs.kitty.enable = true;
+
   # === HYPRLAND CONFIGURATION ===
   wayland.windowManager.hyprland = {
     enable = true;
