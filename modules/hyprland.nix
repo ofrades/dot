@@ -13,7 +13,6 @@
     hyprsunset
 
     # Wayland utilities
-    walker
     wl-clipboard
     wl-clip-persist
     cliphist
@@ -188,7 +187,7 @@
         "$mainMod, d, exec, walker"
         "$mainMod, e, exec, walker -m emojis"
         "$mainMod, c, exec, walker -m clipboard"
-        "$mainMod, b, exec, brave"
+        "$mainMod, b, exec, brave --enable-features=VaapiVideoDecoder --ozone-platform=wayland --disable-gpu-vsync"
 
         # System Controls
         "alt, l, exec, hyprlock"
@@ -220,15 +219,6 @@
         "$mainMod SHIFT, 0, movetoworkspace, 10"
       ];
     };
-  };
-
-  programs.brave = {
-    enable = true;
-    commandLineArgs = [
-      "--enable-features=VaapiVideoDecoder"
-      "--ozone-platform=wayland"
-      "--disable-gpu-vsync"
-    ];
   };
 
   programs.hyprlock = {

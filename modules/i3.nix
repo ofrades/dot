@@ -7,12 +7,17 @@
     networkmanagerapplet
     feh
     picom
-    rofi
+    xclip
   ];
+
   xsession = {
+    enable = true;
     windowManager.i3 = {
       enable = true;
       package = pkgs.i3-gaps;
+      extraConfig = ''
+        default_border pixel 1
+      '';
       config = {
         modifier = "Mod4";
         terminal = "${pkgs.ghostty}/bin/ghostty";
@@ -29,9 +34,13 @@
         keybindings =
           let modifier = config.xsession.windowManager.i3.config.modifier;
           in {
-            "${modifier}+Return" = "exec ${pkgs.ghostty}/bin/ghostty";
-            "${modifier}+Shift+q" = "kill";
+            "${modifier}+t" = "exec ghostty";
+            "${modifier}+q" = "kill";
             "${modifier}+d" = "exec rofi -show drun";
+            "${modifier}+e" = "exec rofi -show emoji";
+            "${modifier}+c" = "exec env CM_LAUNCHER=rofi clipmenu";
+            "${modifier}+x" =
+              "exec rofi -modi rofi-power-menu -show rofi-power-menu";
             "${modifier}+b" = "exec brave";
             "${modifier}+h" = "focus left";
             "${modifier}+j" = "focus down";
@@ -41,14 +50,9 @@
             "${modifier}+Shift+j" = "move down";
             "${modifier}+Shift+k" = "move up";
             "${modifier}+Shift+l" = "move right";
-            "${modifier}+b" = "split h";
-            "${modifier}+v" = "split v";
+            "Alt+l" = "exec i3lock --ignore-empty-password";
             "${modifier}+f" = "fullscreen toggle";
-            "${modifier}+s" = "layout stacking";
-            "${modifier}+w" = "layout tabbed";
-            "${modifier}+e" = "layout toggle split";
             "${modifier}+Shift+space" = "floating toggle";
-            "${modifier}+space" = "focus mode_toggle";
             "${modifier}+a" = "focus parent";
             "${modifier}+1" = "workspace number 1";
             "${modifier}+2" = "workspace number 2";
@@ -76,8 +80,7 @@
               "exec i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'";
             "Print" = "exec gnome-screenshot";
             "${modifier}+Print" = "exec gnome-screenshot -a";
-            "${modifier}+c" = "exec clipmenu";
-            "${modifier}+Shift+s" = "exec flameshot gui";
+            "${modifier}+p" = "exec flameshot gui";
             "${modifier}+Shift+p" =
               "exec ${config.home.homeDirectory}/.local/bin/power-menu";
             "XF86AudioRaiseVolume" =
@@ -107,36 +110,6 @@
         bars = [{
           position = "bottom";
           statusCommand = "${pkgs.i3status}/bin/i3status";
-          colors = {
-            background = "#282a36";
-            statusline = "#f8f8f2";
-            separator = "#44475a";
-            focusedWorkspace = {
-              border = "#44475a";
-              background = "#44475a";
-              text = "#f8f8f2";
-            };
-            activeWorkspace = {
-              border = "#282a36";
-              background = "#282a36";
-              text = "#f8f8f2";
-            };
-            inactiveWorkspace = {
-              border = "#282a36";
-              background = "#282a36";
-              text = "#6272a4";
-            };
-            urgentWorkspace = {
-              border = "#ff5555";
-              background = "#ff5555";
-              text = "#f8f8f2";
-            };
-            bindingMode = {
-              border = "#ff5555";
-              background = "#ff5555";
-              text = "#f8f8f2";
-            };
-          };
         }];
         startup = [
           {
@@ -158,10 +131,18 @@
             notification = false;
           }
           {
+            command = "easyeffects --gapplication-service";
+            notification = false;
+          }
+          {
             command =
-              "${pkgs.feh}/bin/feh --bg-fill ${config.home.homeDirectory}/dot/wallpaper.png";
+              "${pkgs.feh}/bin/feh --bg-fill ${config.home.homeDirectory}/dot/wallpaper_day.png";
             notification = false;
             always = true;
+          }
+          {
+            command = "exec --no-startup-id xss-lock -- i3lock -c 000000";
+            notification = true;
           }
         ];
         window.commands = [
@@ -200,24 +181,6 @@
       interval = 5;
     };
     modules = {
-      "wireless _first_" = {
-        position = 1;
-        settings = {
-          format_up = "W: (%quality at %essid) %ip";
-          format_down = "W: down";
-        };
-      };
-      "ethernet _first_" = {
-        position = 2;
-        settings = {
-          format_up = "E: %ip (%speed)";
-          format_down = "E: down";
-        };
-      };
-      "battery all" = {
-        position = 3;
-        settings = { format = "%status %percentage %remaining"; };
-      };
       "disk /" = {
         position = 4;
         settings = { format = "%avail"; };
@@ -236,8 +199,27 @@
       };
       "tztime local" = {
         position = 7;
-        settings = { format = "%Y-%m-%d %H:%M:%S"; };
+        settings = { format = "%Y-%m-%d %H:%M"; };
       };
     };
+  };
+  services.clipmenu.enable = true;
+  programs.rofi = {
+    enable = true;
+    theme = "gruvbox-dark-hard";
+    plugins = with pkgs; [
+      networkmanager_dmenu
+      rofi-top
+      rofi-calc
+      rofi-emoji
+      rofi-systemd
+      rofi-menugen
+      rofi-bluetooth
+      rofi-power-menu
+      rofi-pulse-select
+      rofi-file-browser
+    ];
+    terminal = "ghostty";
+    location = "center";
   };
 }

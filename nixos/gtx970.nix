@@ -34,14 +34,18 @@ in {
     gvfs.enable = true; # File system support for applications
     flatpak.enable = true;
 
-    greetd = {
+    xserver = {
       enable = true;
-      settings = rec {
-        initial_session = {
-          command = "Hyprland";
-          user = "ofrades";
-        };
-        default_session = initial_session;
+      desktopManager = { xterm.enable = false; };
+      displayManager = {
+        defaultSession = "none+i3";
+        gdm.enable = true;
+      };
+      windowManager.i3 = { enable = true; };
+
+      xkb = {
+        layout = "us,pt";
+        options = "grp:caps_toggle,grp_led:caps";
       };
     };
 
@@ -139,21 +143,6 @@ in {
     description = "Miguel Bastos";
     extraGroups = [ "networkmanager" "wheel" ];
   };
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    git
-    docker
-    nodejs
-    python3
-    ghostty
-    zig
-    alsa-utils
-    pavucontrol
-    easyeffects
-    vlc
-    xdg-desktop-portal-gtk
-  ];
 
   powerManagement.cpuFreqGovernor = "performance";
 

@@ -36,6 +36,13 @@
         defaultSession = "none+i3";
         gdm.enable = true;
       };
+      windowManager.i3 = { enable = true; };
+
+      xkb = {
+        layout = "us,pt";
+        options =
+          "grp:caps_toggle,grp_led:caps"; # Toggle with Caps Lock, indicate with Caps Lock LED
+      };
     };
 
     gnome = {
@@ -105,21 +112,6 @@
     description = "Miguel Bastos";
     extraGroups = [ "networkmanager" "wheel" ];
   };
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    git
-    docker
-    nodejs
-    python3
-    ghostty
-    zig
-    alsa-utils
-    pavucontrol
-    easyeffects
-    vlc
-    xdg-desktop-portal-gtk
-  ];
 
   powerManagement.cpuFreqGovernor = "performance";
 

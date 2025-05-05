@@ -6,7 +6,7 @@ Clone this repo and chdir `git clone git@github.com:ofrades/dot.git && cd dot`
 
 ```bash
 # after system change
-sudo nixos-rebuild switch --flake .#ofrades
+sudo nixos-rebuild switch --flake .#(gtx970 or normal)
 # after config changes
-home-manager switch -f ~/dot/nix/home-manager/home.nix
+home-manager switch --flake .#ofrades
 ```

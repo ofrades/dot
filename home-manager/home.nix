@@ -14,6 +14,7 @@ in {
     ./../modules/hyprland.nix
     ./../modules/i3.nix
     ./../modules/nvim.nix
+    ./../modules/audio.nix
   ];
   home.username = "ofrades";
   home.homeDirectory = "/home/ofrades";
@@ -21,6 +22,17 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
+    vim
+    wget
+    git
+    docker
+    nodejs
+    python3
+    ghostty
+    zig
+    vlc
+    xdg-desktop-portal-gtk
+
     neofetch
     lazygit
     ripgrep
@@ -32,7 +44,6 @@ in {
     bat
     lazydocker
     jdk
-    fzf
     ollama
     jetbrains-mono
     noto-fonts
@@ -49,9 +60,12 @@ in {
     whatsapp-for-linux
     obsidian
     planify
+    walker
   ];
 
   fonts.fontconfig.enable = true;
+
+  programs.fzf.enable = true;
 
   programs.git = {
     enable = true;
@@ -81,6 +95,8 @@ in {
       };
     }];
   };
+
+  programs.brave.enable = true;
 
   programs.ghostty = {
     enable = true;
