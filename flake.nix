@@ -23,9 +23,9 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       nixosConfigurations = {
-        nvidia = lib.nixosSystem {
+        gtx970 = lib.nixosSystem {
           inherit system;
-          modules = [ ./nixos/configuration-nvidia.nix ];
+          modules = [ ./nixos/gtx970.nix ];
         };
 
         normal = lib.nixosSystem {
