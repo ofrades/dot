@@ -155,7 +155,7 @@
             command =
               "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
             notification = false;
-            always = false;
+            always = true;
           }
           {
             command = "${pkgs.networkmanagerapplet}/bin/nm-applet";
@@ -169,7 +169,7 @@
           {
             command = "${pkgs.clipmenu}/bin/clipmenud";
             notification = false;
-            always = false;
+            always = true;
           }
           {
             command =

@@ -1,5 +1,5 @@
 { config, pkgs, ... }: {
-  home.packages = with pkgs; [ easyeffects pavucontrol deepfilternet rnnoise ];
+  home.packages = with pkgs; [ pavucontrol deepfilternet rnnoise ];
 
   xdg.configFile."pipewire/pipewire.conf.d/99-deepfilternet.conf".text = ''
     context.modules = [
