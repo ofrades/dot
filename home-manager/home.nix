@@ -21,6 +21,15 @@ in {
   home.stateVersion = "24.11";
   nixpkgs.config.allowUnfree = true;
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    config = {
+      strict_env = true;
+      whitelist = { prefix = [ "$HOME/dev" ]; };
+    };
+  };
+
   home.packages = with pkgs; [
     vim
     wget

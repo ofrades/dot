@@ -7,7 +7,9 @@
     networkmanagerapplet
     feh
     picom
-    clipmenu
+    tokyonight-gtk-theme
+    papirus-icon-theme
+    polybar
     xclip
     (writeScriptBin "rofi-power" ''
       #!${pkgs.bash}/bin/bash
@@ -67,6 +69,7 @@
             # Application launchers
             "${modifier}+d" = "exec rofi -show drun";
             "${modifier}+e" = "exec rofi -show emoji";
+            "${modifier}+a" = "exec rofi -show filebrowser";
             "${modifier}+b" = "exec brave";
 
             # Fixed lock command - using a consistent approach
@@ -81,7 +84,6 @@
             "${modifier}+Shift+j" = "move down";
             "${modifier}+Shift+k" = "move up";
             "${modifier}+Shift+l" = "move right";
-            "${modifier}+a" = "focus parent";
 
             # Workspace management
             "${modifier}+1" = "workspace number 1";
@@ -167,11 +169,6 @@
             always = true;
           }
           {
-            command = "${pkgs.clipmenu}/bin/clipmenud";
-            notification = false;
-            always = true;
-          }
-          {
             command =
               "${pkgs.feh}/bin/feh --bg-fill ${config.home.homeDirectory}/dot/wallpaper_day.png";
             notification = false;
@@ -197,6 +194,13 @@
     };
   };
 
+  gtk.enable = true;
+  gtk.theme.package = pkgs.tokyonight-gtk-theme;
+  gtk.theme.name = "tokyonight-gtk-theme";
+
+  gtk.iconTheme.package = pkgs.papirus-icon-theme;
+  gtk.iconTheme.name = "Papirus-Dark";
+
   # i3status configuration
   programs.i3status = {
     enable = true;
@@ -219,7 +223,11 @@
   programs.rofi = {
     enable = true;
     theme = "gruvbox-dark-hard";
-    plugins = with pkgs; [ rofi-emoji rofi-calc rofi-bluetooth ];
+    plugins = with pkgs; [ rofi-emoji rofi-calc rofi-file-browser ];
+    extraConfig = {
+      modi = "combi,calc";
+      combi-modi = "drun,run,window,file-browser,ssh,keys,emoji";
+    };
     terminal = "ghostty";
     location = "center";
   };
