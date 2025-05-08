@@ -1,6 +1,6 @@
 { config, inputs, pkgs, ... }: {
 
-  # Simplified package list - removed redundant i3-gaps package since it's specified in the xsession
+  # Package list with polybar already included
   home.packages = with pkgs; [
     i3status
     i3lock
@@ -50,7 +50,7 @@
         menu = "rofi -show drun";
         fonts = {
           names = [ "JetBrains Mono" ];
-          size = 10.0;
+          size = 9.0;
         };
         gaps = {
           inner = 10;
@@ -148,10 +148,8 @@
               "mode default";
           };
         };
-        bars = [{
-          position = "bottom";
-          statusCommand = "${pkgs.i3status}/bin/i3status";
-        }];
+        # Disable the default i3 bar since we're using polybar
+        bars = [ ];
         startup = [
           {
             command =
@@ -179,6 +177,12 @@
             command = "exec --no-startup-id xss-lock -- i3lock -c 000000";
             notification = false;
           }
+          # Start polybar
+          {
+            command = "$HOME/.config/polybar/launch.sh";
+            notification = false;
+            always = true;
+          }
         ];
         window.commands = [
           # Grouped floating window rules for cleaner configuration
@@ -201,18 +205,171 @@
   gtk.iconTheme.package = pkgs.papirus-icon-theme;
   gtk.iconTheme.name = "Papirus-Dark";
 
-  # i3status configuration
-  programs.i3status = {
+  services.polybar = {
     enable = true;
-    general = {
-      colors = true;
-      interval = 5;
+    package = pkgs.polybar;
+    script = ''
+      #!/bin/sh
+      polybar main &
+    '';
+    settings = {
+      "colors" = {
+        background = "#1a1b26";
+        background-alt = "#24283b";
+        foreground = "#c0caf5";
+        primary = "#7aa2f7";
+        secondary = "#bb9af7";
+        alert = "#f7768e";
+        disabled = "#565f89";
+      };
+
+      "bar/main" = {
+        width = "100%";
+        height = "24pt";
+        radius = 0;
+
+        background = "\${colors.background}";
+        foreground = "\${colors.foreground}";
+
+        line-size = "3pt";
+
+        border-size = 0;
+        border-color = "#00000000";
+
+        padding-left = 0;
+        padding-right = 1;
+
+        module-margin = 1;
+
+        separator = "|";
+        separator-foreground = "\${colors.disabled}";
+
+        font-0 = "JetBrains Mono:size=10;2";
+        font-1 = "Font Awesome 6 Free:pixelsize=12;2";
+        font-2 = "Font Awesome 6 Free Solid:pixelsize=12;2";
+        font-3 = "Font Awesome 6 Brands:pixelsize=12;2";
+
+        modules-left = "xworkspaces xwindow";
+        modules-right = "filesystem pulseaudio memory cpu eth date";
+
+        cursor-click = "pointer";
+        cursor-scroll = "ns-resize";
+
+        enable-ipc = true;
+      };
+
+      "module/xworkspaces" = {
+        type = "internal/xworkspaces";
+
+        label-active = "%name%";
+        label-active-background = "\${colors.background-alt}";
+        label-active-underline = "\${colors.primary}";
+        label-active-padding = 1;
+
+        label-occupied = "%name%";
+        label-occupied-padding = 1;
+
+        label-urgent = "%name%";
+        label-urgent-background = "\${colors.alert}";
+        label-urgent-padding = 1;
+
+        label-empty = "%name%";
+        label-empty-foreground = "\${colors.disabled}";
+        label-empty-padding = 1;
+      };
+
+      "module/xwindow" = {
+        type = "internal/xwindow";
+        label = "%title:0:60:...%";
+      };
+
+      "module/filesystem" = {
+        type = "internal/fs";
+        interval = 25;
+
+        mount-0 = "/";
+
+        label-mounted = "%{F#7aa2f7}%mountpoint%%{F-} %percentage_used%%";
+
+        label-unmounted = "%mountpoint% not mounted";
+        label-unmounted-foreground = "\${colors.disabled}";
+      };
+
+      "module/pulseaudio" = {
+        type = "internal/pulseaudio";
+
+        format-volume-prefix = "VOL ";
+        format-volume-prefix-foreground = "\${colors.primary}";
+        format-volume = "<label-volume>";
+
+        label-volume = "%percentage%%";
+
+        label-muted = "muted";
+        label-muted-foreground = "\${colors.disabled}";
+      };
+
+      "module/memory" = {
+        type = "internal/memory";
+        interval = 2;
+        format-prefix = "RAM ";
+        format-prefix-foreground = "\${colors.primary}";
+        label = "%percentage_used:2%%";
+      };
+
+      "module/cpu" = {
+        type = "internal/cpu";
+        interval = 2;
+        format-prefix = "CPU ";
+        format-prefix-foreground = "\${colors.primary}";
+        label = "%percentage:2%%";
+      };
+
+      "module/eth" = {
+        type = "internal/network";
+        interface-type = "wired";
+        interval = 3;
+
+        format-connected-prefix = "NET ";
+        format-connected-prefix-foreground = "\${colors.primary}";
+        label-connected = "%local_ip%";
+
+        format-disconnected = "";
+      };
+
+      "module/date" = {
+        type = "internal/date";
+        interval = 1;
+
+        date = "%Y-%m-%d %H:%M";
+
+        label = "%date%";
+        label-foreground = "\${colors.primary}";
+      };
+
+      "settings" = {
+        screenchange-reload = true;
+        pseudo-transparency = true;
+      };
     };
-    modules = {
-      ipv6.enable = false;
-      "wireless _first_".enable = false;
-      "battery all".enable = false;
-    };
+  };
+
+  # Create polybar launch script
+  home.file.".config/polybar/launch.sh" = {
+    executable = true;
+    text = ''
+      #!/bin/sh
+
+      # Terminate already running bar instances
+      killall -q polybar
+
+      # Wait until the processes have been shut down
+      while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+
+      # Launch Polybar
+      polybar main &
+
+      echo "Polybar launched..."
+    '';
   };
 
   # Remaining program configurations

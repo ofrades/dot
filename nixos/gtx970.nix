@@ -45,8 +45,10 @@ in {
 
       xkb = {
         layout = "us,pt";
-        options = "grp:caps_toggle,grp_led:caps";
+        options = "grp:alt_space_toggle,caps:escape";
       };
+      autoRepeatDelay = 200;
+      autoRepeatInterval = 25;
     };
 
     gnome = {
