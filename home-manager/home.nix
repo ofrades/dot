@@ -13,7 +13,6 @@ in {
     ./../modules/gnome.nix
     ./../modules/hyprland.nix
     ./../modules/i3.nix
-    ./../modules/nvim.nix
     ./../modules/audio.nix
   ];
   home.username = "ofrades";
@@ -28,6 +27,22 @@ in {
       strict_env = true;
       whitelist = { prefix = [ "$HOME/dev" ]; };
     };
+  };
+
+  home.file.".config/nvim".source =
+    config.lib.file.mkOutOfStoreSymlink ./../nvim;
+
+  # home.file.".config/nvim" = {
+  #   source = ./../nvim;
+  #   recursive = true;
+  # };
+
+  programs.neovim = {
+    enable = true;
+    vimAlias = true;
+    withPython3 = true;
+    withNodeJs = true;
+    defaultEditor = true;
   };
 
   home.packages = with pkgs; [
