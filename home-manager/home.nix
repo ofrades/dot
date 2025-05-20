@@ -58,7 +58,8 @@ in {
     noto-fonts
     noto-fonts-emoji
     font-awesome
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+    nerd-fonts.jetbrains-mono
+    jetbrains-mono
     networkmanagerapplet
     nodePackages.pnpm
     (flameshot.override { enableWlrSupport = true; })
@@ -68,7 +69,6 @@ in {
     slack
     whatsapp-for-linux
     obsidian
-    planify
     walker
   ];
 
@@ -117,7 +117,7 @@ in {
       "cursor-style" = "block";
       "font-size" = 10;
       "background-opacity" = 0.9;
-      "theme" = "catppuccin-frappe";
+      "theme" = "tokyonight";
       keybind = [
         "ctrl+a>c=new_tab"
         "ctrl+a>n=next_tab"

@@ -4,12 +4,14 @@
   home.packages = with pkgs; [
     i3status
     i3lock
+    autotiling
     networkmanagerapplet
     feh
     picom
     tokyonight-gtk-theme
     papirus-icon-theme
     polybar
+    xkblayout-state
     xclip
     (writeScriptBin "rofi-power" ''
       #!${pkgs.bash}/bin/bash
@@ -35,6 +37,13 @@
       esac
     '')
   ];
+  services.picom = {
+    enable = true;
+    inactiveOpacity = 0.9;
+    menuOpacity = 0.9;
+    activeOpacity = 1;
+    backend = "glx";
+  };
 
   xsession = {
     enable = true;
@@ -42,11 +51,14 @@
       enable = true;
       package = pkgs.i3-gaps;
       extraConfig = ''
-        default_border pixel 1
+        for_window [class="^.*"] border pixel 2
+        client.focused          #bb9af7 #7aa2f7 #c0caf5
+        client.unfocused        #333333 #222222 #888888
       '';
       config = {
         modifier = "Mod4";
         terminal = "${pkgs.ghostty}/bin/ghostty";
+        defaultWorkspace = "workspace number 1";
         menu = "rofi -show drun";
         fonts = {
           names = [ "JetBrains Mono" ];
@@ -70,10 +82,15 @@
             "${modifier}+d" = "exec rofi -show drun";
             "${modifier}+e" = "exec rofi -show emoji";
             "${modifier}+a" = "exec rofi -show filebrowser";
+            "${modifier}+n" = "exec rofi-network-manager";
             "${modifier}+b" = "exec brave";
 
             # Fixed lock command - using a consistent approach
             "${modifier}+Escape" = "exec i3lock -c 000000";
+
+            # Toggle mic
+            "${modifier}+m" =
+              "exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
 
             # Navigation
             "${modifier}+h" = "focus left";
@@ -110,8 +127,6 @@
             # System controls
             "${modifier}+Shift+c" = "reload";
             "${modifier}+Shift+r" = "restart";
-            "${modifier}+Shift+e" =
-              "exec i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'";
             "${modifier}+Shift+q" = "exec rofi-power";
 
             # Clipboard management
@@ -158,10 +173,6 @@
             always = true;
           }
           {
-            command = "${pkgs.networkmanagerapplet}/bin/nm-applet";
-            notification = false;
-          }
-          {
             command = "${pkgs.picom}/bin/picom --daemon";
             notification = false;
             always = true;
@@ -180,6 +191,11 @@
           # Start polybar
           {
             command = "$HOME/.config/polybar/launch.sh";
+            notification = false;
+            always = true;
+          }
+          {
+            command = "autotiling";
             notification = false;
             always = true;
           }
@@ -244,13 +260,11 @@
         separator = "|";
         separator-foreground = "\${colors.disabled}";
 
-        font-0 = "JetBrains Mono:size=10;2";
-        font-1 = "Font Awesome 6 Free:pixelsize=12;2";
-        font-2 = "Font Awesome 6 Free Solid:pixelsize=12;2";
-        font-3 = "Font Awesome 6 Brands:pixelsize=12;2";
+        font-0 = "JetBrains Mono:size=8;2";
 
         modules-left = "xworkspaces xwindow";
-        modules-right = "filesystem pulseaudio memory cpu eth date";
+        modules-center = "date wireplumber microphone";
+        modules-right = "memory cpu eth keyboard";
 
         cursor-click = "pointer";
         cursor-scroll = "ns-resize";
@@ -283,29 +297,39 @@
         label = "%title:0:60:...%";
       };
 
-      "module/filesystem" = {
-        type = "internal/fs";
-        interval = 25;
-
-        mount-0 = "/";
-
-        label-mounted = "%{F#7aa2f7}%mountpoint%%{F-} %percentage_used%%";
-
-        label-unmounted = "%mountpoint% not mounted";
-        label-unmounted-foreground = "\${colors.disabled}";
+      "module/wireplumber" = {
+        type = "custom/script";
+        exec = ''
+          ${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_SINK@ | ${pkgs.gawk}/bin/awk '{printf "%d%%", $2 * 100; if ($3 == "[MUTED]") print " MUTED"; else print ""}'
+        '';
+        interval = 1;
+        format-prefix = "VOL ";
+        format-prefix-foreground = "\${colors.primary}";
+        label = "%output%";
+        click-left =
+          "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle";
+        click-right = "${pkgs.pavucontrol}/bin/pavucontrol";
+        scroll-up =
+          "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_SINK@ 5%+";
+        scroll-down =
+          "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_SINK@ 5%-";
       };
-
-      "module/pulseaudio" = {
-        type = "internal/pulseaudio";
-
-        format-volume-prefix = "VOL ";
-        format-volume-prefix-foreground = "\${colors.primary}";
-        format-volume = "<label-volume>";
-
-        label-volume = "%percentage%%";
-
-        label-muted = "muted";
-        label-muted-foreground = "\${colors.disabled}";
+      "module/microphone" = {
+        type = "custom/script";
+        exec = ''
+          ${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | ${pkgs.gawk}/bin/awk '{printf "%d%%", $2 * 100; if ($3 == "[MUTED]") print " MUTED"; else print ""}'
+        '';
+        interval = 1;
+        format-prefix = "MIC ";
+        format-prefix-foreground = "\${colors.primary}";
+        label = "%output%";
+        click-left =
+          "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+        click-right = "${pkgs.pavucontrol}/bin/pavucontrol";
+        scroll-up =
+          "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+";
+        scroll-down =
+          "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-";
       };
 
       "module/memory" = {
@@ -334,6 +358,16 @@
         label-connected = "%local_ip%";
 
         format-disconnected = "";
+      };
+
+      "module/keyboard" = {
+        type = "custom/script";
+        exec = "${pkgs.xkblayout-state}/bin/xkblayout-state print '%s'";
+        interval = 1;
+        label = "%output%";
+        label-foreground = "\${colors.primary}";
+        click-left = "setxkbmap us";
+        click-right = "setxkbmap pt";
       };
 
       "module/date" = {
@@ -380,10 +414,16 @@
   programs.rofi = {
     enable = true;
     theme = "gruvbox-dark-hard";
-    plugins = with pkgs; [ rofi-emoji rofi-calc rofi-file-browser ];
+    plugins = with pkgs; [
+      rofi-emoji
+      rofi-calc
+      rofi-file-browser
+      rofi-network-manager
+    ];
     extraConfig = {
       modi = "combi,calc";
-      combi-modi = "drun,run,window,file-browser,ssh,keys,emoji";
+      combi-modi =
+        "drun,run,window,file-browser,ssh,keys,emoji,network-manager";
     };
     terminal = "ghostty";
     location = "center";

@@ -58,6 +58,8 @@ in {
       sushi.enable = true; # File previewer for Nautilus
     };
 
+    network-manager-applet = { enable = true; };
+
     # Printer support
     printing = {
       enable = true;
