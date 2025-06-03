@@ -13,6 +13,11 @@
       url = "github:Jas-SinghFSU/HyprPanel";
       inputs = { nixpkgs = { follows = "nixpkgs"; }; };
     };
+
+    LazyVim = {
+      url = "github:matadaniel/LazyVim-module";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }:
