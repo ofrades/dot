@@ -1,6 +1,5 @@
 { config, pkgs, ... }:
 let
-  # Create a custom derivation for Nushell with renamed binary
   nush = pkgs.runCommand "nush" { nativeBuildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
     ln -s ${pkgs.nushell}/bin/nu $out/bin/nush
@@ -15,6 +14,7 @@ in {
     ./../modules/i3.nix
     ./../modules/nvim.nix
     ./../modules/audio.nix
+    ./../modules/expo.nix
   ];
   home.username = "ofrades";
   home.homeDirectory = "/home/ofrades";
@@ -36,11 +36,49 @@ in {
     git
     docker
     nodejs
+    bun
+    pnpm
     python3
+    uv
     ghostty
     zig
     vlc
     xdg-desktop-portal-gtk
+    (writeScriptBin "rofi-power" ''
+      #!${pkgs.bash}/bin/bash
+      OPTIONS="Lock\nLogout\nReboot\nShutdown\nSuspend"
+      LAUNCHER="rofi -dmenu -i -p Power"
+      POWER=$(echo -e $OPTIONS | $LAUNCHER | awk '{print $1}')
+      case $POWER in
+        Logout)
+          # For Hyprland
+          if [ "$XDG_CURRENT_DESKTOP" = "Hyprland" ]; then
+            hyprctl dispatch exit
+          # For Sway
+          elif [ "$XDG_CURRENT_DESKTOP" = "sway" ]; then
+            swaymsg exit
+          fi
+          ;;
+        Suspend)
+          systemctl suspend
+          ;;
+        Reboot)
+          systemctl reboot
+          ;;
+        Shutdown)
+          systemctl poweroff
+          ;;
+        Lock)
+          # For Hyprland
+          if [ "$XDG_CURRENT_DESKTOP" = "Hyprland" ]; then
+            hyprlock
+          # For Sway
+          elif [ "$XDG_CURRENT_DESKTOP" = "sway" ]; then
+            swaylock -c 000000
+          fi
+          ;;
+      esac
+    '')
 
     neofetch
     lazygit
@@ -61,7 +99,6 @@ in {
     nerd-fonts.jetbrains-mono
     jetbrains-mono
     networkmanagerapplet
-    nodePackages.pnpm
     (flameshot.override { enableWlrSupport = true; })
     nodePackages."@antfu/ni"
     obs-studio
@@ -69,12 +106,57 @@ in {
     slack
     whatsapp-for-linux
     obsidian
-    walker
+    inkscape
+    krita
+    awscli2
+    discord
+    peek
   ];
 
   fonts.fontconfig.enable = true;
 
   programs.fzf.enable = true;
+
+  # === ROFI CONFIGURATION ===
+  programs.rofi = {
+    enable = true;
+    theme = "gruvbox-dark-hard";
+    plugins = with pkgs; [
+      rofi-emoji
+      rofi-calc
+      rofi-file-browser
+      rofi-network-manager
+    ];
+    extraConfig = {
+      modi = "combi,calc";
+      combi-modi =
+        "drun,run,window,file-browser,ssh,keys,emoji,network-manager";
+    };
+    terminal = "ghostty";
+    location = "center";
+  };
+
+  # === CLIPBOARD MANAGEMENT ===
+  services.clipmenu = {
+    enable = true;
+    launcher = "${pkgs.rofi}/bin/rofi";
+  };
+
+  # === NETWORK MANAGER CONFIG ===
+  home.file.".config/networkmanager-dmenu/config.ini" = {
+    text = ''
+      [dmenu]
+      dmenu_command = rofi -dmenu -i -p "Network"
+      rofi_highlight = True
+      compact = True
+      wifi_chars = ▂▄▆█
+      list_saved = True
+
+      [editor]
+      terminal = ghostty
+      gui_if_available = True
+    '';
+  };
 
   programs.git = {
     enable = true;
@@ -141,8 +223,6 @@ in {
         "alt+shift+right=resize_split:right,10"
         "ctrl+a>w=close_surface"
       ];
-      "gtk-single-instance" = true;
-      "gtk-tabs-location" = "bottom";
       "copy-on-select" = "clipboard";
       "confirm-close-surface" = false;
     };

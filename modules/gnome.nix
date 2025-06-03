@@ -24,5 +24,7 @@
     gnome-font-viewer
     gnome-screenshot
     simple-scan # Scanner app
+    tokyonight-gtk-theme
+    papirus-icon-theme
   ];
 }

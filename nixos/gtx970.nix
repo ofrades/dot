@@ -36,16 +36,13 @@ in {
 
     xserver = {
       enable = true;
-      desktopManager = { xterm.enable = false; };
-      displayManager = {
-        defaultSession = "none+i3";
-        gdm.enable = true;
-      };
-      windowManager.i3 = { enable = true; };
+      desktopManager = { xterm.enable = true; };
+      displayManager = { gdm.enable = true; };
+      windowManager.i3.enable = true;
 
       xkb = {
         layout = "us,pt";
-        options = "grp:alt_space_toggle,caps:escape";
+        options = "grp:rctrl_switch,caps:escape";
       };
       autoRepeatDelay = 200;
       autoRepeatInterval = 25;
@@ -57,8 +54,6 @@ in {
       gnome-online-accounts.enable = true; # Online account integration
       sushi.enable = true; # File previewer for Nautilus
     };
-
-    network-manager-applet = { enable = true; };
 
     # Printer support
     printing = {
@@ -91,6 +86,8 @@ in {
     nvidiaSettings = true; # Add this for NVIDIA settings utility
     forceFullCompositionPipeline = true;
   };
+
+  programs.i3lock.enable = true;
 
   programs.hyprland = {
     enable = true;

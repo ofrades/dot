@@ -4,8 +4,29 @@
     ".config/nvim/lua/plugins/plugins.lua" = {
       text = ''
         return {
-          { "mason-org/mason.nvim", version = "^1.0.0" },
-          { "mason-org/mason-lspconfig.nvim", version = "^1.0.0" },
+          {
+            "afonsofrancof/worktrees.nvim",
+            opts = {
+              -- Specify where to create worktrees relative to git common dir
+              -- The common dir is the .git dir in a normal repo or the root dir of a bare repo
+              base_path = "../..", -- Parent directory of common dir
+              -- Template for worktree folder names
+              -- This is only used if you don't specify the folder name when creating the worktree
+              path_template = "{branch}", -- Default: use branch name
+              -- Command names (optional)
+              commands = {
+                create = "WorktreeCreate",
+                delete = "WorktreeDelete",
+                switch = "WorktreeSwitch",
+              },
+              -- Key mappings (optional)
+              mappings = {
+                create = "<leader>gtc",
+                delete = "<leader>gtd",
+                switch = "<leader>gts",
+              },
+            },
+          },
           {
             "nvim-lspconfig",
             opts = {

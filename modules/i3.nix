@@ -1,11 +1,10 @@
 { config, inputs, pkgs, ... }: {
 
-  # Package list with polybar already included
+  # Package list with networking tools added
   home.packages = with pkgs; [
     i3status
-    i3lock
     autotiling
-    networkmanagerapplet
+    networkmanagerapplet # Already included
     feh
     picom
     tokyonight-gtk-theme
@@ -13,30 +12,11 @@
     polybar
     xkblayout-state
     xclip
-    (writeScriptBin "rofi-power" ''
-      #!${pkgs.bash}/bin/bash
-      OPTIONS="Lock\nLogout\nReboot\nShutdown\nSuspend"
-      LAUNCHER="rofi -dmenu -i -p Power"
-      POWER=$(echo -e $OPTIONS | $LAUNCHER | awk '{print $1}')
-      case $POWER in
-        Logout)
-          i3-msg exit
-          ;;
-        Suspend)
-          systemctl suspend
-          ;;
-        Reboot)
-          systemctl reboot
-          ;;
-        Shutdown)
-          systemctl poweroff
-          ;;
-        Lock)
-          i3lock -c 000000
-          ;;
-      esac
-    '')
+    # Added networking tools
+    networkmanager_dmenu # For network management via dmenu/rofi
+    nm-tray # Network Manager tray application
   ];
+
   services.picom = {
     enable = true;
     inactiveOpacity = 0.9;
@@ -74,6 +54,7 @@
           in {
             # Common commands
             "${modifier}+t" = "exec ghostty";
+            "${modifier}+space" = "exec ghostty";
             "${modifier}+q" = "kill";
             "${modifier}+f" = "fullscreen toggle";
             "${modifier}+Shift+space" = "floating toggle";
@@ -82,7 +63,8 @@
             "${modifier}+d" = "exec rofi -show drun";
             "${modifier}+e" = "exec rofi -show emoji";
             "${modifier}+a" = "exec rofi -show filebrowser";
-            "${modifier}+n" = "exec rofi-network-manager";
+            # Updated network manager shortcut
+            "${modifier}+n" = "exec networkmanager_dmenu";
             "${modifier}+b" = "exec brave";
 
             # Fixed lock command - using a consistent approach
@@ -194,6 +176,12 @@
             notification = false;
             always = true;
           }
+          # Start Network Manager Applet
+          {
+            command = "nm-applet";
+            notification = false;
+            always = true;
+          }
           {
             command = "autotiling";
             notification = false;
@@ -224,10 +212,7 @@
   services.polybar = {
     enable = true;
     package = pkgs.polybar;
-    script = ''
-      #!/bin/sh
-      polybar main &
-    '';
+    script = "polybar main &";
     settings = {
       "colors" = {
         background = "#1a1b26";
@@ -264,7 +249,8 @@
 
         modules-left = "xworkspaces xwindow";
         modules-center = "date wireplumber microphone";
-        modules-right = "memory cpu eth keyboard";
+        # Updated right modules to include network interface modules
+        modules-right = "memory cpu wlan eth keyboard";
 
         cursor-click = "pointer";
         cursor-scroll = "ns-resize";
@@ -348,16 +334,45 @@
         label = "%percentage:2%%";
       };
 
+      # Enhanced Ethernet module
       "module/eth" = {
         type = "internal/network";
         interface-type = "wired";
         interval = 3;
 
-        format-connected-prefix = "NET ";
+        format-connected-prefix = "ETH ";
         format-connected-prefix-foreground = "\${colors.primary}";
-        label-connected = "%local_ip%";
+        label-connected = "%local_ip% ↑%upspeed:8% ↓%downspeed:8%";
 
-        format-disconnected = "";
+        format-disconnected-prefix = "ETH ";
+        format-disconnected-prefix-foreground = "\${colors.disabled}";
+        label-disconnected = "disconnected";
+        label-disconnected-foreground = "\${colors.disabled}";
+      };
+
+      # Added WiFi module
+      "module/wlan" = {
+        type = "internal/network";
+        interface-type = "wireless";
+        interval = 3;
+
+        format-connected = "<ramp-signal> <label-connected>";
+        format-connected-prefix = "WIFI ";
+        format-connected-prefix-foreground = "\${colors.primary}";
+        label-connected = "%essid% ↑%upspeed:8% ↓%downspeed:8%";
+
+        format-disconnected-prefix = "WIFI ";
+        format-disconnected-prefix-foreground = "\${colors.disabled}";
+        label-disconnected = "disconnected";
+        label-disconnected-foreground = "\${colors.disabled}";
+
+        ramp-signal-0 = "▁";
+        ramp-signal-1 = "▂";
+        ramp-signal-2 = "▃";
+        ramp-signal-3 = "▄";
+        ramp-signal-4 = "▅";
+        ramp-signal-5 = "▆";
+        ramp-signal-foreground = "\${colors.primary}";
       };
 
       "module/keyboard" = {
@@ -406,26 +421,28 @@
     '';
   };
 
+  # NetworkManager dmenu configuration
+  home.file.".config/networkmanager-dmenu/config.ini" = {
+    text = ''
+      [dmenu]
+      dmenu_command = rofi -dmenu -i -p "Network"
+      rofi_highlight = True
+      compact = True
+      wifi_chars = ▂▄▆█
+      list_saved = True
+
+      [editor]
+      terminal = ghostty
+      gui_if_available = True
+    '';
+  };
+
   # Remaining program configurations
   services.clipmenu = {
     enable = true;
     launcher = "${pkgs.rofi}/bin/rofi";
   };
-  programs.rofi = {
-    enable = true;
-    theme = "gruvbox-dark-hard";
-    plugins = with pkgs; [
-      rofi-emoji
-      rofi-calc
-      rofi-file-browser
-      rofi-network-manager
-    ];
-    extraConfig = {
-      modi = "combi,calc";
-      combi-modi =
-        "drun,run,window,file-browser,ssh,keys,emoji,network-manager";
-    };
-    terminal = "ghostty";
-    location = "center";
-  };
+
+  # Network Manager configuration
+  services.network-manager-applet = { enable = true; };
 }

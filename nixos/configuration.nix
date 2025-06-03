@@ -29,31 +29,12 @@
     gvfs.enable = true; # File system support for applications
     flatpak.enable = true;
 
-    xserver = {
-      enable = true;
-      desktopManager = { xterm.enable = false; };
-      displayManager = {
-        defaultSession = "none+i3";
-        gdm.enable = true;
-      };
-      windowManager.i3 = { enable = true; };
-
-      xkb = {
-        layout = "us,pt";
-        options = "grp:alt_space_toggle,caps:escape";
-      };
-      autoRepeatDelay = 200;
-      autoRepeatInterval = 25;
-    };
-
     gnome = {
       evolution-data-server.enable = true; # Calendar, contacts, tasks
       gnome-keyring.enable = true; # Secure credential storage
       gnome-online-accounts.enable = true; # Online account integration
       sushi.enable = true; # File previewer for Nautilus
     };
-
-    network-manager-applet = { enable = true; };
 
     # Printer support
     printing = {
