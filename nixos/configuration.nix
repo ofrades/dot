@@ -1,7 +1,13 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }:
+let
+  lts = pkgs.linuxPackages_5_15;
+  nvidiaDrv = lts.nvidiaPackages.beta;
+in
+{
   imports = [ ./hardware-configuration.nix ];
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.nvidia.acceptLicense = true;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.luks.devices."luks-c939a0f2-eeaf-4e5b-933b-b45a5ae5e5ec".device =
@@ -23,11 +29,20 @@
     LC_TELEPHONE = "pt_PT.UTF-8";
     LC_TIME = "pt_PT.UTF-8";
   };
-
-  services = {
-    # Basic GNOME system services
-    gvfs.enable = true; # File system support for applications
-    flatpak.enable = true;
+  services.xserver = {
+    enable = true;
+    xkb = {
+      layout = "us,pt";
+      variant = "";
+    };
+    displayManager = {
+      defaultSession = "hyprland";
+      gdm = {
+        enable = true;
+        wayland = true;
+      };
+    };
+    videoDrivers = [ "nvidia" ];
 
     gnome = {
       evolution-data-server.enable = true; # Calendar, contacts, tasks
@@ -36,7 +51,6 @@
       sushi.enable = true; # File previewer for Nautilus
     };
 
-    # Printer support
     printing = {
       enable = true;
       drivers = with pkgs; [
@@ -58,7 +72,6 @@
       wireplumber.enable = true;
     };
   };
-
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -72,8 +85,7 @@
       after = [ "graphical-session.target" ];
       serviceConfig = {
         Type = "simple";
-        ExecStart =
-          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
         Restart = "on-failure";
         RestartSec = 1;
         TimeoutStopSec = 10;
@@ -81,20 +93,36 @@
     };
   };
 
-  hardware.graphics.enable = true;
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+    # install the VA‑API wrapper for NVIDIA so chromium/Brave can do hw decode
+    extraPackages = with pkgs; [ nvidia-vaapi-driver ]; # :contentReference[oaicite:1]{index=1}
+  };
 
+  services.flatpak.enable = true;
   security.polkit.enable = true;
   security.pam.services.greetd.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
-  security.rtkit.enable = true;
-
-  # Ensure sound support
+  hardware.nvidia = {
+    open = false;
+    package = nvidiaDrv;
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    nvidiaSettings = true;
+    forceFullCompositionPipeline = true;
+  };
   hardware.pulseaudio.enable = false;
+  hardware.i2c.enable = true;
+  security.rtkit.enable = true;
 
   users.users.ofrades = {
     isNormalUser = true;
     description = "Miguel Bastos";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
   };
 
   powerManagement.cpuFreqGovernor = "performance";
@@ -104,7 +132,9 @@
     extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
     config.common.default = "*";
   };
-
   system.stateVersion = "24.11";
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 }

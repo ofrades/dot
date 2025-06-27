@@ -1,8 +1,9 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 let
   lts = pkgs.linuxPackages_5_15;
   nvidiaDrv = lts.nvidiaPackages.beta;
-in {
+in
+{
   imports = [ ./hardware-configuration.nix ];
 
   nixpkgs.config.allowUnfree = true;
@@ -33,20 +34,6 @@ in {
     # Basic GNOME system services
     gvfs.enable = true; # File system support for applications
     flatpak.enable = true;
-
-    xserver = {
-      enable = true;
-      desktopManager = { xterm.enable = true; };
-      displayManager = { gdm.enable = true; };
-      windowManager.i3.enable = true;
-
-      xkb = {
-        layout = "us,pt";
-        options = "grp:rctrl_switch,caps:escape";
-      };
-      autoRepeatDelay = 200;
-      autoRepeatInterval = 25;
-    };
 
     gnome = {
       evolution-data-server.enable = true; # Calendar, contacts, tasks
@@ -87,22 +74,20 @@ in {
     forceFullCompositionPipeline = true;
   };
 
-  programs.i3lock.enable = true;
-
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
   };
 
-  environment.sessionVariables = {
-    # Only keep the essential NVIDIA-related ones here
-    LIBVA_DRIVER_NAME = "nvidia";
-    GBM_BACKEND = "nvidia-drm";
-    NVD_BACKEND = "direct";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    WLR_NO_HARDWARE_CURSORS = "1";
-    NIXOS_OZONE_WL = "1";
-  };
+  # environment.sessionVariables = {
+  #   # Only keep the essential NVIDIA-related ones here
+  #   LIBVA_DRIVER_NAME = "nvidia";
+  #   GBM_BACKEND = "nvidia-drm";
+  #   NVD_BACKEND = "direct";
+  #   __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  #   WLR_NO_HARDWARE_CURSORS = "1";
+  #   NIXOS_OZONE_WL = "1";
+  # };
 
   systemd = {
     user.services.polkit-gnome-authentication-agent-1 = {
@@ -112,8 +97,7 @@ in {
       after = [ "graphical-session.target" ];
       serviceConfig = {
         Type = "simple";
-        ExecStart =
-          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
         Restart = "on-failure";
         RestartSec = 1;
         TimeoutStopSec = 10;
@@ -125,8 +109,7 @@ in {
     enable = true;
     enable32Bit = true;
     # install the VA‑API wrapper for NVIDIA so chromium/Brave can do hw decode
-    extraPackages = with pkgs;
-      [ nvidia-vaapi-driver ]; # :contentReference[oaicite:1]{index=1}
+    extraPackages = with pkgs; [ nvidia-vaapi-driver ]; # :contentReference[oaicite:1]{index=1}
   };
 
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -139,10 +122,16 @@ in {
   # Ensure sound support
   hardware.pulseaudio.enable = false;
 
+  hardware.i2c.enable = true;
   users.users.ofrades = {
     isNormalUser = true;
     description = "Miguel Bastos";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "adbusers"
+      "i2c"
+    ];
   };
 
   powerManagement.cpuFreqGovernor = "performance";
@@ -154,5 +143,8 @@ in {
   };
 
   system.stateVersion = "24.11";
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 }

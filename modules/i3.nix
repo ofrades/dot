@@ -1,4 +1,10 @@
-{ config, inputs, pkgs, ... }: {
+{
+  config,
+  inputs,
+  pkgs,
+  ...
+}:
+{
 
   # Package list with networking tools added
   home.packages = with pkgs; [
@@ -50,8 +56,10 @@
           smartGaps = false;
         };
         keybindings =
-          let modifier = config.xsession.windowManager.i3.config.modifier;
-          in {
+          let
+            modifier = config.xsession.windowManager.i3.config.modifier;
+          in
+          {
             # Common commands
             "${modifier}+t" = "exec ghostty";
             "${modifier}+space" = "exec ghostty";
@@ -71,8 +79,7 @@
             "${modifier}+Escape" = "exec i3lock -c 000000";
 
             # Toggle mic
-            "${modifier}+m" =
-              "exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+            "${modifier}+m" = "exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
 
             # Navigation
             "${modifier}+h" = "focus left";
@@ -119,16 +126,11 @@
             "${modifier}+p" = "exec flameshot gui";
 
             # Media controls
-            "XF86AudioRaiseVolume" =
-              "exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%";
-            "XF86AudioLowerVolume" =
-              "exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%";
-            "XF86AudioMute" =
-              "exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle";
-            "XF86MonBrightnessUp" =
-              "exec --no-startup-id brightnessctl set +5%";
-            "XF86MonBrightnessDown" =
-              "exec --no-startup-id brightnessctl set 5%-";
+            "XF86AudioRaiseVolume" = "exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%";
+            "XF86AudioLowerVolume" = "exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%";
+            "XF86AudioMute" = "exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle";
+            "XF86MonBrightnessUp" = "exec --no-startup-id brightnessctl set +5%";
+            "XF86MonBrightnessDown" = "exec --no-startup-id brightnessctl set 5%-";
 
             # Resize mode
             "${modifier}+r" = "mode resize";
@@ -141,16 +143,14 @@
             "l" = "resize grow width 10 px or 10 ppt";
             "Return" = "mode default";
             "Escape" = "mode default";
-            "${config.xsession.windowManager.i3.config.modifier}+r" =
-              "mode default";
+            "${config.xsession.windowManager.i3.config.modifier}+r" = "mode default";
           };
         };
         # Disable the default i3 bar since we're using polybar
         bars = [ ];
         startup = [
           {
-            command =
-              "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+            command = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
             notification = false;
             always = true;
           }
@@ -160,8 +160,7 @@
             always = true;
           }
           {
-            command =
-              "${pkgs.feh}/bin/feh --bg-fill ${config.home.homeDirectory}/dot/wallpaper_day.png";
+            command = "${pkgs.feh}/bin/feh --bg-fill ${config.home.homeDirectory}/dot/wallpaper_day.png";
             notification = false;
             always = true;
           }
@@ -292,13 +291,10 @@
         format-prefix = "VOL ";
         format-prefix-foreground = "\${colors.primary}";
         label = "%output%";
-        click-left =
-          "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle";
+        click-left = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle";
         click-right = "${pkgs.pavucontrol}/bin/pavucontrol";
-        scroll-up =
-          "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_SINK@ 5%+";
-        scroll-down =
-          "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_SINK@ 5%-";
+        scroll-up = "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_SINK@ 5%+";
+        scroll-down = "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_SINK@ 5%-";
       };
       "module/microphone" = {
         type = "custom/script";
@@ -309,13 +305,10 @@
         format-prefix = "MIC ";
         format-prefix-foreground = "\${colors.primary}";
         label = "%output%";
-        click-left =
-          "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+        click-left = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
         click-right = "${pkgs.pavucontrol}/bin/pavucontrol";
-        scroll-up =
-          "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+";
-        scroll-down =
-          "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-";
+        scroll-up = "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+";
+        scroll-down = "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-";
       };
 
       "module/memory" = {
@@ -444,5 +437,7 @@
   };
 
   # Network Manager configuration
-  services.network-manager-applet = { enable = true; };
+  services.network-manager-applet = {
+    enable = true;
+  };
 }

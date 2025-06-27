@@ -18,6 +18,7 @@
     gedit # Text editor
     yaru-theme
     glib
+    papers
     networkmanagerapplet # Network manager
     gnome-calculator
     gnome-calendar

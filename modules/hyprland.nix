@@ -1,5 +1,9 @@
-{ config, inputs, pkgs, ... }: {
-  imports = [ inputs.hyprpanel.homeManagerModules.hyprpanel ];
+{
+  config,
+  pkgs,
+  ...
+}:
+{
 
   # === PACKAGES ===
   home.packages = with pkgs; [
@@ -11,14 +15,17 @@
     hyprshade
     hyprpicker
     hyprsunset
+    hyprpanel
 
     # Wayland utilities
+    walker
     wl-clipboard
     wl-clip-persist
     cliphist
     wf-recorder
     glib
     grimblast
+    xdg-desktop-portal-hyprland
   ];
 
   # === CONFIG FILES ===
@@ -32,9 +39,27 @@
     };
   };
 
-  # needed
   programs.kitty.enable = true;
 
+  home.pointerCursor = {
+    gtk.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Classic";
+    size = 16;
+  };
+
+  gtk = {
+    enable = true;
+    theme = {
+      package = pkgs.flat-remix-gtk;
+      name = "Flat-Remix-GTK-Grey-Darkest";
+    };
+
+    iconTheme = {
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
+    };
+  };
   # === HYPRLAND CONFIGURATION ===
   wayland.windowManager.hyprland = {
     enable = true;
@@ -46,34 +71,22 @@
       "$mainMod" = "SUPER";
 
       # === ENVIRONMENT ===
-      env = [
-        # NVIDIA-specific
-        "LIBVA_DRIVER_NAME,nvidia"
-        "GBM_BACKEND,nvidia-drm"
-        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-        "WLR_NO_HARDWARE_CURSORS,1"
-        "__GL_GSYNC_ALLOWED,0"
-
-        # Wayland/Display server
-        "XDG_SESSION_TYPE,wayland"
-        "XDG_CURRENT_DESKTOP,Hyprland"
-        "XDG_SESSION_DESKTOP,Hyprland"
-        "NIXOS_OZONE_WL,1"
-
-        # Use OpenGL renderer for better stability with NVIDIA
-        "WLR_RENDERER,gles2"
-
-        # Toolkit backends
-        "CLUTTER_BACKEND,wayland"
-        "GDK_BACKEND,wayland,x11"
-        "QT_QPA_PLATFORM,wayland;xcb"
-        "SDL_VIDEODRIVER,wayland"
-
-        # Toolkit theming
-        "GTK_USE_PORTAL,1"
-        "QT_QPA_PLATFORMTHEME,gtk2"
-        "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
-      ];
+      # env = [
+      #   "LIBVA_DRIVER_NAME,nvidia"
+      #   "CLUTTER_BACKEND,wayland"
+      #   "GDK_BACKEND,wayland,x11,*"
+      #   "XDG_SESSION_TYPE,wayland"
+      #   "XDG_CURRENT_DESKTOP,Hyprland"
+      #   "XDG_SESSION_DESKTOP,Hyprland"
+      #   "GBM_BACKEND,nvidia-drm"
+      #   "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+      #   "GTK_USE_PORTAL,1"
+      #   "QT_QPA_PLATFORM,wayland;xcb"
+      #   "QT_QPA_PLATFORMTHEME,gtk2"
+      #   "QT_SCREEN_SCALE_FACTORS,1"
+      #   "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
+      #   "SDL_VIDEODRIVER,wayland"
+      # ];
 
       # === STARTUP APPLICATIONS ===
       exec = [
@@ -86,6 +99,8 @@
 
       exec-once = [
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+        "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
+        "gnome-keyring-daemon --start --components=pkcs11,secrets,ssh"
         "hyprpanel" # Status bar
         "hyprpaper" # Wallpaper
         "hypridle" # Screen lock/sleep
@@ -100,11 +115,9 @@
         preserve_split = true;
       };
 
-      cursor = { enable_hyprcursor = false; };
-
       # === APPEARANCE ===
       general = {
-        allow_tearing = false;
+        allow_tearing = true;
         gaps_in = 10;
         gaps_out = 10;
         border_size = 3;
@@ -186,7 +199,7 @@
         "$mainMod, d, exec, walker"
         "$mainMod, e, exec, walker -m emojis"
         "$mainMod, c, exec, walker -m clipboard"
-        "$mainMod, b, exec, brave --enable-features=VaapiVideoDecoder --ozone-platform=wayland --disable-gpu-vsync"
+        "$mainMod, b, exec, brave"
 
         # System Controls
         "alt, l, exec, hyprlock"
@@ -230,32 +243,38 @@
         ignore_empty_input = true;
       };
 
-      background = [{
-        path = "${config.home.homeDirectory}/dot/wallpaper_day.png";
-        blur_passes = 3;
-        blur_size = 8;
-      }];
+      background = [
+        {
+          path = "${config.home.homeDirectory}/dot/wallpaper_day.png";
+          blur_passes = 3;
+          blur_size = 8;
+        }
+      ];
 
-      label = [{
-        text = "Hi there, $USER";
-        color = "rgb(255, 255, 255)";
-        font_size = 24;
-        position = "0, -40";
-        halign = "center";
-        valign = "center";
-      }];
+      label = [
+        {
+          text = "Hi there, $USER";
+          color = "rgb(255, 255, 255)";
+          font_size = 24;
+          position = "0, -40";
+          halign = "center";
+          valign = "center";
+        }
+      ];
 
-      input-field = [{
-        size = "200, 50";
-        position = "0, -80";
-        monitor = "";
-        dots_center = true;
-        fade_on_empty = false;
-        outline_thickness = 5;
-        placeholder_text = "<i>Password...</i>";
-        shadow_passes = 2;
-        rounding = 10;
-      }];
+      input-field = [
+        {
+          size = "200, 50";
+          position = "0, -80";
+          monitor = "";
+          dots_center = true;
+          fade_on_empty = false;
+          outline_thickness = 5;
+          placeholder_text = "<i>Password...</i>";
+          shadow_passes = 2;
+          rounding = 10;
+        }
+      ];
     };
   };
 
@@ -265,8 +284,7 @@
       general = {
         lock_cmd = "hyprlock"; # avoid starting multiple hyprlock instances.
         before_sleep_cmd = "loginctl lock-session"; # lock before suspend.
-        after_sleep_cmd =
-          "hyprctl dispatch dpms on"; # to avoid having to press a key twice to turn on the display.
+        after_sleep_cmd = "hyprctl dispatch dpms on"; # to avoid having to press a key twice to turn on the display.
       };
       listener = [
         {
@@ -278,6 +296,10 @@
           on-timeout = "hyprctl dispatch dpms off";
           on-resume = "hyprctl dispatch dpms on";
         }
+        {
+          timeout = 600;
+          on-timeout = "systemctl suspend";
+        }
       ];
     };
   };
@@ -285,8 +307,7 @@
   # Panel configuration
   programs.hyprpanel = {
     enable = true;
-    overwrite.enable = true;
-    overlay.enable = true;
+    systemd.enable = true;
 
     settings = {
       theme = {
@@ -297,8 +318,16 @@
       layout = {
         "bar.layouts" = {
           "*" = {
-            "left" = [ "dashboard" "workspaces" "windowtitle" ];
-            "middle" = [ "clock" "microphone" "cava" ];
+            "left" = [
+              "dashboard"
+              "workspaces"
+              "windowtitle"
+            ];
+            "middle" = [
+              "clock"
+              "microphone"
+              "cava"
+            ];
             "right" = [
               "systray"
               "hyprsunset"
@@ -314,7 +343,9 @@
         };
       };
       bar = {
-        workspaces = { show_icons = true; };
+        workspaces = {
+          show_icons = true;
+        };
         customModules.cava = {
           showIcon = false;
           stereo = true;
@@ -322,17 +353,6 @@
       };
     };
 
-    override = {
-      "bar.clock.format" = "%b %d %H:%M";
-      "menus.clock.time.military" = true;
-      "menus.clock.weather.location" = "Viseu";
-      "menus.clock.weather.unit" = "metric";
-      "bar.notifications.hideCountWhenZero" = true;
-      "bar.volume.label" = false;
-      "bar.network.label" = true;
-      "bar.media.show_active_only" = true;
-      "bar.launcher.autoDetectIcon" = true;
-      "notifications.position" = "top right";
-    };
   };
+
 }

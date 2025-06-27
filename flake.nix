@@ -2,16 +2,11 @@
   description = "ofrades NixOS";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    hyprpanel = {
-      url = "github:Jas-SinghFSU/HyprPanel";
-      inputs = { nixpkgs = { follows = "nixpkgs"; }; };
     };
 
     LazyVim = {
@@ -20,28 +15,29 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }:
 
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in {
+    in
+    {
       nixosConfigurations = {
-        normal = lib.nixosSystem {
+        configuration = lib.nixosSystem {
           inherit system;
           modules = [ ./nixos/configuration.nix ];
-        };
-        gtx970 = lib.nixosSystem {
-          inherit system;
-          modules = [ ./nixos/gtx970.nix ];
         };
       };
       homeConfigurations = {
         ofrades = home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs {
             inherit system;
-            overlays = [ inputs.hyprpanel.overlay ];
           };
           modules = [ ./home-manager/home.nix ];
 

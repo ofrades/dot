@@ -3,18 +3,15 @@ let
   nush = pkgs.runCommand "nush" { nativeBuildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
     ln -s ${pkgs.nushell}/bin/nu $out/bin/nush
-    wrapProgram $out/bin/nush --prefix PATH : ${
-      pkgs.lib.makeBinPath [ pkgs.nushell ]
-    }
+    wrapProgram $out/bin/nush --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.nushell ]}
   '';
-in {
+in
+{
   imports = [
     ./../modules/gnome.nix
     ./../modules/hyprland.nix
-    ./../modules/i3.nix
     ./../modules/nvim.nix
     ./../modules/audio.nix
-    ./../modules/expo.nix
   ];
   home.username = "ofrades";
   home.homeDirectory = "/home/ofrades";
@@ -26,7 +23,9 @@ in {
     nix-direnv.enable = true;
     config = {
       strict_env = true;
-      whitelist = { prefix = [ "$HOME/dev" ]; };
+      whitelist = {
+        prefix = [ "$HOME/dev" ];
+      };
     };
   };
 
@@ -38,48 +37,12 @@ in {
     nodejs
     bun
     pnpm
+    biome
     python3
     uv
-    ghostty
     zig
+    ddcutil
     vlc
-    xdg-desktop-portal-gtk
-    (writeScriptBin "rofi-power" ''
-      #!${pkgs.bash}/bin/bash
-      OPTIONS="Lock\nLogout\nReboot\nShutdown\nSuspend"
-      LAUNCHER="rofi -dmenu -i -p Power"
-      POWER=$(echo -e $OPTIONS | $LAUNCHER | awk '{print $1}')
-      case $POWER in
-        Logout)
-          # For Hyprland
-          if [ "$XDG_CURRENT_DESKTOP" = "Hyprland" ]; then
-            hyprctl dispatch exit
-          # For Sway
-          elif [ "$XDG_CURRENT_DESKTOP" = "sway" ]; then
-            swaymsg exit
-          fi
-          ;;
-        Suspend)
-          systemctl suspend
-          ;;
-        Reboot)
-          systemctl reboot
-          ;;
-        Shutdown)
-          systemctl poweroff
-          ;;
-        Lock)
-          # For Hyprland
-          if [ "$XDG_CURRENT_DESKTOP" = "Hyprland" ]; then
-            hyprlock
-          # For Sway
-          elif [ "$XDG_CURRENT_DESKTOP" = "sway" ]; then
-            swaylock -c 000000
-          fi
-          ;;
-      esac
-    '')
-
     neofetch
     lazygit
     ripgrep
@@ -117,47 +80,6 @@ in {
 
   programs.fzf.enable = true;
 
-  # === ROFI CONFIGURATION ===
-  programs.rofi = {
-    enable = true;
-    theme = "gruvbox-dark-hard";
-    plugins = with pkgs; [
-      rofi-emoji
-      rofi-calc
-      rofi-file-browser
-      rofi-network-manager
-    ];
-    extraConfig = {
-      modi = "combi,calc";
-      combi-modi =
-        "drun,run,window,file-browser,ssh,keys,emoji,network-manager";
-    };
-    terminal = "ghostty";
-    location = "center";
-  };
-
-  # === CLIPBOARD MANAGEMENT ===
-  services.clipmenu = {
-    enable = true;
-    launcher = "${pkgs.rofi}/bin/rofi";
-  };
-
-  # === NETWORK MANAGER CONFIG ===
-  home.file.".config/networkmanager-dmenu/config.ini" = {
-    text = ''
-      [dmenu]
-      dmenu_command = rofi -dmenu -i -p "Network"
-      rofi_highlight = True
-      compact = True
-      wifi_chars = ▂▄▆█
-      list_saved = True
-
-      [editor]
-      terminal = ghostty
-      gui_if_available = True
-    '';
-  };
-
   programs.git = {
     enable = true;
     userName = "ofrades";
@@ -169,22 +91,23 @@ in {
       difftool.prompt = false;
       difftool.meld.cmd = ''meld "$REMOTE" "$LOCAL"'';
       merge.tool = "meld";
-      mergetool.meld.cmd =
-        ''meld "$REMOTE" "$MERGED" "$LOCAL" --output "$MERGED"'';
+      mergetool.meld.cmd = ''meld "$REMOTE" "$MERGED" "$LOCAL" --output "$MERGED"'';
       commit.template = "/home/ofrades/.git-commit-message.txt";
       color.ui = true;
       core.editor = "nvim";
       core.excludesfile = "/home/ofrades/.gitignore_global";
     };
-    includes = [{
-      condition = "gitdir:~/dev/neuraspace/";
-      contents = {
-        user = {
-          name = "Miguel Bastos";
-          email = "miguel.bastos@neuraspace.com";
+    includes = [
+      {
+        condition = "gitdir:/home/ofrades/dev/neuraspace/";
+        contents = {
+          user = {
+            name = "Miguel Bastos";
+            email = "miguel.bastos@neuraspace.com";
+          };
         };
-      };
-    }];
+      }
+    ];
   };
 
   programs.brave.enable = true;
@@ -193,6 +116,7 @@ in {
     enable = true;
     enableZshIntegration = true;
     enableBashIntegration = true;
+
     settings = {
       command = "${pkgs.nushell}/bin/nu";
       "window-decoration" = false;
