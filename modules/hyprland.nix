@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}:
-{
+{ config, pkgs, ... }: {
 
   # === PACKAGES ===
   home.packages = with pkgs; [
@@ -39,7 +34,89 @@
     };
   };
 
-  programs.kitty.enable = true;
+  programs = {
+    kitty.enable = true;
+    wlogout = { enable = true; };
+
+    hyprlock = {
+      enable = true;
+      settings = {
+        general = {
+          disable_loading_bar = true;
+          grace = 5;
+          hide_cursor = true;
+          ignore_empty_input = true;
+        };
+
+        background = [{
+          path = "${config.home.homeDirectory}/dot/wallpaper_day.png";
+          blur_passes = 3;
+          blur_size = 8;
+        }];
+
+        label = [{
+          text = "Hi there, $USER";
+          color = "rgb(255, 255, 255)";
+          font_size = 24;
+          position = "0, -40";
+          halign = "center";
+          valign = "center";
+        }];
+
+        input-field = [{
+          size = "200, 50";
+          position = "0, -80";
+          monitor = "";
+          dots_center = true;
+          fade_on_empty = false;
+          outline_thickness = 5;
+          placeholder_text = "<i>Password...</i>";
+          shadow_passes = 2;
+          rounding = 10;
+        }];
+      };
+    };
+
+    hyprpanel = {
+      enable = true;
+      systemd.enable = true;
+
+      settings = {
+        theme = {
+          name = "tokyo_night";
+          font.size = "0.8rem";
+          bar.opacity = 50;
+        };
+        bar.launcher.autoDetectIcon = true;
+        layout = {
+          "bar.layouts" = {
+            "*" = {
+              "left" = [ "dashboard" "workspaces" "windowtitle" ];
+              "middle" = [ "clock" "microphone" "cava" ];
+              "right" = [
+                "systray"
+                "hyprsunset"
+                "hypridle"
+                "volume"
+                "network"
+                "netstat"
+                "kbinput"
+                "power"
+                "notifications"
+              ];
+            };
+          };
+        };
+        bar = {
+          workspaces = { show_icons = true; };
+          customModules.cava = {
+            showIcon = false;
+            stereo = true;
+          };
+        };
+      };
+    };
+  };
 
   home.pointerCursor = {
     gtk.enable = true;
@@ -60,53 +137,44 @@
       name = "Adwaita";
     };
   };
+
   # === HYPRLAND CONFIGURATION ===
   wayland.windowManager.hyprland = {
     enable = true;
-    systemd.enable = true;
+    systemd.enable = false;
     xwayland.enable = true;
 
     settings = {
       # === VARIABLES ===
       "$mainMod" = "SUPER";
+      "$browser" = "brave";
+      "$webapp" = "$browser --app";
+      "$terminal" = "ghostty";
 
       # === ENVIRONMENT ===
-      # env = [
-      #   "LIBVA_DRIVER_NAME,nvidia"
-      #   "CLUTTER_BACKEND,wayland"
-      #   "GDK_BACKEND,wayland,x11,*"
-      #   "XDG_SESSION_TYPE,wayland"
-      #   "XDG_CURRENT_DESKTOP,Hyprland"
-      #   "XDG_SESSION_DESKTOP,Hyprland"
-      #   "GBM_BACKEND,nvidia-drm"
-      #   "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-      #   "GTK_USE_PORTAL,1"
-      #   "QT_QPA_PLATFORM,wayland;xcb"
-      #   "QT_QPA_PLATFORMTHEME,gtk2"
-      #   "QT_SCREEN_SCALE_FACTORS,1"
-      #   "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
-      #   "SDL_VIDEODRIVER,wayland"
-      # ];
-
-      # === STARTUP APPLICATIONS ===
-      exec = [
-        "gsettings set org.gnome.desktop.interface gtk-theme Yaru"
-        "gsettings set org.gnome.desktop.interface cursor-theme Adwaita"
-        "gsettings set org.gnome.desktop.interface icon-theme Papirus"
-        "gsettings set org.gnome.desktop.interface cursor-size 24"
-        "gsettings set org.gnome.desktop.interface text-scaling-factor 1"
+      env = [
+        "LIBVA_DRIVER_NAME,nvidia"
+        "CLUTTER_BACKEND,wayland"
+        "GDK_BACKEND,wayland,x11,*"
+        "XDG_SESSION_TYPE,wayland"
+        "XDG_CURRENT_DESKTOP,Hyprland"
+        "XDG_SESSION_DESKTOP,Hyprland"
+        "QT_QPA_PLATFORM,wayland;xcb"
+        "QT_QPA_PLATFORMTHEME,gtk2"
+        "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
+        "SDL_VIDEODRIVER,wayland"
       ];
 
       exec-once = [
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
         "gnome-keyring-daemon --start --components=pkcs11,secrets,ssh"
-        "hyprpanel" # Status bar
-        "hyprpaper" # Wallpaper
-        "hypridle" # Screen lock/sleep
+        "sleep 2 && hyprpanel"
+        "sleep 1 && hyprpaper"
+        "sleep 3 && hypridle"
         "wl-clip-persist --clipboard regular"
-        "wl-paste --watch cliphist store" # Clipboard history
-        "walker --gapplication-service" # App launcher
+        "wl-paste --watch cliphist store"
+        "walker --gapplication-service"
       ];
 
       # === WINDOW MANAGEMENT ===
@@ -118,25 +186,42 @@
       # === APPEARANCE ===
       general = {
         allow_tearing = true;
-        gaps_in = 10;
+        gaps_in = 5;
         gaps_out = 10;
-        border_size = 3;
+        border_size = 2;
         layout = "dwindle";
         "col.active_border" = "rgba(1ABC9Cbb) rgba(DAA856ee)";
+        "col.inactive_border" = "rgba(595959aa)";
       };
 
       decoration = {
-        rounding = 8;
+        rounding = 0;
         blur = {
           enabled = true;
           size = 3;
-          passes = 2;
+          passes = 1;
         };
-        shadow.enabled = false;
+        shadow = {
+          enabled = true;
+          range = 4;
+          render_power = 3;
+          color = "rgba(1a1a1aee)";
+        };
       };
 
       # === ANIMATIONS ===
-      animations.enabled = false;
+      animations = {
+        enabled = true;
+        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
+        animation = [
+          "windows, 1, 7, myBezier"
+          "windowsOut, 1, 7, default, popin 80%"
+          "border, 1, 10, default"
+          "borderangle, 1, 8, default"
+          "fade, 1, 7, default"
+          "workspaces, 1, 6, default"
+        ];
+      };
 
       # === INPUT CONFIGURATION ===
       input = {
@@ -171,19 +256,20 @@
 
       # === MOUSE BINDINGS ===
       bindm = [
-        "$mainMod, mouse:272, movewindow" # Move windows with mouse
-        "$mainMod, mouse:273, resizewindow" # Resize windows with mouse
+        "$mainMod, mouse:272, movewindow"
+        "$mainMod, mouse:273, resizewindow"
       ];
 
       # === KEY BINDINGS ===
       bind = [
-        # Terminal
         "$mainMod, t, exec, ghostty"
 
         # Window Management
-        "$mainMod, q, killactive,"
-        "$mainMod, f, fullscreen,"
-        "$mainMod SHIFT, space, togglefloating,"
+        "$mainMod, q, killactive"
+        "$mainMod SHIFT, q, exec, wlogout"
+
+        "$mainMod, f, fullscreen"
+        "$mainMod SHIFT, space, togglefloating"
 
         # Window Focus/Movement
         "$mainMod, h, movefocus, l"
@@ -199,12 +285,22 @@
         "$mainMod, d, exec, walker"
         "$mainMod, e, exec, walker -m emojis"
         "$mainMod, c, exec, walker -m clipboard"
-        "$mainMod, b, exec, brave"
+        "$mainMod, b, exec, $browser"
+
+        # Fixed webapp bindings - use the full command directly
+        "$mainMod, a, exec, brave --app=https://chatgpt.com"
+        "$mainMod SHIFT, a, exec, brave --app=https://grok.com"
+        "$mainMod SHIFT, c, exec, brave --app=https://claude.com"
+        "$mainMod, y, exec, brave --app=https://youtube.com"
 
         # System Controls
-        "alt, l, exec, hyprlock"
+        "$mainMod, ESCAPE, exec, hyprlock"
         "$mainMod, p, exec, flameshot gui"
         "$mainMod SHIFT, r, exec, hyprctl reload"
+        "$mainMod SHIFT, p, exec, hyprpicker -a"
+
+        # Debug bindings
+        "$mainMod SHIFT, t, exec, notify-send 'Test' 'Keybinding works'"
 
         # Workspaces
         "$mainMod, 1, workspace, 1"
@@ -233,58 +329,13 @@
     };
   };
 
-  programs.hyprlock = {
-    enable = true;
-    settings = {
-      general = {
-        disable_loading_bar = true;
-        grace = 5;
-        hide_cursor = true;
-        ignore_empty_input = true;
-      };
-
-      background = [
-        {
-          path = "${config.home.homeDirectory}/dot/wallpaper_day.png";
-          blur_passes = 3;
-          blur_size = 8;
-        }
-      ];
-
-      label = [
-        {
-          text = "Hi there, $USER";
-          color = "rgb(255, 255, 255)";
-          font_size = 24;
-          position = "0, -40";
-          halign = "center";
-          valign = "center";
-        }
-      ];
-
-      input-field = [
-        {
-          size = "200, 50";
-          position = "0, -80";
-          monitor = "";
-          dots_center = true;
-          fade_on_empty = false;
-          outline_thickness = 5;
-          placeholder_text = "<i>Password...</i>";
-          shadow_passes = 2;
-          rounding = 10;
-        }
-      ];
-    };
-  };
-
   services.hypridle = {
     enable = true;
     settings = {
       general = {
-        lock_cmd = "hyprlock"; # avoid starting multiple hyprlock instances.
-        before_sleep_cmd = "loginctl lock-session"; # lock before suspend.
-        after_sleep_cmd = "hyprctl dispatch dpms on"; # to avoid having to press a key twice to turn on the display.
+        lock_cmd = "hyprlock";
+        before_sleep_cmd = "loginctl lock-session";
+        after_sleep_cmd = "hyprctl dispatch dpms on";
       };
       listener = [
         {
@@ -303,56 +354,4 @@
       ];
     };
   };
-
-  # Panel configuration
-  programs.hyprpanel = {
-    enable = true;
-    systemd.enable = true;
-
-    settings = {
-      theme = {
-        name = "tokyo_night";
-        font.size = "0.8rem";
-        bar.opacity = 50;
-      };
-      layout = {
-        "bar.layouts" = {
-          "*" = {
-            "left" = [
-              "dashboard"
-              "workspaces"
-              "windowtitle"
-            ];
-            "middle" = [
-              "clock"
-              "microphone"
-              "cava"
-            ];
-            "right" = [
-              "systray"
-              "hyprsunset"
-              "hypridle"
-              "volume"
-              "network"
-              "netstat"
-              "kbinput"
-              "power"
-              "notifications"
-            ];
-          };
-        };
-      };
-      bar = {
-        workspaces = {
-          show_icons = true;
-        };
-        customModules.cava = {
-          showIcon = false;
-          stereo = true;
-        };
-      };
-    };
-
-  };
-
 }

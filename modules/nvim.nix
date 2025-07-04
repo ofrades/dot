@@ -1,56 +1,107 @@
-{ config, inputs, pkgs, ... }: {
-
-  imports = [ inputs.LazyVim.homeManagerModules.default ];
-
-  programs.lazyvim = {
-    enable = true;
-    plugins = with pkgs.vimPlugins; [
-      oil-nvim
-      nvim-lspconfig
-      avante-nvim
-      codecompanion-nvim 
-      dressing-nvim
-      neotest-vitest
-      nvim-colorizer-lua 
-      nvim-web-devicons
-      vim-visual-multi 
-    ];
-    extras = {
-      coding = { yanky.enable = true; };
-
-      lang = {
-        json.enable = true;
-        markdown.enable = true;
-        astro.enable = true;
-        nix.enable = true;
-        python.enable = true;
-        tailwind.enable = true;
-        typescript.enable = true;
-      };
-      test = { core.enable = true; };
-      dap = { core.enable = true; };
-      linting = { eslint.enable = true; };
-      formatting = { prettier.enable = true; };
-
-      editor = {
-        dial.enable = true;
-        snacks_picker.enable = true;
-
-        inc-rename.enable = true;
-      };
-
-      util = {
-        dot.enable = true;
-
-        mini-hipatterns.enable = true;
-      };
-    };
-    pluginsFile = {
-      "plugins.lua".source = ../nvim/lua/plugins/plugins.lua;
-    };
-  };
+{ pkgs, ... }: {
 
   home.file = {
+    ".config/nvim/lua/plugins/plugins.lua" = {
+      text = ''
+        return {
+          {
+            "nvim-lspconfig",
+            opts = {
+              inlay_hints = { enabled = false },
+            },
+          },
+          {
+            "NvChad/nvim-colorizer.lua",
+            opts = {
+              user_default_options = {
+                mode = "background",
+                names = false,
+              },
+            },
+          },
+          { "echasnovski/mini.pairs", enabled = false },
+          { "akinsho/bufferline.nvim", enabled = false },
+          { "mg979/vim-visual-multi" },
+          {
+            "yetone/avante.nvim",
+            event = "VeryLazy",
+            lazy = false,
+            version = false, -- Set this to "*" to always pull the latest release version, or set it to false to update to the latest code changes.
+            opts = {
+              provider = "ollama",
+              ollama = {
+                endpoint = "http://127.0.0.1:11434",
+                model = "codellama:7b",
+              },
+            },
+            build = "make",
+            dependencies = {
+              "stevearc/dressing.nvim",
+              "nvim-lua/plenary.nvim",
+              "MunifTanjim/nui.nvim",
+              {
+                -- Make sure to set this up properly if you have lazy=true
+                "MeanderingProgrammer/render-markdown.nvim",
+                opts = {
+                  file_types = { "markdown", "Avante" },
+                },
+                ft = { "markdown", "Avante" },
+              },
+            },
+          },
+          {
+            "olimorris/codecompanion.nvim",
+            dependencies = {
+              "nvim-lua/plenary.nvim",
+              "nvim-treesitter/nvim-treesitter",
+            },
+            opts = {
+              --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
+              strategies = {
+                --NOTE: Change the adapter as required
+                chat = { adapter = "ollama" },
+                inline = { adapter = "ollama" },
+              },
+              opts = {
+                log_level = "DEBUG",
+              },
+            },
+          },
+          {
+            "stevearc/oil.nvim",
+            dependencies = { "nvim-tree/nvim-web-devicons" },
+            opts = {
+              default_file_explorer = true,
+              columns = {
+                "icon",
+                "size",
+              },
+            },
+            keys = {
+              { "-", "<cmd>Oil<cr>", desc = "Open parent directory with Oil" },
+            },
+          },
+          {
+            "nvim-neotest/neotest",
+            dependencies = {
+              "marilari88/neotest-vitest",
+            },
+            opts = {
+              adapters = {
+                ["neotest-vitest"] = {},
+              },
+              output = {
+                enabled = false,
+              },
+              quickfix = {
+                enabled = false,
+              },
+            },
+          },
+        }
+      '';
+    };
+
     ".config/nvim/lua/config/keymaps.lua" = {
       text = ''
         vim.keymap.set("n", "Y", "y$")
@@ -135,5 +186,72 @@
     withNodeJs = true;
     vimdiffAlias = true;
     defaultEditor = true;
+    extraLuaConfig = ''
+      -- Bootstrap lazy.nvim
+       local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+       if not vim.loop.fs_stat(lazypath) then
+         vim.fn.system({
+           "git",
+           "clone",
+           "--filter=blob:none",
+           "https://github.com/folke/lazy.nvim.git",
+           "--branch=stable",
+           lazypath,
+         })
+       end
+       vim.opt.rtp:prepend(lazypath)
+
+       require("lazy").setup({
+         spec = {
+           -- add LazyVim and import its plugins
+           { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+           { import = "lazyvim.plugins.extras.lang.json" },
+           { import = "lazyvim.plugins.extras.lang.markdown" },
+           { import = "lazyvim.plugins.extras.lang.astro" },
+           { import = "lazyvim.plugins.extras.lang.tex" },
+           { import = "lazyvim.plugins.extras.lang.nix" },
+           { import = "lazyvim.plugins.extras.lang.python" },
+           { import = "lazyvim.plugins.extras.test.core" },
+           { import = "lazyvim.plugins.extras.dap.core" },
+           { import = "lazyvim.plugins.extras.lang.tailwind" },
+           { import = "lazyvim.plugins.extras.lang.typescript" },
+           { import = "lazyvim.plugins.extras.linting.eslint" },
+           { import = "lazyvim.plugins.extras.formatting.prettier" },
+           { import = "lazyvim.plugins.extras.formatting.biome" },
+           { import = "lazyvim.plugins.extras.coding.yanky" },
+           { import = "lazyvim.plugins.extras.editor.snacks_picker" },
+           { import = "plugins" },
+         },
+         defaults = {
+           -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
+           -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
+           lazy = false,
+           -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
+           -- have outdated releases, which may break your Neovim install.
+           version = false, -- always use the latest git commit
+           -- version = "*", -- try installing the latest stable version for plugins that support semver
+         },
+         install = { colorscheme = { "tokyonight" } },
+         checker = {
+           enabled = true, -- check for plugin updates periodically
+           notify = false, -- notify on update
+         }, -- automatically check for plugin updates
+         performance = {
+           rtp = {
+             -- disable some rtp plugins
+             disabled_plugins = {
+               "gzip",
+               -- "matchit",
+               -- "matchparen",
+               -- "netrwPlugin",
+               "tarPlugin",
+               "tohtml",
+               "tutor",
+               "zipPlugin",
+             },
+           },
+         },
+       })
+    '';
   };
 }

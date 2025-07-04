@@ -3,10 +3,11 @@ let
   nush = pkgs.runCommand "nush" { nativeBuildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
     ln -s ${pkgs.nushell}/bin/nu $out/bin/nush
-    wrapProgram $out/bin/nush --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.nushell ]}
+    wrapProgram $out/bin/nush --prefix PATH : ${
+      pkgs.lib.makeBinPath [ pkgs.nushell ]
+    }
   '';
-in
-{
+in {
   imports = [
     ./../modules/gnome.nix
     ./../modules/hyprland.nix
@@ -23,9 +24,7 @@ in
     nix-direnv.enable = true;
     config = {
       strict_env = true;
-      whitelist = {
-        prefix = [ "$HOME/dev" ];
-      };
+      whitelist = { prefix = [ "$HOME/dev" ]; };
     };
   };
 
@@ -60,6 +59,7 @@ in
     noto-fonts-emoji
     font-awesome
     nerd-fonts.jetbrains-mono
+    nerd-fonts.caskaydia-mono
     jetbrains-mono
     networkmanagerapplet
     (flameshot.override { enableWlrSupport = true; })
@@ -91,23 +91,22 @@ in
       difftool.prompt = false;
       difftool.meld.cmd = ''meld "$REMOTE" "$LOCAL"'';
       merge.tool = "meld";
-      mergetool.meld.cmd = ''meld "$REMOTE" "$MERGED" "$LOCAL" --output "$MERGED"'';
+      mergetool.meld.cmd =
+        ''meld "$REMOTE" "$MERGED" "$LOCAL" --output "$MERGED"'';
       commit.template = "/home/ofrades/.git-commit-message.txt";
       color.ui = true;
       core.editor = "nvim";
       core.excludesfile = "/home/ofrades/.gitignore_global";
     };
-    includes = [
-      {
-        condition = "gitdir:/home/ofrades/dev/neuraspace/";
-        contents = {
-          user = {
-            name = "Miguel Bastos";
-            email = "miguel.bastos@neuraspace.com";
-          };
+    includes = [{
+      condition = "gitdir:/home/ofrades/dev/neuraspace/";
+      contents = {
+        user = {
+          name = "Miguel Bastos";
+          email = "miguel.bastos@neuraspace.com";
         };
-      }
-    ];
+      };
+    }];
   };
 
   programs.brave.enable = true;
@@ -153,7 +152,7 @@ in
   };
 
   programs.carapace = {
-    enable = true;
+    enable = false;
     enableNushellIntegration = true;
     enableBashIntegration = true;
   };
