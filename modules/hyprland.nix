@@ -10,7 +10,6 @@
     hyprshade
     hyprpicker
     hyprsunset
-    hyprpanel
 
     # Wayland utilities
     walker
@@ -36,7 +35,6 @@
 
   programs = {
     kitty.enable = true;
-    wlogout = { enable = true; };
 
     hyprlock = {
       enable = true;
@@ -84,34 +82,29 @@
       settings = {
         theme = {
           name = "tokyo_night";
-          font.size = "0.8rem";
-          bar.opacity = 50;
+          font.size = "0.7rem";
         };
         bar.launcher.autoDetectIcon = true;
-        layout = {
-          "bar.layouts" = {
-            "*" = {
-              "left" = [ "dashboard" "workspaces" "windowtitle" ];
-              "middle" = [ "clock" "microphone" "cava" ];
-              "right" = [
-                "systray"
-                "hyprsunset"
-                "hypridle"
-                "volume"
-                "network"
-                "netstat"
-                "kbinput"
-                "power"
-                "notifications"
-              ];
-            };
-          };
-        };
-        bar = {
-          workspaces = { show_icons = true; };
-          customModules.cava = {
-            showIcon = false;
-            stereo = true;
+
+        bar.layouts = {
+          "*" = {
+            "left" = [ "dashboard" "clock" "workspaces" "windowtitle" ];
+            "middle" = [ "volume" ];
+            "right" = [
+              "systray"
+              "hyprsunset"
+              "hypridle"
+              "ram"
+              "cpu"
+              "cputemp"
+              "storage"
+              "network"
+              "netstat"
+              "weather"
+              "kbinput"
+              "notifications"
+              "power"
+            ];
           };
         };
       };
@@ -169,7 +162,6 @@
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
         "gnome-keyring-daemon --start --components=pkcs11,secrets,ssh"
-        "sleep 2 && hyprpanel"
         "sleep 1 && hyprpaper"
         "sleep 3 && hypridle"
         "wl-clip-persist --clipboard regular"
@@ -266,7 +258,7 @@
 
         # Window Management
         "$mainMod, q, killactive"
-        "$mainMod SHIFT, q, exec, wlogout"
+        "$mainMod SHIFT, q, exec, hyprpanel t powerdropdownmenu"
 
         "$mainMod, f, fullscreen"
         "$mainMod SHIFT, space, togglefloating"
@@ -295,9 +287,11 @@
 
         # System Controls
         "$mainMod, ESCAPE, exec, hyprlock"
-        "$mainMod, p, exec, flameshot gui"
+        ", PRINT, exec, hyprshot -m region"
+        "SHIFT, PRINT, exec, hyprshot -m window"
+        "CTRL, PRINT, exec, hyprshot -m output"
+        "$mainMod, PRINT, exec, hyprpicker -a"
         "$mainMod SHIFT, r, exec, hyprctl reload"
-        "$mainMod SHIFT, p, exec, hyprpicker -a"
 
         # Debug bindings
         "$mainMod SHIFT, t, exec, notify-send 'Test' 'Keybinding works'"

@@ -74,6 +74,7 @@ in {
     awscli2
     discord
     peek
+    foliate
   ];
 
   fonts.fontconfig.enable = true;
