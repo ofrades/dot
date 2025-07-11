@@ -10,7 +10,9 @@ let
 in {
   imports = [
     ./../modules/gnome.nix
+    ./../modules/theme.nix
     ./../modules/hyprland.nix
+    ./../modules/hyprpanel.nix
     ./../modules/nvim.nix
     ./../modules/audio.nix
   ];
@@ -76,8 +78,6 @@ in {
     peek
     foliate
   ];
-
-  fonts.fontconfig.enable = true;
 
   programs.fzf.enable = true;
 

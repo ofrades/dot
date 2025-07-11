@@ -103,6 +103,7 @@
     extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
     config.common.default = "*";
   };
+
   system.stateVersion = "24.11";
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 }

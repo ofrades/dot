@@ -8,21 +8,19 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      home-manager,
-      ...
-    }:
+  outputs = inputs@{ self, nixpkgs, home-manager, ... }:
 
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
-    in
-    {
+    in {
       nixosConfigurations = {
         configuration = lib.nixosSystem {
           inherit system;
@@ -31,9 +29,7 @@
       };
       homeConfigurations = {
         ofrades = home-manager.lib.homeManagerConfiguration {
-          pkgs = import nixpkgs {
-            inherit system;
-          };
+          pkgs = import nixpkgs { inherit system; };
           modules = [ ./home-manager/home.nix ];
 
           extraSpecialArgs = {

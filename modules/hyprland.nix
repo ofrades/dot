@@ -22,20 +22,7 @@
     xdg-desktop-portal-hyprland
   ];
 
-  # === CONFIG FILES ===
-  home.file = {
-    # Wallpaper configuration
-    ".config/hypr/hyprpaper.conf" = {
-      text = ''
-        preload = ${config.home.homeDirectory}/dot/wallpaper_day.png
-        wallpaper = ,${config.home.homeDirectory}/dot/wallpaper_day.png
-      '';
-    };
-  };
-
   programs = {
-    kitty.enable = true;
-
     hyprlock = {
       enable = true;
       settings = {
@@ -44,68 +31,6 @@
           grace = 5;
           hide_cursor = true;
           ignore_empty_input = true;
-        };
-
-        background = [{
-          path = "${config.home.homeDirectory}/dot/wallpaper_day.png";
-          blur_passes = 3;
-          blur_size = 8;
-        }];
-
-        label = [{
-          text = "Hi there, $USER";
-          color = "rgb(255, 255, 255)";
-          font_size = 24;
-          position = "0, -40";
-          halign = "center";
-          valign = "center";
-        }];
-
-        input-field = [{
-          size = "200, 50";
-          position = "0, -80";
-          monitor = "";
-          dots_center = true;
-          fade_on_empty = false;
-          outline_thickness = 5;
-          placeholder_text = "<i>Password...</i>";
-          shadow_passes = 2;
-          rounding = 10;
-        }];
-      };
-    };
-
-    hyprpanel = {
-      enable = true;
-      systemd.enable = true;
-
-      settings = {
-        theme = {
-          name = "tokyo_night";
-          font.size = "0.7rem";
-        };
-        bar.launcher.autoDetectIcon = true;
-
-        bar.layouts = {
-          "*" = {
-            "left" = [ "dashboard" "clock" "workspaces" "windowtitle" ];
-            "middle" = [ "volume" ];
-            "right" = [
-              "systray"
-              "hyprsunset"
-              "hypridle"
-              "ram"
-              "cpu"
-              "cputemp"
-              "storage"
-              "network"
-              "netstat"
-              "weather"
-              "kbinput"
-              "notifications"
-              "power"
-            ];
-          };
         };
       };
     };
@@ -118,13 +43,9 @@
     size = 16;
   };
 
+  # Using a neutral GTK theme that complements the sepia tones
   gtk = {
     enable = true;
-    theme = {
-      package = pkgs.flat-remix-gtk;
-      name = "Flat-Remix-GTK-Grey-Darkest";
-    };
-
     iconTheme = {
       package = pkgs.adwaita-icon-theme;
       name = "Adwaita";
@@ -182,8 +103,6 @@
         gaps_out = 10;
         border_size = 2;
         layout = "dwindle";
-        "col.active_border" = "rgba(1ABC9Cbb) rgba(DAA856ee)";
-        "col.inactive_border" = "rgba(595959aa)";
       };
 
       decoration = {
@@ -197,7 +116,6 @@
           enabled = true;
           range = 4;
           render_power = 3;
-          color = "rgba(1a1a1aee)";
         };
       };
 
@@ -255,15 +173,10 @@
       # === KEY BINDINGS ===
       bind = [
         "$mainMod, t, exec, ghostty"
-
-        # Window Management
         "$mainMod, q, killactive"
         "$mainMod SHIFT, q, exec, hyprpanel t powerdropdownmenu"
-
         "$mainMod, f, fullscreen"
         "$mainMod SHIFT, space, togglefloating"
-
-        # Window Focus/Movement
         "$mainMod, h, movefocus, l"
         "$mainMod, l, movefocus, r"
         "$mainMod, k, movefocus, u"
@@ -272,31 +185,21 @@
         "$mainMod SHIFT, l, movewindow, r"
         "$mainMod SHIFT, k, movewindow, u"
         "$mainMod SHIFT, j, movewindow, d"
-
-        # Applications
         "$mainMod, d, exec, walker"
         "$mainMod, e, exec, walker -m emojis"
         "$mainMod, c, exec, walker -m clipboard"
         "$mainMod, b, exec, $browser"
-
-        # Fixed webapp bindings - use the full command directly
         "$mainMod, a, exec, brave --app=https://chatgpt.com"
         "$mainMod SHIFT, a, exec, brave --app=https://grok.com"
         "$mainMod SHIFT, c, exec, brave --app=https://claude.com"
         "$mainMod, y, exec, brave --app=https://youtube.com"
-
-        # System Controls
         "$mainMod, ESCAPE, exec, hyprlock"
         ", PRINT, exec, hyprshot -m region"
         "SHIFT, PRINT, exec, hyprshot -m window"
         "CTRL, PRINT, exec, hyprshot -m output"
         "$mainMod, PRINT, exec, hyprpicker -a"
         "$mainMod SHIFT, r, exec, hyprctl reload"
-
-        # Debug bindings
         "$mainMod SHIFT, t, exec, notify-send 'Test' 'Keybinding works'"
-
-        # Workspaces
         "$mainMod, 1, workspace, 1"
         "$mainMod, 2, workspace, 2"
         "$mainMod, 3, workspace, 3"
@@ -307,8 +210,6 @@
         "$mainMod, 8, workspace, 8"
         "$mainMod, 9, workspace, 9"
         "$mainMod, 0, workspace, 10"
-
-        # Move Window to Workspace
         "$mainMod SHIFT, 1, movetoworkspace, 1"
         "$mainMod SHIFT, 2, movetoworkspace, 2"
         "$mainMod SHIFT, 3, movetoworkspace, 3"

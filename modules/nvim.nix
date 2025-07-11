@@ -11,6 +11,11 @@
             },
           },
           {
+            "echasnovski/mini.base16",
+            lazy = false,
+            priority = 1000,
+          },
+          {
             "NvChad/nvim-colorizer.lua",
             opts = {
               user_default_options = {
