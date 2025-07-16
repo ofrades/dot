@@ -12,7 +12,8 @@ in {
     ./../modules/gnome.nix
     ./../modules/theme.nix
     ./../modules/hyprland.nix
-    ./../modules/hyprpanel.nix
+    ./../modules/waybar.nix
+    ./../modules/wofi.nix
     ./../modules/nvim.nix
     ./../modules/audio.nix
   ];

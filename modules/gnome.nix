@@ -19,7 +19,6 @@
     yaru-theme
     glib
     papers
-    networkmanagerapplet # Network manager
     gnome-calculator
     gnome-calendar
     gnome-font-viewer
